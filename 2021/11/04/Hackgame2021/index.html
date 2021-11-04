@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"thomasonzhao.cn","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Hackgame2021此为Thomason的个人WP，官方WP：USTC-Hackergame&#x2F;hackergame2021-writeups: 中国科学技术大学第八届信息安全大赛的官方与非官方题解 (github.com)。个人战绩如下：  [TOC] 签到打开题目，是一个flag的日记，有显示时间，传入参数为?page&#x3D;。通过简单调整参数发现表示的是秒数，从1970.1.1 8:00向后加。">
+  <meta name="description" content="Hackgame2021此为Thomason的个人WP，官方WP：USTC-Hackergame&#x2F;hackergame2021-writeups: 中国科学技术大学第八届信息安全大赛的官方与非官方题解 (github.com)。个人战绩如下：  签到打开题目，是一个flag的日记，有显示时间，传入参数为?page&#x3D;。通过简单调整参数发现表示的是秒数，从1970.1.1 8:00向后加。题目要求调到">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hackgame2021 WP">
 <meta property="og:url" content="http://thomasonzhao.cn/2021/11/04/Hackgame2021/index.html">
 <meta property="og:site_name" content="Thomason&#39;Blog">
-<meta property="og:description" content="Hackgame2021此为Thomason的个人WP，官方WP：USTC-Hackergame&#x2F;hackergame2021-writeups: 中国科学技术大学第八届信息安全大赛的官方与非官方题解 (github.com)。个人战绩如下：  [TOC] 签到打开题目，是一个flag的日记，有显示时间，传入参数为?page&#x3D;。通过简单调整参数发现表示的是秒数，从1970.1.1 8:00向后加。">
+<meta property="og:description" content="Hackgame2021此为Thomason的个人WP，官方WP：USTC-Hackergame&#x2F;hackergame2021-writeups: 中国科学技术大学第八届信息安全大赛的官方与非官方题解 (github.com)。个人战绩如下：  签到打开题目，是一个flag的日记，有显示时间，传入参数为?page&#x3D;。通过简单调整参数发现表示的是秒数，从1970.1.1 8:00向后加。题目要求调到">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://thomasonzhao.cn/2021/11/04/Hackgame2021/image-20211103144007966.png">
 <meta property="og:image" content="http://thomasonzhao.cn/2021/11/04/Hackgame2021/image-20211103165715029.png">
@@ -40,7 +40,7 @@
 <meta property="og:image" content="http://thomasonzhao.cn/2021/11/04/Hackgame2021/image-20211103201850335.png">
 <meta property="og:image" content="http://thomasonzhao.cn/2021/11/04/Hackgame2021/image-20211103205326244.png">
 <meta property="article:published_time" content="2021-11-04T22:49:41.000Z">
-<meta property="article:modified_time" content="2021-11-04T22:53:36.226Z">
+<meta property="article:modified_time" content="2021-11-04T23:31:10.336Z">
 <meta property="article:author" content="Thomason Zhao">
 <meta property="article:tag" content="WP">
 <meta name="twitter:card" content="summary">
@@ -192,7 +192,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-11-04 17:49:41 / Modified: 17:53:36" itemprop="dateCreated datePublished" datetime="2021-11-04T17:49:41-05:00">2021-11-04</time>
+              <time title="Created: 2021-11-04 17:49:41 / Modified: 18:31:10" itemprop="dateCreated datePublished" datetime="2021-11-04T17:49:41-05:00">2021-11-04</time>
             </span>
 
           
@@ -208,7 +208,6 @@
       
         <h1 id="Hackgame2021"><a href="#Hackgame2021" class="headerlink" title="Hackgame2021"></a>Hackgame2021</h1><p>此为Thomason的个人WP，官方WP：<a target="_blank" rel="noopener" href="https://github.com/USTC-Hackergame/hackergame2021-writeups">USTC-Hackergame/hackergame2021-writeups: 中国科学技术大学第八届信息安全大赛的官方与非官方题解 (github.com)</a>。个人战绩如下：</p>
 <p><img src="image-20211103144007966.png" alt="image-20211103144007966"></p>
-<p>[TOC]</p>
 <h2 id="签到"><a href="#签到" class="headerlink" title="签到"></a>签到</h2><p>打开题目，是一个flag的日记，有显示时间，传入参数为<code>?page=</code>。通过简单调整参数发现表示的是秒数，从1970.1.1 8:00向后加。题目要求调到比赛时间，通过简单数学计算即可实现。</p>
 <blockquote>
 <p>  后来了解到这是Linux的时间戳，可以使用一些在线工具进行解答</p>
