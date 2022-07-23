@@ -8,11 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="The quieter you become, the more you are able to hear.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Thomason&#39;s Blog">
-<meta property="og:url" content="https://thomasonzhao.github.io/index.html">
+<meta property="og:title" content="Search">
+<meta property="og:url" content="https://thomasonzhao.github.io/search/index.html">
 <meta property="og:site_name" content="Thomason&#39;s Blog">
 <meta property="og:description" content="The quieter you become, the more you are able to hear.">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-07-23T20:17:34.000Z">
+<meta property="article:modified_time" content="2022-07-23T20:18:07.180Z">
 <meta property="article:author" content="Thomason Zhao">
 <meta name="twitter:card" content="summary">
     
@@ -34,7 +36,7 @@
       
     
     <!-- title -->
-    <title>Thomason&#39;s Blog</title>
+    <title>Search</title>
     <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
@@ -86,79 +88,22 @@
 </header>
 
         
-        <section id="about">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
   
-    <p>The quieter you become, the more you are able to hear.</p>
 
-  
-  
-    <p>
-      Find me on
+  <div class="content" itemprop="articleBody">
       
-      
-      
-        
-          <a class="icon" target="_blank" rel="noopener" href="https://github.com/ThomasonZhao" aria-label="github">
-            <i class="fab fa-github"></i><!--
-      ---></a><!--
-    ---><!--
-    --->, 
-        
-      
-        
-          <a class="icon" target="_blank" rel="noopener" href="https://twitter.com/Thomason_Zhao" aria-label="twitter">
-            <i class="fab fa-twitter"></i><!--
-      ---></a><!--
-    ---><!--
-    ---> and 
-        
-      
-        
-          <a class="icon" target="_blank" rel="noopener" href="mailto:thomasonzhao@outlook.com" aria-label="mail">
-            <i class="fas fa-envelope"></i><!--
-      ---></a>
-        <!--
-    --->.
-        
-      
-    </p>
-  
+        <section id="search">
+  <form>
+    <input type="text" class="search-input" id="search-input" placeholder="Search...">
+  </form>
+  <div id="search-result"></div>
+  <p class="search-no-result">No results found.</p>
 </section>
 
-<section id="writing">
-  <span class="h1"><a href="/archives/">Writing</a></span>
-  
-  <ul class="post-list">
-    
-    
       
-    
-    
-      <li class="post-item">
-        
-    <div class="meta">
-      
-        
-          <time datetime="2022-07-23T19:00:22.297Z" itemprop="datePublished">2022-07-23</time>
-        
-      
-    </div>
-
-
-        <span>
-    
-        <a class="" href="/2022/07/23/hello-world/">Hello World</a>
-    
-
-
-</span>
-      </li>
-    
-  </ul>
-  
-</section>
-
-
+  </div>
+</article>
 
         
         <footer id="footer">
@@ -211,6 +156,45 @@
 <script src="/js/main.js"></script>
 
 <!-- search -->
+
+  
+<script src="/js/search.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+
+    var $inputArea = $("input#search-input");
+    var $resultArea = document.querySelector("div#search-result");
+
+    $inputArea.focus(function() {
+      var search_path = "search.xml";
+      if (search_path.length == 0) {
+        search_path = "search.xml";
+      }
+      var path = "/" + search_path;
+      searchFunc(path, 'search-input', 'search-result');
+    });
+
+    $inputArea.keydown(function(e) {
+      if (e.which == 13) {
+        e.preventDefault();
+      }
+    });
+
+    var observer = new MutationObserver(function(mutationsList, observer) {
+      if (mutationsList.length == 1) {
+        if (mutationsList[0].addedNodes.length) {
+          $(".search-no-result").hide();
+        } else if (mutationsList[0].removedNodes.length) {
+          $(".search-no-result").show(200);
+        }
+      }
+    });
+
+    observer.observe($resultArea, { childList: true });
+
+  });
+  </script>
 
 <!-- Google Analytics -->
 
