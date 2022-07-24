@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Goals:   Make the win10 UWP calculator 1+1&#x3D;3 Reverse engineering the win10 UWP calculator, understand all (at least most) functionalities.  What is UWP?Universal Windows Platform (UWP) is a compu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Win10 UWP Calculator">
+<meta property="og:url" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/index.html">
+<meta property="og:site_name" content="Thomason&#39;s Blog">
+<meta property="og:description" content="Goals:   Make the win10 UWP calculator 1+1&#x3D;3 Reverse engineering the win10 UWP calculator, understand all (at least most) functionalities.  What is UWP?Universal Windows Platform (UWP) is a compu">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/image-20220403154256266.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/image-20220403154645935.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/Snipaste_2022-04-03_15-25-07.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/image-20220403161157003.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/image-20220403161439426.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/image-20220403170537010.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/image-20220403171802888.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/image-20220403172531763.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/image-20220403172904998.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/image-20220417165207231.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/image-20220417165724038.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/image-20220417173049009.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/ezgif-1-4818e84a2a.gif">
+<meta property="article:published_time" content="2022-04-18T03:31:00.000Z">
+<meta property="article:modified_time" content="2022-07-24T19:49:05.286Z">
+<meta property="article:author" content="Thomason Zhao">
+<meta property="article:tag" content="Spark Program">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/assets/image-20220403154256266.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Win10 UWP Calculator</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/01/27/CVE-2021-4034/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&text=Win10 UWP Calculator"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&title=Win10 UWP Calculator"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&is_video=false&description=Win10 UWP Calculator"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Win10 UWP Calculator&body=Check out this article: https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&title=Win10 UWP Calculator"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&title=Win10 UWP Calculator"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&title=Win10 UWP Calculator"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&title=Win10 UWP Calculator"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&name=Win10 UWP Calculator&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&t=Win10 UWP Calculator"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-is-UWP"><span class="toc-number">1.</span> <span class="toc-text">What is UWP?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dynamic-Analysis-Based-on-Data-Flow"><span class="toc-number">2.</span> <span class="toc-text">Dynamic Analysis Based on Data Flow</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Anchor-in-the-memory"><span class="toc-number">2.1.</span> <span class="toc-text">Anchor in the memory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Who-touches-my-anchor"><span class="toc-number">2.2.</span> <span class="toc-text">Who touches my anchor?</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Static-Analysis"><span class="toc-number">3.</span> <span class="toc-text">Static Analysis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hook"><span class="toc-number">4.</span> <span class="toc-text">Hook</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Achievement-display"><span class="toc-number">5.</span> <span class="toc-text">Achievement display</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Thanks"><span class="toc-number">6.</span> <span class="toc-text">Thanks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">7.</span> <span class="toc-text">References</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Win10 UWP Calculator
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thomason Zhao</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-04-18T03:31:00.000Z" itemprop="datePublished">2022-04-17</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Reverse/">Reverse</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Spark-Program/" rel="tag">Spark Program</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><strong>Goals:</strong> </p>
+<ul>
+<li>Make the win10 UWP calculator 1+1&#x3D;3</li>
+<li>Reverse engineering the win10 UWP calculator, understand all (at least most) functionalities.</li>
+</ul>
+<h2 id="What-is-UWP"><a href="#What-is-UWP" class="headerlink" title="What is UWP?"></a>What is UWP?</h2><p><strong>Universal Windows Platform</strong> (<strong>UWP</strong>) is a <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Computing_platform">computing platform</a> created by <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Microsoft">Microsoft</a> and first introduced in <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Windows_10">Windows 10</a>. The purpose of this platform is to help develop <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Universal_app">universal apps</a> that run on Windows 10, <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Windows_10_Mobile">Windows 10 Mobile</a>, <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Windows_11">Windows 11</a>, <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Xbox_system_software">Xbox One</a>, <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Xbox_system_software">Xbox Series X&#x2F;S</a> and <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Microsoft_HoloLens">HoloLens</a> without the need to be <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Porting">rewritten for each</a>. It supports <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a> app development using <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/C%2B%2B">C++</a>, <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/C_Sharp_(programming_language)">C#</a>, <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/VB.NET">VB.NET</a>, and <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/XAML">XAML</a>. The <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a> is implemented in C++, and supported in C++, VB.NET, C#, <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/F_Sharp_(programming_language)">F#</a> and <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/JavaScript">JavaScript</a>.[<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Universal_Windows_Platform#cite_note-MicrosoftWhatIs-1">1]</a> Designed as an extension to the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Windows_Runtime">Windows Runtime (WinRT)</a> platform first introduced in <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Windows_Server_2012">Windows Server 2012</a> and <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Windows_8">Windows 8</a>, UWP allows developers to create apps that will potentially run on multiple types of devices. (From Wikipedia)</p>
+<p>UWP application usually installed under the directory of <code>C:\Program Files\windowsapp</code>. Usually, users, even administrator, don’t have the permission of editing the files under that directory. </p>
+<h2 id="Dynamic-Analysis-Based-on-Data-Flow"><a href="#Dynamic-Analysis-Based-on-Data-Flow" class="headerlink" title="Dynamic Analysis Based on Data Flow"></a>Dynamic Analysis Based on Data Flow</h2><h3 id="Anchor-in-the-memory"><a href="#Anchor-in-the-memory" class="headerlink" title="Anchor in the memory"></a>Anchor in the memory</h3><p>Set the calculation result to a wired number, suppose they are store in somewhere in the memory in hex format (experience from win32 calc), break the program by windbg and search through the memory to see where it is. The result might be complicate, but after identified some key characteristics of the data, only a few of them “might” be the correct value we want. Here I use “yy” in ascii form and 31097 for decimal value to test the memory. </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s -a 0 L?fffffffffff &quot;yy&quot;</span><br><span class="line">or</span><br><span class="line">s -q 0 L?fffffffffff 0x00007979</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403154256266.png" alt="image-20220403154256266"></p>
+<p>Then, assign them with different value in the memory and continue run the calculator. Base on different value we assigned to them, we can easily identify which memory location is the real one. 31097 + 1 will never results 31105, therefore, we found the correct memory location. </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ed 0000014a`91a83bd0 0000000000007980</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403154645935.png" alt="image-20220403154645935"></p>
+<h3 id="Who-touches-my-anchor"><a href="#Who-touches-my-anchor" class="headerlink" title="Who touches my anchor?"></a>Who touches my anchor?</h3><p>Set up breakpoint on that memory location when any code read it.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ba r 2 0000014a`91a83bd0</span><br></pre></td></tr></table></figure>
+
+<p>Then when the calculator is running and hitting the <strong>“+” button</strong>, the program hit the break point with stack organization (also the control flow) shown as below. </p>
+<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/Snipaste_2022-04-03_15-25-07.png" alt="Snipaste_2022-04-03_15-25-07"></p>
+<p>The current function call is in the library(like “printf” function for c code in stdio.h), ignore that. Step out the current function and examine the code. </p>
+<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403161157003.png" alt="image-20220403161157003"></p>
+<p>Locate it in the IDA, combine the dynamic analysis stack contents, the **a1 is a double pointer of one of the number we want to add. We guess that **a2 <strong>could be</strong> another double pointer which points to the number we want to add (Not add yet, this breakpoint happened just after we push the button “+”) </p>
+<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403161439426.png" alt="image-20220403161439426"></p>
+<p>The whole control flow is shown in the below:</p>
+<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403170537010.png" alt="image-20220403170537010"></p>
+<p>After figure out the control flow of the “+” button, another button will also cause the break point, <strong>“&#x3D;” button</strong>. Using same idea, drag out the control flow of the “&#x3D;” button. </p>
+<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403171802888.png" alt="image-20220403171802888"></p>
+<p>It is worth noting that this function manipulates both input we use to add the number. </p>
+<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403172531763.png" alt="image-20220403172531763"></p>
+<p>It get called under this function. </p>
+<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403172904998.png" alt="image-20220403172904998"></p>
+<p>Until now, we have discovered a lot about the “+” and “&#x3D;” buttons, let’s move on to the static analysis part. </p>
+<h2 id="Static-Analysis"><a href="#Static-Analysis" class="headerlink" title="Static Analysis"></a>Static Analysis</h2><p>Two important functions are: sub_140239270 and sub_140222AE0 do not have any sign to do the addition. Rather, sub_140239270 place space for both numbers we want to add. sub_140222AE0 returns an array with both pointers pointing to the numbers we want to add. </p>
+<p>So the addition will appear in higher level functions. </p>
+<p>What’s more, sub_140222AE0 was found always to be called in pairs. It is reasonable to speculate that other functions are likely to be other operators (addition, subtraction, multiplication, division, …, etc)</p>
+<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220417165207231.png" alt="image-20220417165207231"></p>
+<p>The caller function of sub_140222AE0.  </p>
+<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220417165724038.png" alt="image-20220417165724038"></p>
+<p>Just after two sub_140222AE0 function calls, sub_140233050 do the addition. It updates the pointer in the v13, which stores the new value after the addition. With this information, the challenge will be solved soon. </p>
+<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220417173049009.png" alt="image-20220417173049009"></p>
+<h2 id="Hook"><a href="#Hook" class="headerlink" title="Hook"></a>Hook</h2><p>Originally will use frida to hook the function, but it has some bug when attach to the UWP calculator. So I decide to use windbg scripting instead. </p>
+<p>After search for the windbg scripting, the search results shows that windbg can be script using JavaScript files. </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dx Debugger.State.Scripts.EXP.Contents.EXP(2)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&quot;use strict&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">initializeScript</span>(<span class="params"></span>)</span><br><span class="line">&#123;</span><br><span class="line">    host.<span class="property">diagnostics</span>.<span class="title function_">debugLog</span>(<span class="string">&quot;EXP is ready!\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">EXP</span>(<span class="params">num</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> ctl = host.<span class="property">namespace</span>.<span class="property">Debugger</span>.<span class="property">Utility</span>.<span class="property">Control</span>;</span><br><span class="line">    host.<span class="property">diagnostics</span>.<span class="title function_">debugLog</span>(<span class="string">&quot;Setting up EXP!\n&quot;</span>);</span><br><span class="line">    ctl.<span class="title class_">ExecuteCommand</span>(<span class="string">&quot;bp Calculator!VSDesignerDllMain+0xda1ac&quot;</span>);</span><br><span class="line">    ctl.<span class="title class_">ExecuteCommand</span>(<span class="string">&quot;g&quot;</span>);</span><br><span class="line">    ctl.<span class="title class_">ExecuteCommand</span>(<span class="string">&quot;eb qwo(@rsi)+0xc 0x3&quot;</span>);</span><br><span class="line">    ctl.<span class="title class_">ExecuteCommand</span>(<span class="string">&quot;bd 0&quot;</span>);</span><br><span class="line">    ctl.<span class="title class_">ExecuteCommand</span>(<span class="string">&quot;g&quot;</span>);</span><br><span class="line">    host.<span class="property">diagnostics</span>.<span class="title function_">debugLog</span>(<span class="string">&quot;Finished!\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Achievement-display"><a href="#Achievement-display" class="headerlink" title="Achievement display"></a>Achievement display</h2><p><img src="/2022/04/17/Win10-UWP-Calculator/assets/ezgif-1-4818e84a2a.gif" alt="Source image"></p>
+<h2 id="Thanks"><a href="#Thanks" class="headerlink" title="Thanks"></a>Thanks</h2><p>Atum</p>
+<p>Tencent Spark Program</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-246657-1.htm">【原创】去一个小广告-软件逆向-看雪论坛-安全社区</a></p>
+<p><a target="_blank" rel="noopener" href="http://showlinkroom.me/2017/05/31/UWP%E9%80%86%E5%90%91%E5%88%9D%E6%8E%A5%E8%A7%A6/">UWP逆向初接触 | l1nk3dHouse (showlinkroom.me)</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.walterlv.com/post/create-uwp-app-from-zero-0.html">(1&#x2F;2) 为了理解 UWP 的启动流程，我从零开始创建了一个 UWP 程序 - walterlv</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.walterlv.com/post/create-uwp-app-from-zero-1.html">(2&#x2F;2) 为了理解 UWP 的启动流程，我从零开始创建了一个 UWP 程序 - walterlv</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/NaniteFactory/hookwin10calc">NaniteFactory&#x2F;hookwin10calc: Reverse engineered Windows 10 Calculator.exe (UWP application) hacker. 한글&#x2F;漢文을 배운 윈도우 계산기 패치. (github.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Universal_Windows_Platform">Universal Windows Platform - Wikipedia</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.mattjustice.com/2018/08/24/gdb-for-windbg-users/">GDB commands for WinDbg users | Matthew Justice’s blog (mattjustice.com)</a></p>
+<p><a target="_blank" rel="noopener" href="http://windbg.info/doc/1-common-cmds.html">Common WinDbg Commands (Thematically Grouped)</a></p>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/s--search-memory-">s (Search Memory) - Windows drivers | Microsoft Docs</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/ba--break-on-access-">ba (Break on Access) - Windows drivers | Microsoft Docs</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/e--ea--eb--ed--ed--ef--ep--eq--eu--ew--eza--ezu--enter-values-">e, ea, eb, ed, eD, ef, ep, eq, eu, ew, eza (Enter Values) - Windows drivers | Microsoft Docs</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention?view=msvc-170">x64 calling convention | Microsoft Docs</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/masm-numbers-and-operators?redirectedfrom=MSDN">MASM Numbers and Operators - Windows drivers | Microsoft Docs</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/javascript-debugger-scripting">JavaScript Debugger Scripting - Windows drivers | Microsoft Docs</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-is-UWP"><span class="toc-number">1.</span> <span class="toc-text">What is UWP?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dynamic-Analysis-Based-on-Data-Flow"><span class="toc-number">2.</span> <span class="toc-text">Dynamic Analysis Based on Data Flow</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Anchor-in-the-memory"><span class="toc-number">2.1.</span> <span class="toc-text">Anchor in the memory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Who-touches-my-anchor"><span class="toc-number">2.2.</span> <span class="toc-text">Who touches my anchor?</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Static-Analysis"><span class="toc-number">3.</span> <span class="toc-text">Static Analysis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hook"><span class="toc-number">4.</span> <span class="toc-text">Hook</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Achievement-display"><span class="toc-number">5.</span> <span class="toc-text">Achievement display</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Thanks"><span class="toc-number">6.</span> <span class="toc-text">Thanks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">7.</span> <span class="toc-text">References</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&text=Win10 UWP Calculator"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&title=Win10 UWP Calculator"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&is_video=false&description=Win10 UWP Calculator"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Win10 UWP Calculator&body=Check out this article: https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&title=Win10 UWP Calculator"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&title=Win10 UWP Calculator"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&title=Win10 UWP Calculator"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&title=Win10 UWP Calculator"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&name=Win10 UWP Calculator&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/04/17/Win10-UWP-Calculator/&t=Win10 UWP Calculator"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    Thomason Zhao
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

