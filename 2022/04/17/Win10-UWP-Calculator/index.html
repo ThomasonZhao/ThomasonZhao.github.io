@@ -63,6 +63,12 @@
     
 	<!-- mathjax -->
 	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
 <meta name="generator" content="Hexo 6.2.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -181,44 +187,44 @@
 <h2 id="Dynamic-Analysis-Based-on-Data-Flow"><a href="#Dynamic-Analysis-Based-on-Data-Flow" class="headerlink" title="Dynamic Analysis Based on Data Flow"></a>Dynamic Analysis Based on Data Flow</h2><h3 id="Anchor-in-the-memory"><a href="#Anchor-in-the-memory" class="headerlink" title="Anchor in the memory"></a>Anchor in the memory</h3><p>Set the calculation result to a wired number, suppose they are store in somewhere in the memory in hex format (experience from win32 calc), break the program by windbg and search through the memory to see where it is. The result might be complicate, but after identified some key characteristics of the data, only a few of them “might” be the correct value we want. Here I use “yy” in ascii form and 31097 for decimal value to test the memory. </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s -a 0 L?fffffffffff &quot;yy&quot;</span><br><span class="line">or</span><br><span class="line">s -q 0 L?fffffffffff 0x00007979</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403154256266.png" alt="image-20220403154256266"></p>
+<p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403154256266.png" data-caption="image-20220403154256266"><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403154256266.png" alt="image-20220403154256266"></a></p>
 <p>Then, assign them with different value in the memory and continue run the calculator. Base on different value we assigned to them, we can easily identify which memory location is the real one. 31097 + 1 will never results 31105, therefore, we found the correct memory location. </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ed 0000014a`91a83bd0 0000000000007980</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403154645935.png" alt="image-20220403154645935"></p>
+<p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403154645935.png" data-caption="image-20220403154645935"><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403154645935.png" alt="image-20220403154645935"></a></p>
 <h3 id="Who-touches-my-anchor"><a href="#Who-touches-my-anchor" class="headerlink" title="Who touches my anchor?"></a>Who touches my anchor?</h3><p>Set up breakpoint on that memory location when any code read it.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ba r 2 0000014a`91a83bd0</span><br></pre></td></tr></table></figure>
 
 <p>Then when the calculator is running and hitting the <strong>“+” button</strong>, the program hit the break point with stack organization (also the control flow) shown as below. </p>
-<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/Snipaste_2022-04-03_15-25-07.png" alt="Snipaste_2022-04-03_15-25-07"></p>
+<p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/Snipaste_2022-04-03_15-25-07.png" data-caption="Snipaste_2022-04-03_15-25-07"><img src="/2022/04/17/Win10-UWP-Calculator/assets/Snipaste_2022-04-03_15-25-07.png" alt="Snipaste_2022-04-03_15-25-07"></a></p>
 <p>The current function call is in the library(like “printf” function for c code in stdio.h), ignore that. Step out the current function and examine the code. </p>
-<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403161157003.png" alt="image-20220403161157003"></p>
+<p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403161157003.png" data-caption="image-20220403161157003"><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403161157003.png" alt="image-20220403161157003"></a></p>
 <p>Locate it in the IDA, combine the dynamic analysis stack contents, the **a1 is a double pointer of one of the number we want to add. We guess that **a2 <strong>could be</strong> another double pointer which points to the number we want to add (Not add yet, this breakpoint happened just after we push the button “+”) </p>
-<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403161439426.png" alt="image-20220403161439426"></p>
+<p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403161439426.png" data-caption="image-20220403161439426"><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403161439426.png" alt="image-20220403161439426"></a></p>
 <p>The whole control flow is shown in the below:</p>
-<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403170537010.png" alt="image-20220403170537010"></p>
+<p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403170537010.png" data-caption="image-20220403170537010"><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403170537010.png" alt="image-20220403170537010"></a></p>
 <p>After figure out the control flow of the “+” button, another button will also cause the break point, <strong>“&#x3D;” button</strong>. Using same idea, drag out the control flow of the “&#x3D;” button. </p>
-<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403171802888.png" alt="image-20220403171802888"></p>
+<p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403171802888.png" data-caption="image-20220403171802888"><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403171802888.png" alt="image-20220403171802888"></a></p>
 <p>It is worth noting that this function manipulates both input we use to add the number. </p>
-<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403172531763.png" alt="image-20220403172531763"></p>
+<p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403172531763.png" data-caption="image-20220403172531763"><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403172531763.png" alt="image-20220403172531763"></a></p>
 <p>It get called under this function. </p>
-<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403172904998.png" alt="image-20220403172904998"></p>
+<p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403172904998.png" data-caption="image-20220403172904998"><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220403172904998.png" alt="image-20220403172904998"></a></p>
 <p>Until now, we have discovered a lot about the “+” and “&#x3D;” buttons, let’s move on to the static analysis part. </p>
 <h2 id="Static-Analysis"><a href="#Static-Analysis" class="headerlink" title="Static Analysis"></a>Static Analysis</h2><p>Two important functions are: sub_140239270 and sub_140222AE0 do not have any sign to do the addition. Rather, sub_140239270 place space for both numbers we want to add. sub_140222AE0 returns an array with both pointers pointing to the numbers we want to add. </p>
 <p>So the addition will appear in higher level functions. </p>
 <p>What’s more, sub_140222AE0 was found always to be called in pairs. It is reasonable to speculate that other functions are likely to be other operators (addition, subtraction, multiplication, division, …, etc)</p>
-<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220417165207231.png" alt="image-20220417165207231"></p>
+<p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220417165207231.png" data-caption="image-20220417165207231"><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220417165207231.png" alt="image-20220417165207231"></a></p>
 <p>The caller function of sub_140222AE0.  </p>
-<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220417165724038.png" alt="image-20220417165724038"></p>
+<p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220417165724038.png" data-caption="image-20220417165724038"><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220417165724038.png" alt="image-20220417165724038"></a></p>
 <p>Just after two sub_140222AE0 function calls, sub_140233050 do the addition. It updates the pointer in the v13, which stores the new value after the addition. With this information, the challenge will be solved soon. </p>
-<p><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220417173049009.png" alt="image-20220417173049009"></p>
+<p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220417173049009.png" data-caption="image-20220417173049009"><img src="/2022/04/17/Win10-UWP-Calculator/assets/image-20220417173049009.png" alt="image-20220417173049009"></a></p>
 <h2 id="Hook"><a href="#Hook" class="headerlink" title="Hook"></a>Hook</h2><p>Originally will use frida to hook the function, but it has some bug when attach to the UWP calculator. So I decide to use windbg scripting instead. </p>
 <p>After search for the windbg scripting, the search results shows that windbg can be script using JavaScript files. </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dx Debugger.State.Scripts.EXP.Contents.EXP(2)</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&quot;use strict&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">initializeScript</span>(<span class="params"></span>)</span><br><span class="line">&#123;</span><br><span class="line">    host.<span class="property">diagnostics</span>.<span class="title function_">debugLog</span>(<span class="string">&quot;EXP is ready!\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">EXP</span>(<span class="params">num</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> ctl = host.<span class="property">namespace</span>.<span class="property">Debugger</span>.<span class="property">Utility</span>.<span class="property">Control</span>;</span><br><span class="line">    host.<span class="property">diagnostics</span>.<span class="title function_">debugLog</span>(<span class="string">&quot;Setting up EXP!\n&quot;</span>);</span><br><span class="line">    ctl.<span class="title class_">ExecuteCommand</span>(<span class="string">&quot;bp Calculator!VSDesignerDllMain+0xda1ac&quot;</span>);</span><br><span class="line">    ctl.<span class="title class_">ExecuteCommand</span>(<span class="string">&quot;g&quot;</span>);</span><br><span class="line">    ctl.<span class="title class_">ExecuteCommand</span>(<span class="string">&quot;eb qwo(@rsi)+0xc 0x3&quot;</span>);</span><br><span class="line">    ctl.<span class="title class_">ExecuteCommand</span>(<span class="string">&quot;bd 0&quot;</span>);</span><br><span class="line">    ctl.<span class="title class_">ExecuteCommand</span>(<span class="string">&quot;g&quot;</span>);</span><br><span class="line">    host.<span class="property">diagnostics</span>.<span class="title function_">debugLog</span>(<span class="string">&quot;Finished!\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="Achievement-display"><a href="#Achievement-display" class="headerlink" title="Achievement display"></a>Achievement display</h2><p><img src="/2022/04/17/Win10-UWP-Calculator/assets/ezgif-1-4818e84a2a.gif" alt="Source image"></p>
+<h2 id="Achievement-display"><a href="#Achievement-display" class="headerlink" title="Achievement display"></a>Achievement display</h2><p><a data-fancybox="gallery" data-src="/2022/04/17/Win10-UWP-Calculator/assets/ezgif-1-4818e84a2a.gif" data-caption="Source image"><img src="/2022/04/17/Win10-UWP-Calculator/assets/ezgif-1-4818e84a2a.gif" alt="Source image"></a></p>
 <h2 id="Thanks"><a href="#Thanks" class="headerlink" title="Thanks"></a>Thanks</h2><p>Atum</p>
 <p>Tencent Spark Program</p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-246657-1.htm">【原创】去一个小广告-软件逆向-看雪论坛-安全社区</a></p>
@@ -381,6 +387,11 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 
 </body>
 </html>

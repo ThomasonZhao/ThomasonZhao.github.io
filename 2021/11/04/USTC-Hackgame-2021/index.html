@@ -62,6 +62,12 @@
     
 	<!-- mathjax -->
 	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
 <meta name="generator" content="Hexo 6.2.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -173,22 +179,22 @@
 
   <div class="content" itemprop="articleBody">
     <p>此为Thomason的个人WP，官方WP：<a target="_blank" rel="noopener" href="https://github.com/USTC-Hackergame/hackergame2021-writeups">USTC-Hackergame&#x2F;hackergame2021-writeups: 中国科学技术大学第八届信息安全大赛的官方与非官方题解 (github.com)</a>。个人战绩如下：</p>
-<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103144007966.png" alt="image-20211103144007966"></p>
+<p><a data-fancybox="gallery" data-src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103144007966.png" data-caption="image-20211103144007966"><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103144007966.png" alt="image-20211103144007966"></a></p>
 <p>[TOC]</p>
 <h2 id="签到"><a href="#签到" class="headerlink" title="签到"></a>签到</h2><p>打开题目，是一个flag的日记，有显示时间，传入参数为<code>?page=</code>。通过简单调整参数发现表示的是秒数，从1970.1.1 8:00向后加。题目要求调到比赛时间，通过简单数学计算即可实现。</p>
 <blockquote>
 <p>  后来了解到这是Linux的时间戳，可以使用一些在线工具进行解答</p>
 </blockquote>
-<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103165715029.png" alt="image-20211103165715029"></p>
+<p><a data-fancybox="gallery" data-src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103165715029.png" data-caption="image-20211103165715029"><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103165715029.png" alt="image-20211103165715029"></a></p>
 <h2 id="进制十六——参上"><a href="#进制十六——参上" class="headerlink" title="进制十六——参上"></a>进制十六——参上</h2><p>题目给出一个带有十六进制数据的flag文件，明文flag被处理遮挡住了，但是16进制的数据并未被遮挡。定位 f 对应的 ASCII-Hex 编码为66，向后一一解码 Hex 即可。</p>
-<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/hex_editor.png" alt="hex_editor"></p>
+<p><a data-fancybox="gallery" data-src="/2021/11/04/USTC-Hackgame-2021/assets/hex_editor.png" data-caption="hex_editor"><img src="/2021/11/04/USTC-Hackgame-2021/assets/hex_editor.png" alt="hex_editor"></a></p>
 <h2 id="去吧！追寻自由的电波"><a href="#去吧！追寻自由的电波" class="headerlink" title="去吧！追寻自由的电波"></a>去吧！追寻自由的电波</h2><p>题目给出一个变调加速后的MP3文件，能够模糊听出“alpha beta”之类的单词，同时题目提示“考虑到信息的鲁棒性，X 同学使用了无线电中惯用的方法来区分字符串中读音相近的字母。”猜测使用 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/NATO_phonetic_alphabet">NATO phonetic alphabet - Wikipedia</a> 读法朗读flag内容的字母。</p>
 <p>这里笔者没有安装处理音频的软件，采用在线的一个浏览器插件解决。载入文件后直接调节速度即可，此插件自动变调减速音频。如果使用播放器进行低速播放还是会听到非常明显的小黄人音效，而且根本听不清，是因为播放器是不会对原本音频变调处理的，只做速度上的减速。</p>
 <blockquote>
 <p>  NATO phonetic alphabet 在众多战争类游戏中也有出现，比如战地五在夺取基地C时旁白播报：Take the objective Charlie. </p>
 </blockquote>
-<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103171404165.png" alt="image-20211103171404165"></p>
-<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103171656102.png" alt="image-20211103171656102"></p>
+<p><a data-fancybox="gallery" data-src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103171404165.png" data-caption="image-20211103171404165"><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103171404165.png" alt="image-20211103171404165"></a></p>
+<p><a data-fancybox="gallery" data-src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103171656102.png" data-caption="image-20211103171656102"><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103171656102.png" alt="image-20211103171656102"></a></p>
 <h2 id="猫咪问答-Pro-Max"><a href="#猫咪问答-Pro-Max" class="headerlink" title="猫咪问答 Pro Max"></a>猫咪问答 Pro Max</h2><p>猫咪问答，典型折磨题。题目答案都可以从互联网上找到，但是需要一些搜索技巧才能快速准确地找到答案。</p>
 <ol>
 <li>题目要求找到已经被并入中科大 Linux 用户协会（USTCLUG）的中科大信息安全俱乐部（SEC@USTC）的社团章程。题目给出了信息安全俱乐部以前的域名，想必是和这个有关。一开始尝试谷歌搜索几个关键字：“中科大信息安全俱乐部”，“章程”，“会员代表大会”，但都没有结果。域名无法打开，尝试寻找历史IP，也是无功而返。最后在好友的提醒下想到使用搜索引擎快照进行解决。<a target="_blank" rel="noopener" href="https://web.archive.org/">Wayback Machine (archive.org)</a> 通过网址输入域名查询历史快照，在快照首页找到章程。</li>
@@ -198,19 +204,19 @@
 <li>RFC举报机制。搜索相关关键字即可找到 <a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/rfc8962.txt">官方文档</a> 中第六节有明确指出应该发向哪里。</li>
 </ol>
 <h2 id="卖瓜"><a href="#卖瓜" class="headerlink" title="卖瓜"></a>卖瓜</h2><p>通过6斤的瓜和9斤的瓜称出20斤，小学生都知道是称不出来的。这题有点脑筋急转弯的感觉。一开始尝试浮点数绕过，科学计数法等等操作，结果都以失败告终。但是在尝试科学计数法的时候不小心数字整大了没清零，瓜的显示直接变成浮点数了。猜测可能有溢出，溢出成负数再慢慢加回来。经过尝试，如图，正好在这个条件下的负数可以直接使用6斤的瓜称够20斤。</p>
-<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103173402531.png" alt="image-20211103173402531"></p>
-<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103173652547.png" alt="image-20211103173652547"></p>
+<p><a data-fancybox="gallery" data-src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103173402531.png" data-caption="image-20211103173402531"><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103173402531.png" alt="image-20211103173402531"></a></p>
+<p><a data-fancybox="gallery" data-src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103173652547.png" data-caption="image-20211103173652547"><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103173652547.png" alt="image-20211103173652547"></a></p>
 <h2 id="透明的文件"><a href="#透明的文件" class="headerlink" title="透明的文件"></a>透明的文件</h2><p>题目提示说文件是用来在终端生成五颜六色的flag。但是打开文件是一堆很奇怪的字符，有点像乱码。文件中找来找去找不到任何有关flag的线索，猜测是展示出flag并非直接在文中显示。搜索发现了一个<a target="_blank" rel="noopener" href="https://blog.csdn.net/u014470361/article/details/81512330">CSDN</a>的相关介绍，但是并没有说明为什么这样就能显示彩色字体，按照文中的格式，把每个 <code>[</code> 前面都加上 <code>\033</code> 并且分行， <code>[XXm</code> 为表示的颜色字符的结尾标识部分，使用简单的shell脚本打印所有行即可。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">for line in `cat transparent.txt`</span><br><span class="line">do</span><br><span class="line">    echo -e &quot;$line&quot;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>  后来查到终端显示彩色字符源于一个叫 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/ANSI_escape_code">ANSI escape code</a> 的东西，终端把那些“奇怪”的字符序列解释为相应的指令，而不是普通字符编码。</p>
 </blockquote>
-<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103200311283.png" alt="image-20211103200311283"></p>
-<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103201003986.png" alt="image-20211103201003986"></p>
+<p><a data-fancybox="gallery" data-src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103200311283.png" data-caption="image-20211103200311283"><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103200311283.png" alt="image-20211103200311283"></a></p>
+<p><a data-fancybox="gallery" data-src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103201003986.png" data-caption="image-20211103201003986"><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103201003986.png" alt="image-20211103201003986"></a></p>
 <h2 id="旅行照片"><a href="#旅行照片" class="headerlink" title="旅行照片"></a>旅行照片</h2><p>这是个非常有趣的题目，题目提示没有隐写等各种奇技淫巧，就是直接答题。观察图片，题目提示左上角是一个KFC（不说我都没看到）。直接搜索蓝色KFC相关资料，查到是一个在秦皇岛的一处景点，新奥海地世界。谷歌地图查看位置，发现在图上方有一个类似港口的地方，结合地图确定拍摄者大概位置为13<del>15层，以及拍摄时间约为下午的3</del>4点，朝向东南。然后可以通过KFC官方渠道找到门店电话（或者美团什么的），至于KFC旁边的三个字可以通过这个店在地图上标注的具体位置猜测，地图的位置是…秦皇岛市…海豚馆旁。猜测是海豚馆。但是本人是找到了在停车场拍照的正门照片（忘记保存），旁边确实是海豚馆。</p>
-<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/travel-photo.jpg" alt="img"></p>
-<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103201850335.png" alt="image-20211103201850335"></p>
+<p><a data-fancybox="gallery" data-src="/2021/11/04/USTC-Hackgame-2021/assets/travel-photo.jpg" data-caption="img"><img src="/2021/11/04/USTC-Hackgame-2021/assets/travel-photo.jpg" alt="img"></a></p>
+<p><a data-fancybox="gallery" data-src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103201850335.png" data-caption="image-20211103201850335"><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103201850335.png" alt="image-20211103201850335"></a></p>
 <h2 id="FLAG-助力大红包"><a href="#FLAG-助力大红包" class="headerlink" title="FLAG 助力大红包"></a>FLAG 助力大红包</h2><p><del>拼多多砍一刀拿flag</del> （bushi。题目要求通过不同IP访问平台砍一刀，但是每个&#x2F;8地址只允许有一个IP参与砍。直接Python写脚本使用 <code>X-Forward-For</code> 伪造IP访问，当所有&#x2F;8地址访问完之后就可以拿到flag。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">url = <span class="string">&#x27;URL&#x27;</span></span><br><span class="line">ip = <span class="string">&#x27;.0.0.1&#x27;</span></span><br><span class="line">headers = &#123;<span class="string">&#x27;X-Forwarded-For&#x27;</span>:ip&#125;</span><br><span class="line">data = &#123;<span class="string">&#x27;ip&#x27;</span>:ip&#125;</span><br><span class="line">proxies = &#123;<span class="string">&#x27;http&#x27;</span>:<span class="string">&#x27;http://127.0.0.1:8080&#x27;</span>&#125; <span class="comment"># 本地Burp监听，自己测试是否访问成功</span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span> (<span class="number">256</span>):</span><br><span class="line">	ip = <span class="string">&#x27;.0.0.1&#x27;</span></span><br><span class="line">	ip = <span class="built_in">str</span>(i) + ip</span><br><span class="line">	<span class="built_in">print</span>(ip)</span><br><span class="line">	headers = &#123;<span class="string">&#x27;X-Forwarded-For&#x27;</span>:ip&#125;</span><br><span class="line">	data = &#123;<span class="string">&#x27;ip&#x27;</span>:ip&#125;</span><br><span class="line">	proxies = &#123;<span class="string">&#x27;http&#x27;</span>:<span class="string">&#x27;http://127.0.0.1:8080&#x27;</span>&#125;</span><br><span class="line">	req = requests.post(url, headers=headers, data=data, proxies=proxies)</span><br><span class="line">	sleep(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 
@@ -224,7 +230,7 @@
 <p>然后通过返回的数据直接利用payload完成攻击：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;query&quot;:&quot;&#123; user(id:1) &#123; privateEmail &#125;&#125;&quot;&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103205326244.png" alt="image-20211103205326244"></p>
+<p><a data-fancybox="gallery" data-src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103205326244.png" data-caption="image-20211103205326244"><img src="/2021/11/04/USTC-Hackgame-2021/assets/image-20211103205326244.png" alt="image-20211103205326244"></a></p>
 <h2 id="Easy-RSA"><a href="#Easy-RSA" class="headerlink" title="Easy RSA"></a>Easy RSA</h2><p>参考：<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/RSA%E5%8A%A0%E5%AF%86%E6%BC%94%E7%AE%97%E6%B3%95">RSA加密算法</a> <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%A8%A1%E5%8F%8D%E5%85%83%E7%B4%A0">模逆元</a> <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0">欧拉函数</a> <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq2539879928/article/details/106861935">Python实现密码学中的模逆运算</a> <a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/compute-n-under-modulo-p/">Compute n! under modulo p - GeeksforGeeks</a></p>
 <p><strong>求 $p$</strong></p>
 <p>利用<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Wilson's_theorem">Wilson’s theorem - Wikipedia</a> 即可快速求出大数的的余数，尤其是当有阶乘存在的时候，参考代码： <a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/compute-n-under-modulo-p/">Compute n! under modulo p - GeeksforGeeks</a>。<strong>注意别忘记最后是求出数字的下一个质数。</strong></p>
@@ -403,6 +409,11 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 
 </body>
 </html>

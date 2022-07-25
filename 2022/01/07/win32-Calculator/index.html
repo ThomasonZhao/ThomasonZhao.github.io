@@ -57,6 +57,12 @@
     
 	<!-- mathjax -->
 	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
 <meta name="generator" content="Hexo 6.2.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -179,27 +185,27 @@
 </blockquote>
 <p>对着函数列表一通找，由于命名足够合理，很容易猜测函数的目的是什么，并且还有相关前缀，例如<code>CCalcEngine</code>，<code>CCalcHistory</code>，<code>CcalculatorController</code>等。现在就需要开始想一想要完成1+1&#x3D;3这个任务的条件是什么了。当按下1+1&#x3D;这几个按键时会调用很多不同的函数（在动态调试的时候稍微留意了一下），比如接受按键类型的函数，运算函数，运算结果显示函数。在一整条调用链里的任何一个地方都可以进行修改。</p>
 <p>是在一开始过滤了其他不相关函数直接留下了<code>DoOperation</code>函数，猜测可能存在运算。在F5反汇编后一系列的过滤和调用更加证实了猜想很可能是正确的。</p>
-<p><img src="/2022/01/07/win32-Calculator/assets/image-20220109120553100.png" alt="image-20220109120553100"></p>
+<p><a data-fancybox="gallery" data-src="/2022/01/07/win32-Calculator/assets/image-20220109120553100.png" data-caption="image-20220109120553100"><img src="/2022/01/07/win32-Calculator/assets/image-20220109120553100.png" alt="image-20220109120553100"></a></p>
 <h2 id="Debugging"><a href="#Debugging" class="headerlink" title="Debugging"></a>Debugging</h2><p>在函数开头位置下断点，用IDA内选择Windbg动态调试计算器，结果果然像之前猜想的那样停在了断点处。说明这个函数确实是在调用链之中。</p>
-<p><img src="/2022/01/07/win32-Calculator/assets/image-20220109121215992-16502356803191.png" alt="image-20220109121215992"></p>
+<p><a data-fancybox="gallery" data-src="/2022/01/07/win32-Calculator/assets/image-20220109121215992-16502356803191.png" data-caption="image-20220109121215992"><img src="/2022/01/07/win32-Calculator/assets/image-20220109121215992-16502356803191.png" alt="image-20220109121215992"></a></p>
 <p>之后进行单步调试，看看在函数内部发生了什么。在过完一系列的if-else之后调用了一个叫<code>addrat</code>的函数（看起来就很像加法函数Doge）。F7进入函数内部瞧瞧发现它调用了<code>addnum</code>函数，<code>addnum</code>函数调用了<code>_addnum</code>函数，这更像加法函数了！多调试几次可以发现如果使用乘法会调用<code>mulrat</code>函数，以此类推。由此可以大概猜测函数调用链如下：</p>
 <p>按下等号–&gt;调用<code>DoOperation</code>确定算数方法和内容–&gt;调用相关算数函数–&gt;给系统做交互最终显示在屏幕上。</p>
-<p><img src="/2022/01/07/win32-Calculator/assets/image-20220109121358078.png" alt="image-20220109121358078"></p>
+<p><a data-fancybox="gallery" data-src="/2022/01/07/win32-Calculator/assets/image-20220109121358078.png" data-caption="image-20220109121358078"><img src="/2022/01/07/win32-Calculator/assets/image-20220109121358078.png" alt="image-20220109121358078"></a></p>
 <p>既然DoOperation函如其名，那么需要计算的数字肯定通过传参或者某种方式传了进去。在一开始下断点的位置函数刚刚开始运行，猜测传参可能是和需要计算的值相关。传参有三个，int，**（指针的指针），*（指针）。</p>
-<p><img src="/2022/01/07/win32-Calculator/assets/image-20220109141132268.png" alt="image-20220109141132268"></p>
+<p><a data-fancybox="gallery" data-src="/2022/01/07/win32-Calculator/assets/image-20220109141132268.png" data-caption="image-20220109141132268"><img src="/2022/01/07/win32-Calculator/assets/image-20220109141132268.png" alt="image-20220109141132268"></a></p>
 <p>经过多次测试，发现int是个常数，不管输入数值如何都是不会变的。因此直接去内存中找这两个指针所指的地址。如图所示为参数a4所指的值，右边8byte的区域就是输入计算的数值了，完成任务只需要去篡改内存即可。</p>
 <p>关于这里为什么指针指的是前面部分而不是直接指向数值（一开始还找了好久找不到输入的数字去哪了），猜测可能是计算器支持多种计算方式还有科学计数法，用其他的一些方式表示数字。</p>
-<p><img src="/2022/01/07/win32-Calculator/assets/image-20220109141437411.png" alt="image-20220109141437411"></p>
+<p><a data-fancybox="gallery" data-src="/2022/01/07/win32-Calculator/assets/image-20220109141437411.png" data-caption="image-20220109141437411"><img src="/2022/01/07/win32-Calculator/assets/image-20220109141437411.png" alt="image-20220109141437411"></a></p>
 <h2 id="Hooking"><a href="#Hooking" class="headerlink" title="Hooking"></a>Hooking</h2><p>了解了函数调用链后便可以用frida-trace去hook关键的DoOperation函数了，位置就选在Debugging时下断点的地方，算好偏移地址，启动计算器。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; frida<span class="literal">-trace</span> <span class="operator">-f</span> C:\Windows\System32\win32calc.exe <span class="literal">--decorate</span> <span class="literal">-a</span> <span class="string">&quot;win32calc.exe!0x4753c&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>frida-trace不会中断程序运行，但是在终端可以看到打印一行字。每当按下&#x3D;号进行运算时，终端就会打印，说明位置应该是没有问题的。</p>
-<p><img src="/2022/01/07/win32-Calculator/assets/image-20220109122803673.png" alt="image-20220109122803673"></p>
+<p><a data-fancybox="gallery" data-src="/2022/01/07/win32-Calculator/assets/image-20220109122803673.png" data-caption="image-20220109122803673"><img src="/2022/01/07/win32-Calculator/assets/image-20220109122803673.png" alt="image-20220109122803673"></a></p>
 <p>frida-trace会在当前文件夹下生成<code>__handlers__</code>文件夹，里面储存着需要hook函数的js文件，更改此文件中的内容即可对函数进行操作。像之前说的，直接篡改相应的内存地址即可。这里直接拿出最终exp（注释内容为调试所需，dump内存之类的）：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">onEnter</span>(<span class="params">log, args, state</span>) &#123;</span><br><span class="line">    <span class="comment">// frida-trace -f C:\Windows\System32\win32calc.exe --decorate -a &quot;win32calc.exe!0x4753c&quot;</span></span><br><span class="line">    <span class="title function_">log</span>(<span class="string">&#x27;sub_4753c() [win32calc.exe]&#x27;</span>);</span><br><span class="line">    <span class="comment">// **R8, *R9</span></span><br><span class="line">    <span class="keyword">var</span> <span class="variable constant_">R8</span> = <span class="title function_">ptr</span>(args[<span class="number">2</span>]);</span><br><span class="line">    <span class="keyword">var</span> <span class="variable constant_">R9</span> = <span class="title function_">ptr</span>(args[<span class="number">3</span>]);</span><br><span class="line">    <span class="comment">// log(R8);</span></span><br><span class="line">    <span class="comment">// log(R9);</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> oldValR9 = <span class="variable constant_">R9</span>.<span class="title function_">readPointer</span>().<span class="title function_">add</span>(<span class="string">&quot;0xc&quot;</span>);</span><br><span class="line">    <span class="comment">// log(oldValR9);</span></span><br><span class="line">    <span class="comment">// log(hexdump(oldValR9, &#123;</span></span><br><span class="line">    <span class="comment">// offset: 0,</span></span><br><span class="line">    <span class="comment">// length: 32,</span></span><br><span class="line">    <span class="comment">// header: true,</span></span><br><span class="line">    <span class="comment">// ansi: true</span></span><br><span class="line">    <span class="comment">// &#125;)); </span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> newValR9 = oldValR9.<span class="title function_">writePointer</span>(<span class="title function_">ptr</span>(<span class="string">&quot;0x02&quot;</span>));</span><br><span class="line">    <span class="comment">// log(hexdump(oldValR9, &#123;</span></span><br><span class="line">    <span class="comment">// offset: 0,</span></span><br><span class="line">    <span class="comment">// length: 32,</span></span><br><span class="line">    <span class="comment">// header: true,</span></span><br><span class="line">    <span class="comment">// ansi: true</span></span><br><span class="line">    <span class="comment">// &#125;)); </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>再次运行命令后就会发现1+1&#x3D;3了，成果展示：</p>
-<p><img src="/2022/01/07/win32-Calculator/assets/ezgif.com-gif-maker.gif" alt="ezgif.com-gif-maker"></p>
+<p><a data-fancybox="gallery" data-src="/2022/01/07/win32-Calculator/assets/ezgif.com-gif-maker.gif" data-caption="ezgif.com-gif-maker"><img src="/2022/01/07/win32-Calculator/assets/ezgif.com-gif-maker.gif" alt="ezgif.com-gif-maker"></a></p>
 <h2 id="Reference-1"><a href="#Reference-1" class="headerlink" title="Reference"></a>Reference</h2><p><a target="_blank" rel="noopener" href="https://frida.re/docs/frida-trace/">https://frida.re/docs/frida-trace/</a></p>
 <p><a target="_blank" rel="noopener" href="https://frida.re/docs/javascript-api/">https://frida.re/docs/javascript-api/</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/win32calc/win32calc/releases">https://github.com/win32calc/win32calc/releases</a></p>
@@ -350,6 +356,11 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 
 </body>
 </html>
