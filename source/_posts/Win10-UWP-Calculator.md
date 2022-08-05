@@ -1,8 +1,9 @@
 ---
 title: Win10 UWP Calculator
 date: 2022-04-17 22:31:00
-tags: Spark Program
 category: Reverse
+tags: 
+    - Spark Program
 ---
 
 **Goals:** 

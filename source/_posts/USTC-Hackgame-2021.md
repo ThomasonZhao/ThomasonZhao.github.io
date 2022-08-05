@@ -1,8 +1,9 @@
 ---
 title: USTC Hackgame 2021
 date: 2021-11-04 17:45:00
-tags: USTC Hackgame
 category: Writeup
+tags: 
+    - USTC Hackgame
 ---
 
 此为Thomason的个人WP，官方WP：[USTC-Hackergame/hackergame2021-writeups: 中国科学技术大学第八届信息安全大赛的官方与非官方题解 (github.com)](https://github.com/USTC-Hackergame/hackergame2021-writeups)。个人战绩如下：

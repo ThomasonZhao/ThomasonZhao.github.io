@@ -1,8 +1,9 @@
 ---
 title: ASIS CTF 2021
 date: 2021-12-30 10:58:00
-tags: ASIS CTF
 category: Writeup
+tags: 
+	- ASIS CTF
 ---
 
 ## Web

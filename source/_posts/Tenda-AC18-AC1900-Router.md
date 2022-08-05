@@ -1,6 +1,7 @@
 ---
 title: Tenda AC18 AC1900 Router
 date: 2022-08-05 00:54:02
+category: CVE Vulnerability
 tags: 
     - CVE-2018-5767
     - CVE-2018-5768 
@@ -9,7 +10,6 @@ tags:
     - CVE-2020-15916 
     - CVE-2022-28556 
     - CVE-2022-28557
-category: CVE Vulnerability
 ---
 
 **Objectives:**
