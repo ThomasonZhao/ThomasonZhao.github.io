@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="Calculator-Challenge Description  difficulty: medium  type: basic  make the calulator in your system 1+1&#x3D;3. Skills Reverse Engineering Hooking Tracing Debugging Tools Disasmbler + Decompiler : ID">
+    <meta name="description" content="Challenge Descriptiondifficulty: mediumtype: basicmake the calulator in your system 1+1&#x3D;3. SkillsReverse EngineeringHookingTracingDebugging ToolsDisasmbler + Decompiler : IDA Pro&#x2F;GhidraDebug">
 <meta property="og:type" content="article">
 <meta property="og:title" content="win32 Calculator">
 <meta property="og:url" content="https://thomasonzhao.github.io/2022/01/07/win32-Calculator/index.html">
 <meta property="og:site_name" content="Thomason&#39;s Blog">
-<meta property="og:description" content="Calculator-Challenge Description  difficulty: medium  type: basic  make the calulator in your system 1+1&#x3D;3. Skills Reverse Engineering Hooking Tracing Debugging Tools Disasmbler + Decompiler : ID">
+<meta property="og:description" content="Challenge Descriptiondifficulty: mediumtype: basicmake the calulator in your system 1+1&#x3D;3. SkillsReverse EngineeringHookingTracingDebugging ToolsDisasmbler + Decompiler : IDA Pro&#x2F;GhidraDebug">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://thomasonzhao.github.io/2022/01/07/win32-Calculator/assets/image-20220109120553100.png">
 <meta property="og:image" content="https://thomasonzhao.github.io/2022/01/07/win32-Calculator/assets/image-20220109121215992-16502356803191.png">
@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://thomasonzhao.github.io/2022/01/07/win32-Calculator/assets/image-20220109122803673.png">
 <meta property="og:image" content="https://thomasonzhao.github.io/2022/01/07/win32-Calculator/assets/ezgif.com-gif-maker.gif">
 <meta property="article:published_time" content="2022-01-07T21:07:00.000Z">
-<meta property="article:modified_time" content="2022-08-05T06:08:46.166Z">
+<meta property="article:modified_time" content="2022-08-06T21:59:32.921Z">
 <meta property="article:author" content="Thomason Zhao">
 <meta property="article:tag" content="Spark Program">
 <meta name="twitter:card" content="summary">
@@ -124,7 +124,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Calculator-Challenge-Description"><span class="toc-number">1.</span> <span class="toc-text">Calculator-Challenge Description</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Skills"><span class="toc-number">1.1.</span> <span class="toc-text">Skills</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tools"><span class="toc-number">1.2.</span> <span class="toc-text">Tools</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keywords"><span class="toc-number">1.3.</span> <span class="toc-text">Keywords</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">1.4.</span> <span class="toc-text">Reference</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Calculator-Write-up"><span class="toc-number">2.</span> <span class="toc-text">Calculator-Write up</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Static-Analysis"><span class="toc-number">2.1.</span> <span class="toc-text">Static Analysis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Debugging"><span class="toc-number">2.2.</span> <span class="toc-text">Debugging</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hooking"><span class="toc-number">2.3.</span> <span class="toc-text">Hooking</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference-1"><span class="toc-number">2.4.</span> <span class="toc-text">Reference</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge-Description"><span class="toc-number">1.</span> <span class="toc-text">Challenge Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Skills"><span class="toc-number">2.</span> <span class="toc-text">Skills</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tools"><span class="toc-number">3.</span> <span class="toc-text">Tools</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keywords"><span class="toc-number">4.</span> <span class="toc-text">Keywords</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Write-up"><span class="toc-number">5.</span> <span class="toc-text">Write up</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Static-Analysis"><span class="toc-number">5.1.</span> <span class="toc-text">Static Analysis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Debugging"><span class="toc-number">5.2.</span> <span class="toc-text">Debugging</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hooking"><span class="toc-number">5.3.</span> <span class="toc-text">Hooking</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reference"><span class="toc-number">5.4.</span> <span class="toc-text">Reference</span></a></li></ol></li></ol>
     </div>
   </span>
 </div>
@@ -157,7 +157,7 @@
       
     <div class="article-category">
         <i class="fas fa-archive"></i>
-        <a class="category-link" href="/categories/Reverse/">Reverse</a>
+        <a class="category-link" href="/categories/Project-Writeup/">Project Writeup</a>
     </div>
 
 
@@ -173,20 +173,19 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h1 id="Calculator-Challenge-Description"><a href="#Calculator-Challenge-Description" class="headerlink" title="Calculator-Challenge Description"></a>Calculator-Challenge Description</h1><p>  difficulty: medium<br>  type: basic<br>  make the calulator in your system 1+1&#x3D;3.</p>
-<h2 id="Skills"><a href="#Skills" class="headerlink" title="Skills"></a>Skills</h2><p> Reverse Engineering<br> Hooking<br> Tracing<br> Debugging</p>
-<h2 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h2><p> Disasmbler + Decompiler : IDA Pro&#x2F;Ghidra<br> Debugger: windbg&#x2F;ollydbg&#x2F;gdb<br> Tracer&#x2F;hook: frida</p>
-<h2 id="Keywords"><a href="#Keywords" class="headerlink" title="Keywords"></a>Keywords</h2><p> frida hook<br> ida pro</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>IDA Pro 权威指南</p>
-<h1 id="Calculator-Write-up"><a href="#Calculator-Write-up" class="headerlink" title="Calculator-Write up"></a>Calculator-Write up</h1><p>采用的是Win7的 win32calc.exe 作为逆向对象，没有采用Win10自带计算器主要是因为它的可执行文件和进程文件不是一个，不太好进行静态分析（不知道怎么进行操作）。Win10计算器已经开源：<a target="_blank" rel="noopener" href="https://github.com/microsoft/calculator">https://github.com/microsoft/calculator</a></p>
-<h2 id="Static-Analysis"><a href="#Static-Analysis" class="headerlink" title="Static Analysis"></a>Static Analysis</h2><p>用管理员权限打开IDA，直接在System32文件夹下打开win32calc.exe文件进行静态分析（管理员权限为了后期能够动态调试，纯静态调试可以把exe文件复制到工作目录）。IDA会自动从Microsoft官方地址下载相关的Symbol Table，所以在逆向这个文件时大部分函数都是有名字的，大大加速了逆向进度，同时也抛出疑问：</p>
+    <h2 id="Challenge-Description"><a href="#Challenge-Description" class="headerlink" title="Challenge Description"></a>Challenge Description</h2><p>difficulty: medium<br>type: basic<br>make the calulator in your system 1+1&#x3D;3.</p>
+<h2 id="Skills"><a href="#Skills" class="headerlink" title="Skills"></a>Skills</h2><p>Reverse Engineering<br>Hooking<br>Tracing<br>Debugging</p>
+<h2 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h2><p>Disasmbler + Decompiler : IDA Pro&#x2F;Ghidra<br>Debugger: windbg&#x2F;ollydbg&#x2F;gdb<br>Tracer&#x2F;hook: frida</p>
+<h2 id="Keywords"><a href="#Keywords" class="headerlink" title="Keywords"></a>Keywords</h2><p>frida hook<br>ida pro</p>
+<h2 id="Write-up"><a href="#Write-up" class="headerlink" title="Write up"></a>Write up</h2><p>采用的是Win7的 win32calc.exe 作为逆向对象，没有采用Win10自带计算器主要是因为它的可执行文件和进程文件不是一个，不太好进行静态分析（不知道怎么进行操作）。Win10计算器已经开源：<a target="_blank" rel="noopener" href="https://github.com/microsoft/calculator">https://github.com/microsoft/calculator</a></p>
+<h3 id="Static-Analysis"><a href="#Static-Analysis" class="headerlink" title="Static Analysis"></a>Static Analysis</h3><p>用管理员权限打开IDA，直接在System32文件夹下打开win32calc.exe文件进行静态分析（管理员权限为了后期能够动态调试，纯静态调试可以把exe文件复制到工作目录）。IDA会自动从Microsoft官方地址下载相关的Symbol Table，所以在逆向这个文件时大部分函数都是有名字的，大大加速了逆向进度，同时也抛出疑问：</p>
 <blockquote>
 <p>  如果计算器没有符号(这个时候函数名都无了)，该怎样搞？</p>
 </blockquote>
 <p>对着函数列表一通找，由于命名足够合理，很容易猜测函数的目的是什么，并且还有相关前缀，例如<code>CCalcEngine</code>，<code>CCalcHistory</code>，<code>CcalculatorController</code>等。现在就需要开始想一想要完成1+1&#x3D;3这个任务的条件是什么了。当按下1+1&#x3D;这几个按键时会调用很多不同的函数（在动态调试的时候稍微留意了一下），比如接受按键类型的函数，运算函数，运算结果显示函数。在一整条调用链里的任何一个地方都可以进行修改。</p>
 <p>是在一开始过滤了其他不相关函数直接留下了<code>DoOperation</code>函数，猜测可能存在运算。在F5反汇编后一系列的过滤和调用更加证实了猜想很可能是正确的。</p>
 <p><a data-fancybox="gallery" data-src="/2022/01/07/win32-Calculator/assets/image-20220109120553100.png" data-caption="image-20220109120553100"><img src="/2022/01/07/win32-Calculator/assets/image-20220109120553100.png" alt="image-20220109120553100"></a></p>
-<h2 id="Debugging"><a href="#Debugging" class="headerlink" title="Debugging"></a>Debugging</h2><p>在函数开头位置下断点，用IDA内选择Windbg动态调试计算器，结果果然像之前猜想的那样停在了断点处。说明这个函数确实是在调用链之中。</p>
+<h3 id="Debugging"><a href="#Debugging" class="headerlink" title="Debugging"></a>Debugging</h3><p>在函数开头位置下断点，用IDA内选择Windbg动态调试计算器，结果果然像之前猜想的那样停在了断点处。说明这个函数确实是在调用链之中。</p>
 <p><a data-fancybox="gallery" data-src="/2022/01/07/win32-Calculator/assets/image-20220109121215992-16502356803191.png" data-caption="image-20220109121215992"><img src="/2022/01/07/win32-Calculator/assets/image-20220109121215992-16502356803191.png" alt="image-20220109121215992"></a></p>
 <p>之后进行单步调试，看看在函数内部发生了什么。在过完一系列的if-else之后调用了一个叫<code>addrat</code>的函数（看起来就很像加法函数Doge）。F7进入函数内部瞧瞧发现它调用了<code>addnum</code>函数，<code>addnum</code>函数调用了<code>_addnum</code>函数，这更像加法函数了！多调试几次可以发现如果使用乘法会调用<code>mulrat</code>函数，以此类推。由此可以大概猜测函数调用链如下：</p>
 <p>按下等号–&gt;调用<code>DoOperation</code>确定算数方法和内容–&gt;调用相关算数函数–&gt;给系统做交互最终显示在屏幕上。</p>
@@ -196,7 +195,7 @@
 <p>经过多次测试，发现int是个常数，不管输入数值如何都是不会变的。因此直接去内存中找这两个指针所指的地址。如图所示为参数a4所指的值，右边8byte的区域就是输入计算的数值了，完成任务只需要去篡改内存即可。</p>
 <p>关于这里为什么指针指的是前面部分而不是直接指向数值（一开始还找了好久找不到输入的数字去哪了），猜测可能是计算器支持多种计算方式还有科学计数法，用其他的一些方式表示数字。</p>
 <p><a data-fancybox="gallery" data-src="/2022/01/07/win32-Calculator/assets/image-20220109141437411.png" data-caption="image-20220109141437411"><img src="/2022/01/07/win32-Calculator/assets/image-20220109141437411.png" alt="image-20220109141437411"></a></p>
-<h2 id="Hooking"><a href="#Hooking" class="headerlink" title="Hooking"></a>Hooking</h2><p>了解了函数调用链后便可以用frida-trace去hook关键的DoOperation函数了，位置就选在Debugging时下断点的地方，算好偏移地址，启动计算器。</p>
+<h3 id="Hooking"><a href="#Hooking" class="headerlink" title="Hooking"></a>Hooking</h3><p>了解了函数调用链后便可以用frida-trace去hook关键的DoOperation函数了，位置就选在Debugging时下断点的地方，算好偏移地址，启动计算器。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; frida<span class="literal">-trace</span> <span class="operator">-f</span> C:\Windows\System32\win32calc.exe <span class="literal">--decorate</span> <span class="literal">-a</span> <span class="string">&quot;win32calc.exe!0x4753c&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>frida-trace不会中断程序运行，但是在终端可以看到打印一行字。每当按下&#x3D;号进行运算时，终端就会打印，说明位置应该是没有问题的。</p>
@@ -206,7 +205,7 @@
 
 <p>再次运行命令后就会发现1+1&#x3D;3了，成果展示：</p>
 <p><a data-fancybox="gallery" data-src="/2022/01/07/win32-Calculator/assets/ezgif.com-gif-maker.gif" data-caption="ezgif.com-gif-maker"><img src="/2022/01/07/win32-Calculator/assets/ezgif.com-gif-maker.gif" alt="ezgif.com-gif-maker"></a></p>
-<h2 id="Reference-1"><a href="#Reference-1" class="headerlink" title="Reference"></a>Reference</h2><p><a target="_blank" rel="noopener" href="https://frida.re/docs/frida-trace/">https://frida.re/docs/frida-trace/</a></p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p><a target="_blank" rel="noopener" href="https://frida.re/docs/frida-trace/">https://frida.re/docs/frida-trace/</a></p>
 <p><a target="_blank" rel="noopener" href="https://frida.re/docs/javascript-api/">https://frida.re/docs/javascript-api/</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/win32calc/win32calc/releases">https://github.com/win32calc/win32calc/releases</a></p>
 <p><a target="_blank" rel="noopener" href="https://tianyu-code.top/%E6%B1%87%E7%BC%96/%E5%AF%84%E5%AD%98%E5%99%A8%E4%BB%8B%E7%BB%8D/">https://tianyu-code.top/%E6%B1%87%E7%BC%96/%E5%AF%84%E5%AD%98%E5%99%A8%E4%BB%8B%E7%BB%8D/</a></p>
@@ -240,7 +239,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Calculator-Challenge-Description"><span class="toc-number">1.</span> <span class="toc-text">Calculator-Challenge Description</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Skills"><span class="toc-number">1.1.</span> <span class="toc-text">Skills</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tools"><span class="toc-number">1.2.</span> <span class="toc-text">Tools</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keywords"><span class="toc-number">1.3.</span> <span class="toc-text">Keywords</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">1.4.</span> <span class="toc-text">Reference</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Calculator-Write-up"><span class="toc-number">2.</span> <span class="toc-text">Calculator-Write up</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Static-Analysis"><span class="toc-number">2.1.</span> <span class="toc-text">Static Analysis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Debugging"><span class="toc-number">2.2.</span> <span class="toc-text">Debugging</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hooking"><span class="toc-number">2.3.</span> <span class="toc-text">Hooking</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference-1"><span class="toc-number">2.4.</span> <span class="toc-text">Reference</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge-Description"><span class="toc-number">1.</span> <span class="toc-text">Challenge Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Skills"><span class="toc-number">2.</span> <span class="toc-text">Skills</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tools"><span class="toc-number">3.</span> <span class="toc-text">Tools</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keywords"><span class="toc-number">4.</span> <span class="toc-text">Keywords</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Write-up"><span class="toc-number">5.</span> <span class="toc-text">Write up</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Static-Analysis"><span class="toc-number">5.1.</span> <span class="toc-text">Static Analysis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Debugging"><span class="toc-number">5.2.</span> <span class="toc-text">Debugging</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hooking"><span class="toc-number">5.3.</span> <span class="toc-text">Hooking</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reference"><span class="toc-number">5.4.</span> <span class="toc-text">Reference</span></a></li></ol></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
