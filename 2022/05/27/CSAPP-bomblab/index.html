@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="This is the writeup for CSAPP bomblab Tool: IDA&#x2F;Ghidra, pwndbg Phase 1Phase 1 compare input with a string originally inside the program.  1Border relations with Canada have never been better.  So">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSAPP bomblab">
+<meta property="og:url" content="https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/index.html">
+<meta property="og:site_name" content="Thomason&#39;s Blog">
+<meta property="og:description" content="This is the writeup for CSAPP bomblab Tool: IDA&#x2F;Ghidra, pwndbg Phase 1Phase 1 compare input with a string originally inside the program.  1Border relations with Canada have never been better.  So">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-05-27T07:55:00.000Z">
+<meta property="article:modified_time" content="2022-08-06T21:26:05.629Z">
+<meta property="article:author" content="Thomason Zhao">
+<meta property="article:tag" content="CSAPP Labs">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CSAPP bomblab</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/06/16/CSAPP-attacklab/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/05/19/CSAPP-datalab/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&text=CSAPP bomblab"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&title=CSAPP bomblab"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&is_video=false&description=CSAPP bomblab"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CSAPP bomblab&body=Check out this article: https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&title=CSAPP bomblab"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&title=CSAPP bomblab"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&title=CSAPP bomblab"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&title=CSAPP bomblab"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&name=CSAPP bomblab&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&t=CSAPP bomblab"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-1"><span class="toc-number">1.</span> <span class="toc-text">Phase 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-2"><span class="toc-number">2.</span> <span class="toc-text">Phase 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-3"><span class="toc-number">3.</span> <span class="toc-text">Phase 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-4"><span class="toc-number">4.</span> <span class="toc-text">Phase 4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-5"><span class="toc-number">5.</span> <span class="toc-text">Phase 5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-6"><span class="toc-number">6.</span> <span class="toc-text">Phase 6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Secret-Phase"><span class="toc-number">7.</span> <span class="toc-text">Secret Phase</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        CSAPP bomblab
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thomason Zhao</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-05-27T07:55:00.000Z" itemprop="datePublished">2022-05-27</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Writeup/">Writeup</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CSAPP-Labs/" rel="tag">CSAPP Labs</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>This is the writeup for CSAPP bomblab</p>
+<p>Tool: IDA&#x2F;Ghidra, pwndbg</p>
+<h2 id="Phase-1"><a href="#Phase-1" class="headerlink" title="Phase 1"></a>Phase 1</h2><p>Phase 1 compare input with a string originally inside the program. </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Border relations with Canada have never been better.</span><br></pre></td></tr></table></figure>
+
+<p>So input the same string can defuse the bomb</p>
+<h2 id="Phase-2"><a href="#Phase-2" class="headerlink" title="Phase 2"></a>Phase 2</h2><p>Phase 2 read in 6 numbers in sequence. There is a while loop checking that the number in the back should be twice the one in the front. </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 2 4 8 16 32</span><br></pre></td></tr></table></figure>
+
+<h2 id="Phase-3"><a href="#Phase-3" class="headerlink" title="Phase 3"></a>Phase 3</h2><p>Phase 3 read in 2 numbers. The first number used as a variable in a switch statement of total 8 choices. From the disassembler, we can know different value that will be compared with our second number. So find the right case you want to choose and input them as pairs</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 207</span><br></pre></td></tr></table></figure>
+
+<h2 id="Phase-4"><a href="#Phase-4" class="headerlink" title="Phase 4"></a>Phase 4</h2><p>Phase 4 also read in 2 numbers. The first number should be less than or equal to <code>0xE = 14</code>. There is a function called <code>func4</code> that is a recursive function, the input number should make its return value equal to 0. After some test, input <code>0</code> can return <code>0</code>, so just simply solved it. </p>
+<p>Then the program just simply compare the second value with 0. If it is, you will pass the test, otherwise the bomb will explode. </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 0</span><br></pre></td></tr></table></figure>
+
+<h2 id="Phase-5"><a href="#Phase-5" class="headerlink" title="Phase 5"></a>Phase 5</h2><p>Phase 6 read in string with length 6, encrypt&#x2F;decrypt it in some way and compare the result of the encryption&#x2F;decryption with <code>flyers</code>. </p>
+<p>It take an <code>AND</code> operation to the input string byte, which result only the half of the byte. Ex. <code>f = 0x66; 0x66 AND 0x0f = 0x06</code>. The program use the last half byte as the index to get the characters in the array. If the output of those character become <code>flyers</code>, you defuse the bomb.</p>
+<p>The encryption&#x2F;decryption array:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">unsigned char array_3449[] =</span><br><span class="line">&#123;</span><br><span class="line">  0x6D, 0x61, 0x64, 0x75, 0x69, 0x65, 0x72, 0x73, 0x6E, 0x66, </span><br><span class="line">  0x6F, 0x74, 0x76, 0x62, 0x79, 0x6C</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ionefg</span><br></pre></td></tr></table></figure>
+
+<h2 id="Phase-6"><a href="#Phase-6" class="headerlink" title="Phase 6"></a>Phase 6</h2><p>Phase 6 read in 6 numbers. First, there are two nested loop to make sure every input number is less or equal to 6, and there are no number that next to each other are equal. Ex:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1 3 4 6 9 2		(X) because 9 &gt; 6</span><br><span class="line">1 3 6 6 2 4		(X) because 6 = 6 and they are next to each other</span><br></pre></td></tr></table></figure>
+
+<p>Then there is a second loop use 7 minus each input number and store the value in the same position as the original input. </p>
+<p>The third loop initialize the “node” for the next loop. There are 6 nodes in total (also 6 input).  </p>
+<p>The fourth loop set up the pointer for each “node” by the sequence of the input. Similar to an object, the “node” here have 8 byte to store their own value and another 8 byte point to another node. </p>
+<p>The last loop examine the “node chain” to make sure it is in decreasing or same order.  </p>
+<p>After debugging, the pointing direction should be:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node3 -&gt; node4 -&gt; node5 -&gt; node6 -&gt; node1 -&gt; node2</span><br></pre></td></tr></table></figure>
+
+<p>The solution should be (remember, the second loop reverse the inputs if we choose not to have repeated number):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4 3 2 1 6 5</span><br></pre></td></tr></table></figure>
+
+<h2 id="Secret-Phase"><a href="#Secret-Phase" class="headerlink" title="Secret Phase"></a>Secret Phase</h2><p>If we take a specific look at the <code>phase_defused</code> function, we can see that if the <code>num_input_strings</code>, which counting the number of inputs, equal to 6, another branch will open up. </p>
+<p>After dynamic analysis, the new branch in the <code>phase_defused</code> function redo the <code>sscanf</code> function on the input of phase 4:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sscanf</span>(PHASE_4_str, <span class="string">&quot;%d %d %s&quot;</span>, rdx, rcx, r8);</span><br></pre></td></tr></table></figure>
+
+<p>Then compare the contents of the last string with <code>DrEvil</code>. If equal, the checks passed, successfully into the secrete phase. But as it said: <code>But finding it and solving it are quite different...</code></p>
+<p>The secret phase read in string and convert it to long int. The value after convert should less than 1000. Then call the <code>fun7</code>, another recursive function, with the parameter of <code>char *a1, input_val</code>. <code>a1</code> is an array in the program <code>.data</code> section, which we are able to access by disassembler. The return value of <code>fun7</code> should equal to 2, then we defuse the secret phase. </p>
+<p>There are two recursive branches for <code>fun7</code>. The whole <code>fun7</code> looks like this:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// error case</span></span><br><span class="line"><span class="keyword">if</span> (!a1)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// base case</span></span><br><span class="line"><span class="keyword">if</span> (*a1 = a2)</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// recursive branches</span></span><br><span class="line"><span class="keyword">if</span> (*a1 &gt; a2)</span><br><span class="line">	<span class="keyword">return</span> <span class="number">2</span> * fun7(*(a1 + <span class="number">0x8</span>), input_val);</span><br><span class="line"><span class="keyword">if</span> (*a1 &lt; a2)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * fun7(*(a1 + <span class="number">0x10</span>), input_val) + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p> So in order to make the the return value to be 2, we may go in the first branch for first call, go in the second branch for second call, and terminate the recursion for third call. </p>
+<p>After examine the array, we can easily find the solution for the secret phase follow the procedure above. </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
+
+
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-1"><span class="toc-number">1.</span> <span class="toc-text">Phase 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-2"><span class="toc-number">2.</span> <span class="toc-text">Phase 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-3"><span class="toc-number">3.</span> <span class="toc-text">Phase 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-4"><span class="toc-number">4.</span> <span class="toc-text">Phase 4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-5"><span class="toc-number">5.</span> <span class="toc-text">Phase 5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-6"><span class="toc-number">6.</span> <span class="toc-text">Phase 6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Secret-Phase"><span class="toc-number">7.</span> <span class="toc-text">Secret Phase</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&text=CSAPP bomblab"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&title=CSAPP bomblab"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&is_video=false&description=CSAPP bomblab"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CSAPP bomblab&body=Check out this article: https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&title=CSAPP bomblab"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&title=CSAPP bomblab"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&title=CSAPP bomblab"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&title=CSAPP bomblab"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&name=CSAPP bomblab&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/05/27/CSAPP-bomblab/&t=CSAPP bomblab"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    Thomason Zhao
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="This is the writeup for CSAPP datalab bitXorXOR gate can be composed by couple NAND gate. Use legal ops ~ &amp; to construct NAND gate to get XOR. 12345678int bitXor(int x, int y) &amp;#123;    &#x2F;* Use ~ a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSAPP datalab">
+<meta property="og:url" content="https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/index.html">
+<meta property="og:site_name" content="Thomason&#39;s Blog">
+<meta property="og:description" content="This is the writeup for CSAPP datalab bitXorXOR gate can be composed by couple NAND gate. Use legal ops ~ &amp; to construct NAND gate to get XOR. 12345678int bitXor(int x, int y) &amp;#123;    &#x2F;* Use ~ a">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-05-19T15:26:00.000Z">
+<meta property="article:modified_time" content="2022-08-06T21:22:32.512Z">
+<meta property="article:author" content="Thomason Zhao">
+<meta property="article:tag" content="CSAPP Labs">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CSAPP datalab</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/05/27/CSAPP-bomblab/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/04/17/Win10-UWP-Calculator/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&text=CSAPP datalab"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&title=CSAPP datalab"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&is_video=false&description=CSAPP datalab"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CSAPP datalab&body=Check out this article: https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&title=CSAPP datalab"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&title=CSAPP datalab"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&title=CSAPP datalab"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&title=CSAPP datalab"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&name=CSAPP datalab&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&t=CSAPP datalab"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#bitXor"><span class="toc-number">1.</span> <span class="toc-text">bitXor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tmin"><span class="toc-number">2.</span> <span class="toc-text">tmin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#isTmax"><span class="toc-number">3.</span> <span class="toc-text">isTmax</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#allOddBits"><span class="toc-number">4.</span> <span class="toc-text">allOddBits</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#negate"><span class="toc-number">5.</span> <span class="toc-text">negate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#isAsciiDigit"><span class="toc-number">6.</span> <span class="toc-text">isAsciiDigit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conditional"><span class="toc-number">7.</span> <span class="toc-text">conditional</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#isLessOrEqual"><span class="toc-number">8.</span> <span class="toc-text">isLessOrEqual</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#logicalNeg"><span class="toc-number">9.</span> <span class="toc-text">logicalNeg</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#howManyBits"><span class="toc-number">10.</span> <span class="toc-text">*howManyBits</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#floatScale2"><span class="toc-number">11.</span> <span class="toc-text">floatScale2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#float-Float2Int"><span class="toc-number">12.</span> <span class="toc-text">float Float2Int</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#floatPower2"><span class="toc-number">13.</span> <span class="toc-text">floatPower2</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        CSAPP datalab
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thomason Zhao</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-05-19T15:26:00.000Z" itemprop="datePublished">2022-05-19</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Writeup/">Writeup</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CSAPP-Labs/" rel="tag">CSAPP Labs</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>This is the writeup for CSAPP datalab</p>
+<h2 id="bitXor"><a href="#bitXor" class="headerlink" title="bitXor"></a>bitXor</h2><p><code>XOR</code> gate can be composed by couple <code>NAND</code> gate. Use legal ops <code>~ &amp;</code> to construct <code>NAND</code> gate to get <code>XOR</code>.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">bitXor</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">    <span class="comment">/* Use ~ and &amp; constuct NAND gate to calculate XOR */</span></span><br><span class="line">    <span class="type">int</span> temp = ~(x &amp; y);</span><br><span class="line">    <span class="type">int</span> a = ~(x &amp; temp);</span><br><span class="line">    <span class="type">int</span> b = ~(y &amp; temp);</span><br><span class="line">    <span class="type">int</span> result = ~(a &amp; b);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="tmin"><a href="#tmin" class="headerlink" title="tmin"></a>tmin</h2><p>$T_{min}$ is <code>0x80000000 = 0b1000...0</code>. Do bit shift on 1 will get the correct result</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">tmin</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">/* Tmin is 0b1000...0, so doing bit shift on 1 */</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> &lt;&lt; <span class="number">31</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="isTmax"><a href="#isTmax" class="headerlink" title="isTmax"></a>isTmax</h2><p>$T_{max}$ is <code>0x700000000 = 0b0111...1</code>, which is $T_{min} &#x3D; T_{max} + 1$. Also, we know that $T_{min} + T_{max} &#x3D; 0$. So we may use this advantage to solve the puzzle. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">isTmax</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    <span class="comment">/* Tmax is 0b0111...1, it is Tmin - 1. Tmin + Tmax = 1 */</span></span><br><span class="line">    <span class="keyword">return</span> !(~((x + <span class="number">1</span>) + x) | !(x + <span class="number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="allOddBits"><a href="#allOddBits" class="headerlink" title="allOddBits"></a>allOddBits</h2><p>To satisfy the requirement of having all odd bits to be 1, the simplest number is <code>0xAAAAAAAA = 0b1010...1010</code>.  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">allOddBits</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    <span class="comment">/* The simplest number satisfied the requirement is 0xAAA..A, so make it and do comparision */</span></span><br><span class="line">    <span class="type">int</span> temp = <span class="number">0xAA</span>;</span><br><span class="line">    <span class="type">int</span> oddBits = temp &lt;&lt; <span class="number">24</span>;</span><br><span class="line">    oddBits += temp &lt;&lt; <span class="number">16</span>;</span><br><span class="line">    oddBits += temp &lt;&lt; <span class="number">8</span>;</span><br><span class="line">    oddBits += temp;</span><br><span class="line">    <span class="keyword">return</span> !((x &amp; oddBits) ^ oddBits);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="negate"><a href="#negate" class="headerlink" title="negate"></a>negate</h2><p>Doing two’s complement negation. Use negate operator then add 1. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">negate</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    <span class="comment">/* Doing two&#x27;s complement negation */</span></span><br><span class="line">    <span class="type">int</span> result = ~x;</span><br><span class="line">    result += <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="isAsciiDigit"><a href="#isAsciiDigit" class="headerlink" title="isAsciiDigit"></a>isAsciiDigit</h2><p>Make sure it range from <code>0x30 ~ 0x39 (inclusive)</code> which means that <code>(x - 0x30) &gt;= 0 &amp;&amp; (0x39 - x) &gt;= 0</code>. So implement this into code. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">isAsciiDigit</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="comment">/* (x - 0x30 &gt;= 0) &amp;&amp; (0x39 - x) &gt;=0 */</span></span><br><span class="line">  <span class="type">int</span> NEG = <span class="number">1</span> &lt;&lt; <span class="number">31</span>;</span><br><span class="line">  <span class="keyword">return</span> !((x + ~<span class="number">0x30</span> + <span class="number">1</span>) &amp; NEG) &amp; !((<span class="number">0x39</span> + ~x + <span class="number">1</span>) &amp; NEG);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="conditional"><a href="#conditional" class="headerlink" title="conditional"></a>conditional</h2><p>We may use <code>!!</code> to identify if <code>x</code> is not 0. When <code>x</code> is not 0, we should have <code>y</code> side identifier to be <code>0xfff...f</code> and <code>z</code> side to be <code>0x0</code>, and when <code>x</code> is 0 vise versa. Therefore, it only satisfy one side of <code>|</code> operator, other side will be 0. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">conditional</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> z)</span> &#123;</span><br><span class="line">    <span class="comment">/* Use ~(!!x) + 1 as identifier to make sure it only satisfy one side, other side is 0*/</span></span><br><span class="line">    <span class="type">int</span> temp = ~(!!x) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> (temp &amp; y) | (~temp &amp; z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="isLessOrEqual"><a href="#isLessOrEqual" class="headerlink" title="isLessOrEqual"></a>isLessOrEqual</h2><p>Solve the problem case by case</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">isLessOrEqual</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">    <span class="comment">/* Solve it case by case. Check the sign of x and y */</span></span><br><span class="line">    <span class="type">int</span> signX = x &gt;&gt; <span class="number">31</span>;</span><br><span class="line">    <span class="type">int</span> signY = y &gt;&gt; <span class="number">31</span>;</span><br><span class="line">    <span class="keyword">return</span> (signX &amp; !signY) | (!(signX ^ signY) &amp; !((y + ~x + <span class="number">1</span>) &gt;&gt; <span class="number">31</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="logicalNeg"><a href="#logicalNeg" class="headerlink" title="logicalNeg"></a>logicalNeg</h2><p>There are two number that is same as itself after the negation, $T_{min}$ and 0. But 0 always “positive” (most significant bit is 0).</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">logicalNeg</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    <span class="comment">/* 0 is the only number that is &quot;positive&quot; after its negation */</span></span><br><span class="line">    <span class="type">int</span> negX = ~x + <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> result = ((x &gt;&gt; <span class="number">31</span>) | (negX &gt;&gt; <span class="number">31</span>)) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="howManyBits"><a href="#howManyBits" class="headerlink" title="*howManyBits"></a>*howManyBits</h2><p>I have no idea how to implement this except for stupid enumeration. I find a solution instead. </p>
+<p>The solution first flip the sign of the input if it is negative. Then, it doing a binary search on the processed input. <strong>Key here on the binary search is that he shift the input based on what it get.</strong> </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">howManyBits</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="type">int</span> sign, b1, b2, b4, b8, b16;</span><br><span class="line">  sign = (x &gt;&gt; <span class="number">31</span>);</span><br><span class="line">  x = (sign &amp; ~x) | (~sign &amp; x);</span><br><span class="line">  b16 = !!(x &gt;&gt; <span class="number">16</span>) &lt;&lt; <span class="number">4</span>;</span><br><span class="line">  x = x &gt;&gt; b16;</span><br><span class="line">  b8 = !!(x &gt;&gt; <span class="number">8</span>) &lt;&lt; <span class="number">3</span>;</span><br><span class="line">  x = x &gt;&gt; b8;</span><br><span class="line">  b4 = !!(x &gt;&gt; <span class="number">4</span>) &lt;&lt; <span class="number">2</span>;</span><br><span class="line">  x = x &gt;&gt; b4;</span><br><span class="line">  b2 = !!(x &gt;&gt; <span class="number">2</span>) &lt;&lt; <span class="number">1</span>;</span><br><span class="line">  x = x &gt;&gt; b2;</span><br><span class="line">  b1 = !!(x &gt;&gt; <span class="number">1</span>);</span><br><span class="line">  x = x &gt;&gt; b1;</span><br><span class="line">  <span class="keyword">return</span> b16 + b8 + b4 + b2 + b1 + x + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="floatScale2"><a href="#floatScale2" class="headerlink" title="floatScale2"></a>floatScale2</h2><p>In floating point part, we are allowed to use <code>if, while</code> those branch and loop, which is much easier than stuffs above. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="title function_">floatScale2</span><span class="params">(<span class="type">unsigned</span> uf)</span> &#123;</span><br><span class="line">    <span class="type">unsigned</span> frac = (uf &lt;&lt; <span class="number">9</span>) &gt;&gt; <span class="number">9</span>;</span><br><span class="line">    <span class="type">unsigned</span> <span class="built_in">exp</span> = (uf &lt;&lt; <span class="number">1</span>) &gt;&gt; <span class="number">24</span>;</span><br><span class="line">    <span class="type">unsigned</span> sign = uf &gt;&gt; <span class="number">31</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check if NaN or infinity</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">exp</span> == <span class="number">0xff</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> uf;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">exp</span> != <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">exp</span> += <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        frac &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (sign &lt;&lt; <span class="number">31</span>) + (<span class="built_in">exp</span> &lt;&lt; <span class="number">23</span>) + frac;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="float-Float2Int"><a href="#float-Float2Int" class="headerlink" title="float Float2Int"></a>float Float2Int</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">floatFloat2Int</span><span class="params">(<span class="type">unsigned</span> uf)</span> &#123;</span><br><span class="line">    <span class="type">unsigned</span> frac = (uf &lt;&lt; <span class="number">9</span>) &gt;&gt; <span class="number">9</span>;</span><br><span class="line">    <span class="type">int</span> <span class="built_in">exp</span> = (uf &lt;&lt; <span class="number">1</span>) &gt;&gt; <span class="number">24</span>;</span><br><span class="line">    <span class="type">int</span> sign = uf &gt;&gt; <span class="number">31</span>;</span><br><span class="line">    <span class="type">int</span> result;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 0 representation</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">exp</span> == <span class="number">0</span> &amp;&amp; frac == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">exp</span> -= <span class="number">127</span>;</span><br><span class="line">    result = <span class="number">1</span> &lt;&lt; <span class="built_in">exp</span>;</span><br><span class="line">    <span class="comment">// overflow</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">exp</span> &gt; <span class="number">31</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span> &lt;&lt; <span class="number">31</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 0.???...</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">exp</span> &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">exp</span> &gt; <span class="number">23</span>)&#123;</span><br><span class="line">        result += frac &lt;&lt; (<span class="built_in">exp</span> - <span class="number">23</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        result += frac &gt;&gt; (<span class="number">23</span> - <span class="built_in">exp</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (sign)&#123;</span><br><span class="line">        result = ~result + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="floatPower2"><a href="#floatPower2" class="headerlink" title="floatPower2"></a>floatPower2</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="title function_">floatPower2</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    <span class="type">unsigned</span> INF = <span class="number">0xff</span> &lt;&lt; <span class="number">23</span>;</span><br><span class="line">    <span class="type">int</span> <span class="built_in">exp</span> = x + <span class="number">127</span>;</span><br><span class="line">    <span class="comment">// overflow</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">exp</span> &gt;= <span class="number">255</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> INF;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 0.00000??...</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">exp</span> &lt;= <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">exp</span> &lt;&lt; <span class="number">23</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#bitXor"><span class="toc-number">1.</span> <span class="toc-text">bitXor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tmin"><span class="toc-number">2.</span> <span class="toc-text">tmin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#isTmax"><span class="toc-number">3.</span> <span class="toc-text">isTmax</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#allOddBits"><span class="toc-number">4.</span> <span class="toc-text">allOddBits</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#negate"><span class="toc-number">5.</span> <span class="toc-text">negate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#isAsciiDigit"><span class="toc-number">6.</span> <span class="toc-text">isAsciiDigit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conditional"><span class="toc-number">7.</span> <span class="toc-text">conditional</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#isLessOrEqual"><span class="toc-number">8.</span> <span class="toc-text">isLessOrEqual</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#logicalNeg"><span class="toc-number">9.</span> <span class="toc-text">logicalNeg</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#howManyBits"><span class="toc-number">10.</span> <span class="toc-text">*howManyBits</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#floatScale2"><span class="toc-number">11.</span> <span class="toc-text">floatScale2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#float-Float2Int"><span class="toc-number">12.</span> <span class="toc-text">float Float2Int</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#floatPower2"><span class="toc-number">13.</span> <span class="toc-text">floatPower2</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&text=CSAPP datalab"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&title=CSAPP datalab"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&is_video=false&description=CSAPP datalab"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CSAPP datalab&body=Check out this article: https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&title=CSAPP datalab"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&title=CSAPP datalab"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&title=CSAPP datalab"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&title=CSAPP datalab"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&name=CSAPP datalab&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/05/19/CSAPP-datalab/&t=CSAPP datalab"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    Thomason Zhao
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+</body>
+</html>
