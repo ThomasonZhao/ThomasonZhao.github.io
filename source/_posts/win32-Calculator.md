@@ -27,15 +27,12 @@ Tracer/hook: frida
 ## Keywords
 frida hook
 ida pro
-## Reference
-IDA Pro 权威指南
-
 
 ## Write up
 
 采用的是Win7的 win32calc.exe 作为逆向对象，没有采用Win10自带计算器主要是因为它的可执行文件和进程文件不是一个，不太好进行静态分析（不知道怎么进行操作）。Win10计算器已经开源：https://github.com/microsoft/calculator
 
-## Static Analysis
+### Static Analysis
 
 用管理员权限打开IDA，直接在System32文件夹下打开win32calc.exe文件进行静态分析（管理员权限为了后期能够动态调试，纯静态调试可以把exe文件复制到工作目录）。IDA会自动从Microsoft官方地址下载相关的Symbol Table，所以在逆向这个文件时大部分函数都是有名字的，大大加速了逆向进度，同时也抛出疑问：
 
@@ -47,7 +44,7 @@ IDA Pro 权威指南
 
 ![image-20220109120553100](assets/image-20220109120553100.png)
 
-## Debugging
+### Debugging
 
 在函数开头位置下断点，用IDA内选择Windbg动态调试计算器，结果果然像之前猜想的那样停在了断点处。说明这个函数确实是在调用链之中。
 
@@ -69,7 +66,7 @@ IDA Pro 权威指南
 
 ![image-20220109141437411](assets/image-20220109141437411.png)
 
-## Hooking
+### Hooking
 
 了解了函数调用链后便可以用frida-trace去hook关键的DoOperation函数了，位置就选在Debugging时下断点的地方，算好偏移地址，启动计算器。
 
@@ -116,7 +113,7 @@ onEnter(log, args, state) {
 
 ![ezgif.com-gif-maker](assets/ezgif.com-gif-maker.gif)
 
-## Reference
+### Reference
 
 https://frida.re/docs/frida-trace/
 
