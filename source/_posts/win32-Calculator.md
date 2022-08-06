@@ -1,37 +1,37 @@
 ---
 title: win32 Calculator
 date: 2022-01-07 15:07:00
-category: Reverse
+category: Project Writeup
 tags: 
     - Spark Program
 ---
 
-# Calculator-Challenge Description
+## Challenge Description
 
-  difficulty: medium
-  type: basic
-  make the calulator in your system 1+1=3.
+difficulty: medium
+type: basic
+make the calulator in your system 1+1=3.
 
 ## Skills 
- Reverse Engineering
- Hooking
- Tracing
- Debugging
+Reverse Engineering
+Hooking
+Tracing
+Debugging
 
 ## Tools
 
- Disasmbler + Decompiler : IDA Pro/Ghidra
- Debugger: windbg/ollydbg/gdb
- Tracer/hook: frida
+Disasmbler + Decompiler : IDA Pro/Ghidra
+Debugger: windbg/ollydbg/gdb
+Tracer/hook: frida
 
 ## Keywords
- frida hook
- ida pro
+frida hook
+ida pro
 ## Reference
 IDA Pro 权威指南
 
 
-# Calculator-Write up
+## Write up
 
 采用的是Win7的 win32calc.exe 作为逆向对象，没有采用Win10自带计算器主要是因为它的可执行文件和进程文件不是一个，不太好进行静态分析（不知道怎么进行操作）。Win10计算器已经开源：https://github.com/microsoft/calculator
 

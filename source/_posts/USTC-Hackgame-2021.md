@@ -1,7 +1,7 @@
 ---
 title: USTC Hackgame 2021
 date: 2021-11-04 17:45:00
-category: Writeup
+category: CTF Writeup
 tags: 
     - USTC Hackgame
 ---

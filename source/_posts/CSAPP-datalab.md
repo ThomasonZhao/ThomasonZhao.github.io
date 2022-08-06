@@ -1,7 +1,7 @@
 ---
 title: CSAPP datalab
 date: 2022-05-19 10:26:00
-category: Writeup
+category: Project Writeup
 tags:
   - CSAPP Labs
 ---
