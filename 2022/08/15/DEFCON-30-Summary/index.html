@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Best GiftI am honored that my team r3kapig provides this precious opportunity to participate on-site in DEF CON CTF in Las Vegas! For a beginner who has just learned security for about a year, this is">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DEFCON 30 Summary">
+<meta property="og:url" content="https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/index.html">
+<meta property="og:site_name" content="Thomason&#39;s Blog">
+<meta property="og:description" content="Best GiftI am honored that my team r3kapig provides this precious opportunity to participate on-site in DEF CON CTF in Las Vegas! For a beginner who has just learned security for about a year, this is">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/assets/badge.jpg">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/assets/CP-r3kapig.jpg">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/assets/burp-exploit.jpg">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/assets/n132-yyds.jpg">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/assets/scorebot.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/assets/win-win.jpg">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/assets/2019-yyds.jpg">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/assets/scoreboard-rules.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/assets/scoreboard-by-mmm.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/assets/photo-with-yan.jpg">
+<meta property="article:published_time" content="2022-08-15T17:51:00.000Z">
+<meta property="article:modified_time" content="2022-08-29T01:55:19.828Z">
+<meta property="article:author" content="Thomason Zhao">
+<meta property="article:tag" content="DEFCON">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/assets/badge.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>DEFCON 30 Summary</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/08/26/CTFZone-2022/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/08/05/Tenda-AC18-AC1900-Router/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&text=DEFCON 30 Summary"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&title=DEFCON 30 Summary"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&is_video=false&description=DEFCON 30 Summary"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DEFCON 30 Summary&body=Check out this article: https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&title=DEFCON 30 Summary"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&title=DEFCON 30 Summary"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&title=DEFCON 30 Summary"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&title=DEFCON 30 Summary"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&name=DEFCON 30 Summary&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&t=DEFCON 30 Summary"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Best-Gift"><span class="toc-number">1.</span> <span class="toc-text">Best Gift</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Day1-A-Rough-Start"><span class="toc-number">2.</span> <span class="toc-text">Day1: A Rough Start</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Day2-Getting-Better-and-Harder"><span class="toc-number">3.</span> <span class="toc-text">Day2: Getting Better and Harder</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Day3-End-Never-Ends-at-196"><span class="toc-number">4.</span> <span class="toc-text">Day3: End? Never Ends at 196!</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Not-Just-Hacking"><span class="toc-number">5.</span> <span class="toc-text">Not Just Hacking</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        DEFCON 30 Summary
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thomason Zhao</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-08-15T17:51:00.000Z" itemprop="datePublished">2022-08-15</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Experience/">Experience</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/DEFCON/" rel="tag">DEFCON</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Best-Gift"><a href="#Best-Gift" class="headerlink" title="Best Gift"></a>Best Gift</h2><p>I am honored that my team <code>r3kapig</code> provides this precious opportunity to participate on-site in DEF CON CTF in Las Vegas! For a beginner who has just learned security for about a year, this is undoubtedly an eye-opening experience. </p>
+<p>My birthday is around August, so I consider it my best birthday gift.  </p>
+<p><a data-fancybox="gallery" data-src="/2022/08/15/DEFCON-30-Summary/assets/badge.jpg" data-caption="badge"><img src="/2022/08/15/DEFCON-30-Summary/assets/badge.jpg" alt="badge"></a></p>
+<p><a data-fancybox="gallery" data-src="/2022/08/15/DEFCON-30-Summary/assets/CP-r3kapig.jpg" data-caption="CP-r3kapig"><img src="/2022/08/15/DEFCON-30-Summary/assets/CP-r3kapig.jpg" alt="CP-r3kapig"></a></p>
+<h2 id="Day1-A-Rough-Start"><a href="#Day1-A-Rough-Start" class="headerlink" title="Day1: A Rough Start"></a>Day1: A Rough Start</h2><p>On the first day, NI(Nautilus Institute) released three AWD challenges, <code>router_pi</code>, <code>web4_factory</code>, and  <code>perplexity</code>. I mainly focus on the <code>router_pi</code> challenge because it is a relatively easy one. </p>
+<p>The http service is buggy everywhere, almost like the <a target="_blank" rel="noopener" href="https://thomasonzhao.cn/2022/08/05/Tenda-AC18-AC1900-Router/">Tenda RouterTenda AC18 AC1900 Router
+</a>. One obvious vulnerability is the <code>ping</code> command injection. Thank the weak password. I quickly constructed a Burp Suite Intruder payload to attack other teams’ vulnbox. </p>
+<p><a data-fancybox="gallery" data-src="/2022/08/15/DEFCON-30-Summary/assets/burp-exploit.jpg" data-caption="burp-exploit"><img src="/2022/08/15/DEFCON-30-Summary/assets/burp-exploit.jpg" alt="burp-exploit"></a></p>
+<p>Since it is just at the beginning of the game, as usual, NI’s infrastructure bug results that some teams being unable to upload their patch. Only two teams patch their program to defend against this. This almost became the main source of the flag. Even close to the end of the day, we can still grab 3~4 flags each round.  </p>
+<p>However, at the end of the first day, NI announced that today’s challenges would not show up again in the captain’s meeting. So other teammates in China cannot prepare for the game during their day. </p>
+<p><strong>Live CTF</strong></p>
+<p>But good news is: God n132 wins the first round of live ctf with opponent from <code>water paddler</code>!</p>
+<p><a data-fancybox="gallery" data-src="/2022/08/15/DEFCON-30-Summary/assets/n132-yyds.jpg" data-caption="n132-yyds"><img src="/2022/08/15/DEFCON-30-Summary/assets/n132-yyds.jpg" alt="n132-yyds"></a></p>
+<h2 id="Day2-Getting-Better-and-Harder"><a href="#Day2-Getting-Better-and-Harder" class="headerlink" title="Day2: Getting Better and Harder"></a>Day2: Getting Better and Harder</h2><p>In second day, new challenges are released: <code>mambo_server</code>, <code>nivisor_v1</code>, <code>nivisor_v2</code>, <code>corewar-n1</code> (KOH), and <code>corewar-n2</code>. I turn to focus on the operation and maintenance of EXP scripts and the vulnbox. We found that some team seemed to install a persistent trojan on our vulnbox yesterday. Cause us to lose points, and no one cares about the vulnbox machine. I wrote a simple bash script to monitor the processes and <code>/tmp</code> directory. </p>
+<p>Also, since NI’s scoreboard can only show the current score at the current round (tick), I wrote a simple scorebot by python script to grab the information and sync it to the team message. Not perfect, though. It only shows the score changes compare to the last round and has no graph view. </p>
+<p><a data-fancybox="gallery" data-src="/2022/08/15/DEFCON-30-Summary/assets/scorebot.png" data-caption="scorebot"><img src="/2022/08/15/DEFCON-30-Summary/assets/scorebot.png" alt="scorebot"></a></p>
+<p>I also decided to write an AWD exp platform rather than just tmux and run it in my WSL. Probably write it in the future to prepare the next AWD-like ctfs. But at the current stage, the flags are more important than the platform. </p>
+<p>The overall situation isn’t good compared to the first day. The challenges are not that simple, and we lack people to reverse and exploit the binaries. Luckily, NI decides to release the source file of the top teams in KOH. We can copy their code to make denfence. And then something funny happens. Everyone wins the KOH (Just a joke, the horizontal row represents the team’s status as host (host and guest will compete for their code) in the core, so there still have losses, just not shown on the board). Everyone wins the same as no one wins. </p>
+<p><a data-fancybox="gallery" data-src="/2022/08/15/DEFCON-30-Summary/assets/win-win.jpg" data-caption="win-win"><img src="/2022/08/15/DEFCON-30-Summary/assets/win-win.jpg" alt="win-win"></a></p>
+<p><strong>Live CTF</strong></p>
+<p>Again in live ctf: God 2019 wins the second round of live ctf! We are now in the top 4 on the live ctf rank. </p>
+<p><a data-fancybox="gallery" data-src="/2022/08/15/DEFCON-30-Summary/assets/2019-yyds.jpg" data-caption="2019-yyds"><img src="/2022/08/15/DEFCON-30-Summary/assets/2019-yyds.jpg" alt="2019-yyds"></a></p>
+<h2 id="Day3-End-Never-Ends-at-196"><a href="#Day3-End-Never-Ends-at-196" class="headerlink" title="Day3: End? Never Ends at 196!"></a>Day3: End? Never Ends at 196!</h2><p>On the last day of the game, Our main force found a new vulnerability that could exploit almost all teams in both <code>nivisor_v1 &amp; nivisor_v2</code> on their day. Just waiting for NI to open the infrastructure and debug the service. </p>
+<p>However, it took longer than it was expected, and the game just ended 1 hour earlier than it was supposed to because of the infrastructure issue. Not only us but also other hackers get annoyed by this. So we have the following memes:</p>
+<p><a data-fancybox="gallery" data-src="/2022/08/15/DEFCON-30-Summary/assets/scoreboard-rules.png" data-caption="scoreboard-rule-meme"><img src="/2022/08/15/DEFCON-30-Summary/assets/scoreboard-rules.png" alt="scoreboard-rule-meme"></a></p>
+<p>After the end of the whole game, we asked Fish about the reason, he said that:</p>
+<blockquote>
+<p>Each time when a service get down (not pwned, just broken), we will pause the scoreboard and wait the service to reinitialize itself otherwise the game will be unfair. But seems we choose the wrong language to write the challenge. Python’s memory manipulation is too bad. So a team is constantly been attacked and we can’t fix this issue. We have not choice but to end the game.</p>
+</blockquote>
+<p><strong>Live CTF</strong></p>
+<p>Sadly, God 2019 lose in the live ctf against <code>perfect root</code>. Not because the challenge is so hard that he didn’t know how to do, but because the challenge is too simple, he just not fast enough. It’s not his fault, we all proud of him. 2019&amp;n132 YYDS!</p>
+<p>Here is he overall scoreboard provided by team <code>MMM</code>.</p>
+<p><a data-fancybox="gallery" data-src="/2022/08/15/DEFCON-30-Summary/assets/scoreboard-by-mmm.png" data-caption="scoreboard-by-mmm"><img src="/2022/08/15/DEFCON-30-Summary/assets/scoreboard-by-mmm.png" alt="scoreboard-by-mmm"></a></p>
+<h2 id="Not-Just-Hacking"><a href="#Not-Just-Hacking" class="headerlink" title="Not Just Hacking"></a>Not Just Hacking</h2><p>Luckily, team <code>Shellphish</code> is at the table next to us. I met Professor Yan and successfully took photo with him. He is the founder of <a target="_blank" rel="noopener" href="https://pwn.college/">pwn.college</a> as well as one of the main organizers of DEF CON CTF in the past few years (2018~2021), known as OOO-<a target="_blank" rel="noopener" href="https://oooverflow.io/">the Order of the Overflow</a></p>
+<p><a data-fancybox="gallery" data-src="/2022/08/15/DEFCON-30-Summary/assets/photo-with-yan.jpg" data-caption="photo-with-yan"><img src="/2022/08/15/DEFCON-30-Summary/assets/photo-with-yan.jpg" alt="photo-with-yan"></a></p>
+<p>He is a really nice guy. Owing to time constraints, I only have a short conversation with him:</p>
+<blockquote>
+<p>“Yoo~ You just finished pwncollege blue belt and now you are in DEFCON! Which team are you in?”<br>“r3kapig!”<br>“Oh r3kapig~ r3kapig will win this game, they will be the champion!”<br>“Haha, not that easy as to earn a blue belt~“<br>“Haha, for sure~“</p>
+</blockquote>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Best-Gift"><span class="toc-number">1.</span> <span class="toc-text">Best Gift</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Day1-A-Rough-Start"><span class="toc-number">2.</span> <span class="toc-text">Day1: A Rough Start</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Day2-Getting-Better-and-Harder"><span class="toc-number">3.</span> <span class="toc-text">Day2: Getting Better and Harder</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Day3-End-Never-Ends-at-196"><span class="toc-number">4.</span> <span class="toc-text">Day3: End? Never Ends at 196!</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Not-Just-Hacking"><span class="toc-number">5.</span> <span class="toc-text">Not Just Hacking</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&text=DEFCON 30 Summary"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&title=DEFCON 30 Summary"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&is_video=false&description=DEFCON 30 Summary"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DEFCON 30 Summary&body=Check out this article: https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&title=DEFCON 30 Summary"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&title=DEFCON 30 Summary"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&title=DEFCON 30 Summary"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&title=DEFCON 30 Summary"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&name=DEFCON 30 Summary&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/08/15/DEFCON-30-Summary/&t=DEFCON 30 Summary"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    Thomason Zhao
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+</body>
+</html>

