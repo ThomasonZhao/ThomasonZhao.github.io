@@ -126,7 +126,7 @@ p.interactive()
 
 The program takes in the user input and then `printf` out. Classic format string challenge. However, I stuck at reruning the `printf` function to overwrite the return address. I thought of overwrite the chain pointers and get control, but failed because one `printf` don't allow to overwrite two places (return address and a pointer) 
 
-After looking at the WP in the [reference](#reference) section, they said all the secrets are lie in the [source code](https://elixir.bootlin.com/glibc/glibc-2.31/source/stdio-common/vfprintf-internal.c#L1748). 
+After looking at the WP in the [reference](#Reference) section, they said all the secrets are lie in the [source code](https://elixir.bootlin.com/glibc/glibc-2.31/source/stdio-common/vfprintf-internal.c#L1748). 
 
 The source code tell us that when it encounters the position character, `$`, it will store the value of positions into an internal buffer called `args_value`. So when doing the overwrite by using `%n`, the value was fatched is the initial value instead of the changed value. To get rid of this, we need to construct payload without the first `$` character. Instead, we may use `%c` or `%p` to get to the right poisition on stack.
 
