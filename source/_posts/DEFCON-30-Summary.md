@@ -76,15 +76,38 @@ Here is he overall scoreboard provided by team `MMM`.
 
 ##  Not Just Hacking
 
+**Gordon Ramsay's Fish and chips!** 
+
+It's not very tasty though, not recommend. But still nice thing to try "classic English food" in American. 
+
+![fish-and-chips](assets/fish-and-chips.jpg)
+
+**Hash!** 
+
+A very good brunch resterant! It's just downstairs from the Linq hotel. Convenient and cheap, recommend. 
+
+![hash](assets/hash.jpg)
+
+**Beautiful Water Fountain!** 
+
+Although not as good as the fountain in Shenzhen Sea World, hahaha. 
+
+![water-fountain](assets/water-fountain.jpg)
+
+**People**
+
 Luckily, team `Shellphish` is at the table next to us. I met Professor Yan and successfully took photo with him. He is the founder of [pwn.college](https://pwn.college/) as well as one of the main organizers of DEF CON CTF in the past few years (2018~2021), known as OOO-[the Order of the Overflow](https://oooverflow.io/)
 
 ![photo-with-yan](assets/photo-with-yan.jpg)
 
 He is a really nice guy. Owing to time constraints, I only have a short conversation with him:
 
-> "Yoo\~ You just finished pwncollege blue belt and now you are in DEFCON! Which team are you in?"
+> "Yoo\~ You just finished pwncollege and now you are in DEFCON! Which team are you in?"
 > "r3kapig!"
 > "Oh r3kapig\~ r3kapig will win this game, they will be the champion!"
 > "Haha, not that easy as to earn a blue belt\~"
 > "Haha, for sure\~"
 
+Also, meet a lot of friends and get familiar with other team members, 2019, n132, 20, 1ph0n, saccharide, oroggs.
+
+![we-are-r3kapig](assets/we-are-r3kapig.jpg)
