@@ -565,6 +565,6 @@ https://www.anquanke.com/post/id/204403
 
 https://www.anquanke.com/post/id/231445
 
-https://xz.aliyun.com/t/7357?spm=5176.12901015.0.i12901015.65db525cQBSuI3&accounttraceid=1d7f8f3f083842dba12fa62662c34665asfk#toc-1
+https://xz.aliyun.com/t/7357
 
 https://wzt.ac.cn/2021/05/28/QEMU-networking/
