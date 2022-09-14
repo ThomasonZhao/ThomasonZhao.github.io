@@ -281,7 +281,7 @@ BL              sub_16AB4
 
 Go deep inside the `TendaTelnet` function, it will kill the existed one and relaunch a new telnet service. 
 
-```
+```c
 int __fastcall TendaTelnet(int a1)
 {
   char v3[32]; // [sp+10h] [bp-12Ch] BYREF
