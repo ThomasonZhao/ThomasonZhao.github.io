@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="This is the writeup for CSAPP shlab GoalsTo help us better understand the concept of exceptional control flow, we are going to make a tiny shell (tsh) that can run basic user commands and some built-i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSAPP shlab">
+<meta property="og:url" content="https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/index.html">
+<meta property="og:site_name" content="Thomason&#39;s Blog">
+<meta property="og:description" content="This is the writeup for CSAPP shlab GoalsTo help us better understand the concept of exceptional control flow, we are going to make a tiny shell (tsh) that can run basic user commands and some built-i">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-27T02:23:30.000Z">
+<meta property="article:modified_time" content="2022-12-27T02:26:03.392Z">
+<meta property="article:author" content="Thomason Zhao">
+<meta property="article:tag" content="CSAPP Labs">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CSAPP shlab</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/09/06/CSAPP-cachelab/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&text=CSAPP shlab"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&title=CSAPP shlab"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&is_video=false&description=CSAPP shlab"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CSAPP shlab&body=Check out this article: https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&title=CSAPP shlab"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&title=CSAPP shlab"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&title=CSAPP shlab"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&title=CSAPP shlab"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&name=CSAPP shlab&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&t=CSAPP shlab"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Goals"><span class="toc-number">1.</span> <span class="toc-text">Goals</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Evaluate-Function"><span class="toc-number">2.</span> <span class="toc-text">Evaluate Function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Background-amp-Foreground"><span class="toc-number">3.</span> <span class="toc-text">Background &amp; Foreground</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Signal-Handlers"><span class="toc-number">4.</span> <span class="toc-text">Signal Handlers</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        CSAPP shlab
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thomason Zhao</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-12-27T02:23:30.000Z" itemprop="datePublished">2022-12-26</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Project-Writeup/">Project Writeup</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CSAPP-Labs/" rel="tag">CSAPP Labs</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>This is the writeup for CSAPP shlab</p>
+<h2 id="Goals"><a href="#Goals" class="headerlink" title="Goals"></a>Goals</h2><p>To help us better understand the concept of exceptional control flow, we are going to make a tiny shell (<code>tsh</code>) that can run basic user commands and some built-in commands. It could also manipulate foreground and background jobs like what we have in the <code>bash</code>. We could fulfill this goal by finishing some essential missing functions in the <code>tsh.c</code> file. </p>
+<ul>
+<li><code>eval</code> function. To understand how <code>fork</code> and <code>execve</code> system calls will be used, how foreground and background jobs are set up, and how <code>sigprocmask</code> will be used to block&#x2F;unblock signals in order to manage the process correctly. </li>
+<li><code>do_bgfg</code> shell builtin function. To understand how to manipulate foreground and background jobs.</li>
+<li><code>sig??_handler</code> a bunch of signal handler functions. To understand how to reap out children using <code>waitpid</code> system call and how to send the signal to other processes using the <code>kill</code> system call.</li>
+</ul>
+<h2 id="Evaluate-Function"><a href="#Evaluate-Function" class="headerlink" title="Evaluate Function"></a>Evaluate Function</h2><p>The <code>eval</code> function is the first and most basic function we need to implement in this lab. The logic is easy. First, parse the command using provided helper function <code>parseline</code>. Then check if it is the built-in command. If not, then we could execute the user command directly by using <code>fork</code>, <code>execve</code> combo. Easy and straightforward. </p>
+<p>But to fulfill our goal, we should treat each non-built-in command as a <strong>job</strong> (similar to the concept of process in OS’s view) to make our life easier in the rest functions. When each user command gets executed, whether it is foreground or background, we should add it to the job list (implementation provided). Since when each child process terminates, it will send <code>SIGCHLD</code> to the parent process. We should block this signal before we <code>fork</code> the child in case our child terminates before we add the job. Then unblock after adding the job to the job list. We should also unblock it in the child process so that the child process can receive <code>SIGCHLD</code> from its child. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * eval - Evaluate the command line that the user has just typed in</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * If the user has requested a built-in command (quit, jobs, bg or fg)</span></span><br><span class="line"><span class="comment"> * then execute it immediately. Otherwise, fork a child process and</span></span><br><span class="line"><span class="comment"> * run the job in the context of the child. If the job is running in</span></span><br><span class="line"><span class="comment"> * the foreground, wait for it to terminate and then return.  Note:</span></span><br><span class="line"><span class="comment"> * each child process must have a unique process group ID so that our</span></span><br><span class="line"><span class="comment"> * background children don&#x27;t receive SIGINT (SIGTSTP) from the kernel</span></span><br><span class="line"><span class="comment"> * when we type ctrl-c (ctrl-z) at the keyboard.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">eval</span><span class="params">(<span class="type">char</span> *cmdline)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">char</span> *argv[MAXARGS];                    <span class="comment">// argv for execve</span></span><br><span class="line">    <span class="type">int</span> bg;                                 <span class="comment">// background job or not</span></span><br><span class="line">    <span class="type">pid_t</span> cpid;                             <span class="comment">// child pid</span></span><br><span class="line">    <span class="type">int</span> state;                              <span class="comment">// process status</span></span><br><span class="line">    <span class="type">sigset_t</span> mask_all, mask_one, prev_mask; <span class="comment">// signal maskes</span></span><br><span class="line"></span><br><span class="line">    bg = parseline(cmdline, argv);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ignore blank line</span></span><br><span class="line">    <span class="keyword">if</span> (argv[<span class="number">0</span>] == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// execute built-in command directly</span></span><br><span class="line">    <span class="keyword">if</span> (!builtin_cmd(argv))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// fill the mask</span></span><br><span class="line">        sigfillset(&amp;mask_all);</span><br><span class="line">        sigemptyset(&amp;mask_one);</span><br><span class="line">        sigaddset(&amp;mask_one, SIGCHLD);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// block SIGCHILD after added the job</span></span><br><span class="line">        sigprocmask(SIG_BLOCK, &amp;mask_one, &amp;prev_mask);</span><br><span class="line">        <span class="comment">// fork child to run command</span></span><br><span class="line">        cpid = fork();</span><br><span class="line">        <span class="keyword">if</span> (cpid == <span class="number">-1</span>)</span><br><span class="line">            unix_error(<span class="string">&quot;fork error!&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (cpid == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// child</span></span><br><span class="line">            <span class="comment">// unblock signals for child</span></span><br><span class="line">            sigprocmask(SIG_SETMASK, &amp;prev_mask, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (setpgid(<span class="number">0</span>, <span class="number">0</span>) &lt; <span class="number">0</span>)</span><br><span class="line">                unix_error(<span class="string">&quot;setpgid error!&quot;</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (execve(argv[<span class="number">0</span>], argv, environ) &lt; <span class="number">0</span>)</span><br><span class="line">                unix_error(<span class="string">&quot;execve error!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// parent</span></span><br><span class="line">            state = bg ? BG : FG;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// block all while adding job</span></span><br><span class="line">            sigprocmask(SIG_BLOCK, &amp;mask_all, <span class="literal">NULL</span>);</span><br><span class="line">            <span class="keyword">if</span> (addjob(jobs, cpid, state, cmdline) == <span class="number">0</span>)</span><br><span class="line">                unix_error(<span class="string">&quot;addjob error!&quot;</span>);</span><br><span class="line">            <span class="comment">// unblock SIGCHILD after added job</span></span><br><span class="line">            sigprocmask(SIG_SETMASK, &amp;prev_mask, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!bg)</span><br><span class="line">                <span class="comment">// wait foreground job</span></span><br><span class="line">                waitfg(cpid);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="comment">// background prompt</span></span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;[%d] (%d) %s&quot;</span>, pid2jid(cpid), cpid, cmdline);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Background-amp-Foreground"><a href="#Background-amp-Foreground" class="headerlink" title="Background &amp; Foreground"></a>Background &amp; Foreground</h2><p>Manipulating background and foreground jobs is relatively easy since the skeleton code already provides us with the <code>job_t</code> struct. In the <code>do_bgfg</code> function, we only need to modify the <code>state</code> field of the job given through the command line. The project provides us with <code>getjobpid</code> and <code>getjobjid</code>. They can allow us to get the corresponding job very easily. </p>
+<p>After we have the proper job filtered out, we can resume the process by sending <code>SIGCONT</code> signal through <code>kill</code> system call. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * do_bgfg - Execute the builtin bg and fg commands</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">do_bgfg</span><span class="params">(<span class="type">char</span> **argv)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">job_t</span> *<span class="title">job</span>;</span></span><br><span class="line">    <span class="type">int</span> id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (argv[<span class="number">1</span>] == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%s command requires PID or %%jobid argument\n&quot;</span>, argv[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// user input jobjid or pid</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">sscanf</span>(argv[<span class="number">1</span>], <span class="string">&quot;%%%d&quot;</span>, &amp;id) &gt; <span class="number">0</span>)</span><br><span class="line">        job = getjobjid(jobs, id);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">sscanf</span>(argv[<span class="number">1</span>], <span class="string">&quot;%d&quot;</span>, &amp;id) &gt; <span class="number">0</span>)</span><br><span class="line">        job = getjobpid(jobs, id);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        unix_error(<span class="string">&quot;sscanf error!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (job != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        kill(job-&gt;pid, SIGCONT);</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">strcmp</span>(argv[<span class="number">0</span>], <span class="string">&quot;bg&quot;</span>) == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            job-&gt;state = BG;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;[%d] (%d) %s&quot;</span>, job-&gt;jid, job-&gt;pid, job-&gt;cmdline);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            job-&gt;state = FG;</span><br><span class="line">            waitfg(job-&gt;pid);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;(%d) No such process\n&quot;</span>, id);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Signal-Handlers"><a href="#Signal-Handlers" class="headerlink" title="Signal Handlers"></a>Signal Handlers</h2><p>We need to implement total 3 signal handlers: <code>sigchld_handler</code>, <code>sigint_handler</code>, and <code>sigtstp_handler</code>. <code>sigint_handler</code> and <code>sigtstp_handler</code> are very easy to implement because they both apply to the foreground job. They can get the foreground job pid directly through <code>fgpid</code> helper function and send the signal through kill. </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * sigint_handler - The kernel sends a SIGINT to the shell whenver the</span></span><br><span class="line"><span class="comment"> *    user types ctrl-c at the keyboard.  Catch it and send it along</span></span><br><span class="line"><span class="comment"> *    to the foreground job.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">sigint_handler</span><span class="params">(<span class="type">int</span> sig)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pid_t</span> pid;</span><br><span class="line">    <span class="type">int</span> olderrno;</span><br><span class="line"></span><br><span class="line">    olderrno = errno;</span><br><span class="line"></span><br><span class="line">    pid = fgpid(jobs);</span><br><span class="line">    <span class="keyword">if</span> (pid)</span><br><span class="line">    &#123;</span><br><span class="line">        kill(pid, sig);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    errno = olderrno;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * sigtstp_handler - The kernel sends a SIGTSTP to the shell whenever</span></span><br><span class="line"><span class="comment"> *     the user types ctrl-z at the keyboard. Catch it and suspend the</span></span><br><span class="line"><span class="comment"> *     foreground job by sending it a SIGTSTP.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">sigtstp_handler</span><span class="params">(<span class="type">int</span> sig)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pid_t</span> pid;</span><br><span class="line">    <span class="type">int</span> olderrno;</span><br><span class="line"></span><br><span class="line">    olderrno = errno;</span><br><span class="line"></span><br><span class="line">    pid = fgpid(jobs);</span><br><span class="line">    <span class="keyword">if</span> (pid)</span><br><span class="line">    &#123;</span><br><span class="line">        kill(pid, sig);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    errno = olderrno;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>sigchld_handler</code>, on the other hand, is more complicated. We should have a more comprehansive view of how we should use <code>waitpid</code> to reap the children. Let’s first take look at the man page. </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">The  waitpid()  system  call suspends execution of the calling thread until a child specified by pid argument has changed state. </span><br><span class="line">By default, waitpid() waits only for terminated chil‐dren, but this behavior is modifiable via the options argument, as described below.</span><br><span class="line"></span><br><span class="line">The value of pid can be:</span><br><span class="line"></span><br><span class="line">&lt; -1   meaning wait for any child process whose process group ID is equal to the absolute value of pid.</span><br><span class="line"></span><br><span class="line">-1     meaning wait for any child process.</span><br><span class="line"></span><br><span class="line">0      meaning wait for any child process whose process group ID is equal to that of the calling process at the time of the call to waitpid().</span><br><span class="line"></span><br><span class="line">&gt; 0    meaning wait for the child whose process ID is equal to the value of pid.</span><br><span class="line"></span><br><span class="line">The value of options is an OR of zero or more of the following constants:</span><br><span class="line"></span><br><span class="line">WNOHANG     return immediately if no child has exited.</span><br><span class="line"></span><br><span class="line">WUNTRACED   also return if a child has stopped (but not traced via ptrace(2)).  Status for traced children which have stopped is provided even if this option is not specified.</span><br><span class="line"></span><br><span class="line">If wstatus is not NULL, wait() and waitpid() store status information in the int to which it points.  This integer can be inspected with the following macros (which take  the  integer</span><br><span class="line">itself as an argument, not a pointer to it, as is done in wait() and waitpid()!):</span><br><span class="line"></span><br><span class="line">WIFEXITED(wstatus)</span><br><span class="line">       returns true if the child terminated normally, that is, by calling exit(3) or _exit(2), or by returning from main().</span><br><span class="line"></span><br><span class="line">WEXITSTATUS(wstatus)</span><br><span class="line">       returns  the exit status of the child.  This consists of the least significant 8 bits of the status argument that the child specified in a call to exit(3) or _exit(2) or as the</span><br><span class="line">       argument for a return statement in main().  This macro should be employed only if WIFEXITED returned true.</span><br><span class="line"></span><br><span class="line">WIFSIGNALED(wstatus)</span><br><span class="line">       returns true if the child process was terminated by a signal.</span><br><span class="line"></span><br><span class="line">WTERMSIG(wstatus)</span><br><span class="line">       returns the number of the signal that caused the child process to terminate.  This macro should be employed only if WIFSIGNALED returned true.</span><br><span class="line"></span><br><span class="line">WCOREDUMP(wstatus)</span><br><span class="line">       returns true if the child produced a core dump (see core(5)).  This macro should be employed only if WIFSIGNALED returned true.</span><br><span class="line"></span><br><span class="line">WIFSTOPPED(wstatus)</span><br><span class="line">       returns  true  if  the  child  process  was  stopped  by delivery of a signal; this is possible only if the call was done using WUNTRACED or when the child is being traced (see</span><br><span class="line">       ptrace(2)).</span><br><span class="line"></span><br><span class="line">WSTOPSIG(wstatus)</span><br><span class="line">       returns the number of the signal which caused the child to stop.  This macro should be employed only if WIFSTOPPED returned true.</span><br><span class="line"></span><br><span class="line">WIFCONTINUED(wstatus)</span><br><span class="line">       (since Linux 2.6.10) returns true if the child process was resumed by delivery of SIGCONT.</span><br></pre></td></tr></table></figure>
+
+<p><code>waitpid</code> system call gives us various options to reap a child from the parent process. Each time a child is stopped or terminated (received signal or not) will send <code>SIGCHLD</code> to the parent. We could identify different cases by functions to the <code>wstatus</code>. We will need <code>WIFEXITED</code> to represent a normal exit of the child, <code>WIFSIGNALED</code> to represent exit by receiving a signal from other processes like <code>SIGINT</code> sent by the user through ctrl-c, and <code>WIFSTOPPED</code> represents stopped by receiving a signal from other processes like <code>SIGTSTP</code> send by the user through ctrl-z. Then, we could wrap those in a while loop to make sure we reap all the children each time we receive a <code>SIGCHLD</code> signal. Don’t forget to block the signal while deleting the job!</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * sigchld_handler - The kernel sends a SIGCHLD to the shell whenever</span></span><br><span class="line"><span class="comment"> *     a child job terminates (becomes a zombie), or stops because it</span></span><br><span class="line"><span class="comment"> *     received a SIGSTOP or SIGTSTP signal. The handler reaps all</span></span><br><span class="line"><span class="comment"> *     available zombie children, but doesn&#x27;t wait for any other</span></span><br><span class="line"><span class="comment"> *     currently running children to terminate.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">sigchld_handler</span><span class="params">(<span class="type">int</span> sig)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">job_t</span> *<span class="title">job</span>;</span>            <span class="comment">// job ptr for a terminated or stopped job</span></span><br><span class="line">    <span class="type">pid_t</span> pid;                    <span class="comment">// child pid</span></span><br><span class="line">    <span class="type">int</span> status;                   <span class="comment">// child status</span></span><br><span class="line">    <span class="type">sigset_t</span> mask_all, prev_mask; <span class="comment">// signal maskes</span></span><br><span class="line">    <span class="type">int</span> olderrno;                 <span class="comment">// save errno</span></span><br><span class="line"></span><br><span class="line">    olderrno = errno;</span><br><span class="line">    sigfillset(&amp;mask_all);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// reaping children</span></span><br><span class="line">    <span class="keyword">while</span> ((pid = waitpid(<span class="number">-1</span>, &amp;status, WNOHANG | WUNTRACED)) &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (WIFEXITED(status))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// normal exit</span></span><br><span class="line">            sigprocmask(SIG_BLOCK, &amp;mask_all, &amp;prev_mask);</span><br><span class="line">            deletejob(jobs, pid);</span><br><span class="line">            sigprocmask(SIG_SETMASK, &amp;prev_mask, <span class="literal">NULL</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (WIFSIGNALED(status))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// terminated by a signal</span></span><br><span class="line">            job = getjobpid(jobs, pid);</span><br><span class="line">            sigprocmask(SIG_BLOCK, &amp;mask_all, &amp;prev_mask);</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Job [%d] (%d) terminated by singal %d\n&quot;</span>, job-&gt;jid, job-&gt;pid, SIGINT);</span><br><span class="line">            deletejob(jobs, pid);</span><br><span class="line">            sigprocmask(SIG_SETMASK, &amp;prev_mask, <span class="literal">NULL</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// stopped</span></span><br><span class="line">            job = getjobpid(jobs, pid);</span><br><span class="line">            sigprocmask(SIG_BLOCK, &amp;mask_all, &amp;prev_mask);</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Job [%d] (%d) stopped by singal %d\n&quot;</span>, job-&gt;jid, job-&gt;pid, SIGTSTP);</span><br><span class="line">            job-&gt;state = ST;</span><br><span class="line">            sigprocmask(SIG_SETMASK, &amp;prev_mask, <span class="literal">NULL</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    errno = olderrno;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Goals"><span class="toc-number">1.</span> <span class="toc-text">Goals</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Evaluate-Function"><span class="toc-number">2.</span> <span class="toc-text">Evaluate Function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Background-amp-Foreground"><span class="toc-number">3.</span> <span class="toc-text">Background &amp; Foreground</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Signal-Handlers"><span class="toc-number">4.</span> <span class="toc-text">Signal Handlers</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&text=CSAPP shlab"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&title=CSAPP shlab"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&is_video=false&description=CSAPP shlab"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CSAPP shlab&body=Check out this article: https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&title=CSAPP shlab"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&title=CSAPP shlab"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&title=CSAPP shlab"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&title=CSAPP shlab"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&name=CSAPP shlab&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2022/12/26/CSAPP-shlab/&t=CSAPP shlab"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    Thomason Zhao
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+</body>
+</html>
