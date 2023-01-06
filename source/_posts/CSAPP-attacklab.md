@@ -1,7 +1,7 @@
 ---
 title: CSAPP attacklab
 date: 2022-06-16 23:45:00
-category: Project Writeup
+category: Independent Learning
 tags:
   - CSAPP Labs
 ---

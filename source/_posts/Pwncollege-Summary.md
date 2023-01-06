@@ -1,7 +1,7 @@
 ---
 title: Pwncollege Summary
 date: 2022-08-02 19:46:49
-category: Project Writeup
+category: Independent Learning
 tags: 
     - Pwncollege
 ---

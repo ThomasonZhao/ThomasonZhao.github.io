@@ -1,7 +1,7 @@
 ---
 title: CSAPP datalab
 date: 2022-05-19 10:26:00
-category: Project Writeup
+category: Independent Learning
 tags:
   - CSAPP Labs
 ---

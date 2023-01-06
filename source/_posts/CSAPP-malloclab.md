@@ -1,7 +1,7 @@
 ---
 title: CSAPP malloclab
 date: 2023-01-03 19:02:35
-category: Project Writeup
+category: Independent Learning
 tags:
   - CSAPP Labs
 ---

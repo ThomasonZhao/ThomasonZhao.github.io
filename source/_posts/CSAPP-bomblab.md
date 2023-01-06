@@ -1,7 +1,7 @@
 ---
 title: CSAPP bomblab
 date: 2022-05-27 02:55:00
-category: Project Writeup
+category: Independent Learning
 tags:
   - CSAPP Labs
 ---

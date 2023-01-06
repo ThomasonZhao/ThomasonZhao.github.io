@@ -1,7 +1,7 @@
 ---
 title: CSAPP cachelab
 date: 2022-09-06 22:10:18
-category: Project Writeup
+category: Independent Learning
 tags:
   - CSAPP Labs
 ---
