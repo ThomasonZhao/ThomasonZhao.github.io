@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="The contents of this blog are primarily my paper review homework for the honor section of the CS537 Operating System course at UW-Madison. But those papers deserve us to spend time reviewing them. In">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Paper Review: The UNIX Time-Sharing System">
+<meta property="og:url" content="https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/index.html">
+<meta property="og:site_name" content="Thomason&#39;s Blog">
+<meta property="og:description" content="The contents of this blog are primarily my paper review homework for the honor section of the CS537 Operating System course at UW-Madison. But those papers deserve us to spend time reviewing them. In">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-02-14T05:40:37.000Z">
+<meta property="article:modified_time" content="2023-02-18T23:15:52.167Z">
+<meta property="article:author" content="Thomason Zhao">
+<meta property="article:tag" content="OS">
+<meta property="article:tag" content="Unix">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Paper Review: The UNIX Time-Sharing System</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/01/05/6-S081-Lab1-Xv6-and-Unix-utilities/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&text=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&title=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&is_video=false&description=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Paper Review: The UNIX Time-Sharing System&body=Check out this article: https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&title=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&title=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&title=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&title=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&name=Paper Review: The UNIX Time-Sharing System&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&t=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Overview-amp-Background"><span class="toc-number">1.</span> <span class="toc-text">Overview &amp; Background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">2.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#File-System"><span class="toc-number">3.</span> <span class="toc-text">File System</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Process-Management"><span class="toc-number">4.</span> <span class="toc-text">Process Management</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Unix-Shell"><span class="toc-number">5.</span> <span class="toc-text">Unix Shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Trap-x2F-System-Call"><span class="toc-number">6.</span> <span class="toc-text">Trap &#x2F; System Call</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summary"><span class="toc-number">7.</span> <span class="toc-text">Summary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">8.</span> <span class="toc-text">Reference</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Paper Review: The UNIX Time-Sharing System
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thomason Zhao</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-02-14T05:40:37.000Z" itemprop="datePublished">2023-02-13</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Academic-Paper/">Academic Paper</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/OS/" rel="tag">OS</a>, <a class="tag-link-link" href="/tags/Unix/" rel="tag">Unix</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>The contents of this blog are primarily my paper review homework for the honor section of the CS537 Operating System course at UW-Madison. But those papers deserve us to spend time reviewing them. In this paper, for example, you could get a glimpse of the modern large operating system’s prototype and how it is designed and implemented. So, let’s get started!</p>
+<h2 id="Overview-amp-Background"><a href="#Overview-amp-Background" class="headerlink" title="Overview &amp; Background"></a>Overview &amp; Background</h2><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Unix">Unix</a> is a family of multitasking, multiuser computer operating systems that derive from the original AT&amp;T Unix, whose development started in 1969 at the Bell Labs research center by Ken Thompson, Dennis Ritchie, and others.</p>
+<p>The paper “The UNIX Time-Sharing System” by D. M. Ritchie and K. Thompson, published in the Communications of the ACM in 1974, reveals the development and design of the Unix operating system. It describes Unix as a time-sharing system, meaning that multiple users can interact with the computer simultaneously and share its resources. The authors aim to present Unix as a more efficient and practical alternative to other existing time-sharing systems.</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>The paper begins by discussing the current situation of Unix and the hardware and software environment that Unix presents. There have been three versions of Unix before presenting this paper. They are mainly used for research in operating systems, languages, computer networks, and other computer science topics and document preparation in the Bell Labs. </p>
+<p>The third version of Unix is rewritten in C programming language and supports various programs like assembler, text editor based on QED, linking loader, symbolic debugger, the compiler for a language resembling BCPL with types and structures (C), interpreter for a dialect of BASIC, text formatting program, Fortran compiler, Snobol interpreter, top-down compiler-compiler (TMC), bottom-up compiler-compiler (YACC), form letter generator, macro processor (M6), and permuted index program.</p>
+<blockquote>
+<p>It is hoped, however, the users of UNIX will find that the most important characteristics of the system are its simplicity, elegance, and ease of use.</p>
+</blockquote>
+<h2 id="File-System"><a href="#File-System" class="headerlink" title="File System"></a>File System</h2><p>Then, the paper describes the design of Unix, starting with the features and detailed implementation of its file system. It divides the storage type into three different categories: ordinary files, directories, and special files. The system will provide protection for every file to make sure no user is doing something unwanted. </p>
+<p>Ordinary files are just normal files that users generally use, for example, text files and executable binary files. It also supports links, which allow multiple names to refer to a single file. This design makes it easy for users to navigate, organize, and share their files. </p>
+<p>Directories make the file system hierarchical. It organizes files in a tree-like structure. All files could be found by tracing the path through a chain of directories. The <em>root</em> directory <code>/</code>, however, which the system maintained for its own use, is the origin of all other directories. It defines that each directory has at least two entries: <code>.</code> represent the current directory, and <code>..</code> represent the parent directory. </p>
+<p>Special files are abstractions provided by the operating system. It abstracts I&#x2F;O devices as special files allowing users to treat I&#x2F;O devices in the same way as regular files. It also makes it straightforward to mount a new file system from other drive devices to the machine.</p>
+<p>With the file system abstraction above, manipulating I&#x2F;O requests are relatively easy for the user to make. Unix provides four main system calls: <code>open</code>, <code>close</code>, <code>read</code>, and <code>write</code>. They allow users to treat every file as a file descriptor, which also abstract by the operating system, and manipulate the data very easily, even if they are I&#x2F;O devices! </p>
+<h2 id="Process-Management"><a href="#Process-Management" class="headerlink" title="Process Management"></a>Process Management</h2><p>In the following section, the paper describes the processes and images in Unix, which is responsible for managing the execution of programs. The processes in Unix are supported by different system routines, which makes processes can be easily created, executed, terminated, and communicated with each other. This makes it easy for users to run multiple programs simultaneously and switch between them as needed.</p>
+<p>The operating system maintains an image for every process. It includes a core image, general register values, the status of open files, the current directory, and the like. An image is the current state of a pseudo-computer. The core here is an early saying of the Unix kernel. </p>
+<p>Users could easily create processes by calling <code>fork</code> system call, which creates a new process with a copy of the current process’s image. With another powerful system call <code>execute</code>, users may run any program in this newly created process. </p>
+<p>Pipe is also an important feature which allows processes to communicate with each other without continue using <code>read</code> and <code>write</code> to do expensive I&#x2F;O on the same file. This channel, like other open files, is passed from parent to child process in the image by the fork call. A read using a pipe file descriptor waits until another process writes using the file descriptor for the same pipe. </p>
+<p>Ternimation of a process is relatively easy. With <code>exit</code> system call, the operating system terminates a process, destroys its image, closes its open files, and generally obliterates it. When the parent is notified through the <code>wait</code> primitive, the indicated status is available to the parent;</p>
+<h2 id="Unix-Shell"><a href="#Unix-Shell" class="headerlink" title="Unix Shell"></a>Unix Shell</h2><p>On top of the process management feature, the paper describes the ideas and implementations of the shell, which is the interface between the user and the operating system. The shell allows users to enter commands executed by the operating system. With the essential system calls described in the previous section, the shell could easily fork children, do I&#x2F;O redirection to any files, pipe communication between different processes, or decide a process to run in the background or foreground. </p>
+<p>Another essential feature is the idea of the “init” daemon process, which is created when the system boots and acts as the parent of all processes. It only wakes up when users log in through the typewriter channel. It first forks itself and sets up the standard in, out, and error descriptor, then transfer control to the user by executing the shell program.</p>
+<h2 id="Trap-x2F-System-Call"><a href="#Trap-x2F-System-Call" class="headerlink" title="Trap &#x2F; System Call"></a>Trap &#x2F; System Call</h2><p>Furthermore, the paper introduces the idea of traps. Rather than call them “traps,” I prefer to call them “signals” directly. The paper presents an operating system prototype using signals to interact and manipulate the processes. In this design, the operating system will control the process once a hardware interrupt, fault, or specific signal is received. It will treat the process differently based on the fault type or signal type.</p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>Finally, the paper concludes by summarizing the strengths of Unix and how it compares to other time-sharing systems. They explain that Unix is a simple, flexible, and efficient time-sharing system for programmers to use and maintain itself.</p>
+<p>Overall, the paper provides a comprehensive overview of the design and implementation of the Unix operating system. The authors effectively explain the critical features of Unix and why it is a more efficient and practical alternative to other time-sharing systems.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>O. M. Ritchie and K. Thompson, “The UNIX time-sharing system,” in <em>The Bell System Technical Journal</em>, vol. 57, no. 6, pp. 1905-1929, July-Aug. 1978, doi: 10.1002&#x2F;j.1538-7305.1978.tb02136.x.</p>
+<p>PDF: <a target="_blank" rel="noopener" href="https://dsf.berkeley.edu/cs262/unix.pdf">https://dsf.berkeley.edu/cs262/unix.pdf</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Overview-amp-Background"><span class="toc-number">1.</span> <span class="toc-text">Overview &amp; Background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">2.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#File-System"><span class="toc-number">3.</span> <span class="toc-text">File System</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Process-Management"><span class="toc-number">4.</span> <span class="toc-text">Process Management</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Unix-Shell"><span class="toc-number">5.</span> <span class="toc-text">Unix Shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Trap-x2F-System-Call"><span class="toc-number">6.</span> <span class="toc-text">Trap &#x2F; System Call</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summary"><span class="toc-number">7.</span> <span class="toc-text">Summary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">8.</span> <span class="toc-text">Reference</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&text=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&title=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&is_video=false&description=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Paper Review: The UNIX Time-Sharing System&body=Check out this article: https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&title=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&title=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&title=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&title=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&name=Paper Review: The UNIX Time-Sharing System&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2023/02/13/Paper-Review-The-UNIX-Time-Sharing-System/&t=Paper Review: The UNIX Time-Sharing System"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    Thomason Zhao
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+</body>
+</html>
