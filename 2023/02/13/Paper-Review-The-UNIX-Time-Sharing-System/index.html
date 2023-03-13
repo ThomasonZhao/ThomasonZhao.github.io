@@ -13,12 +13,14 @@
 <meta property="og:site_name" content="Thomason&#39;s Blog">
 <meta property="og:description" content="The contents of this blog are primarily my paper review homework for the honor section of the CS537 Operating System course at UW-Madison. But those papers deserve us to spend time reviewing them. In">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://unix.org/images/unix-an-open-group-standard.png">
 <meta property="article:published_time" content="2023-02-14T05:40:37.000Z">
-<meta property="article:modified_time" content="2023-02-18T23:15:52.167Z">
+<meta property="article:modified_time" content="2023-03-13T22:01:46.125Z">
 <meta property="article:author" content="Thomason Zhao">
-<meta property="article:tag" content="OS">
+<meta property="article:tag" content="Operating System">
 <meta property="article:tag" content="Unix">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://unix.org/images/unix-an-open-group-standard.png">
     
     
       
@@ -85,6 +87,8 @@
     <br/>
     <span id="actions">
       <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2023/02/18/Review-of-ptmalloc2/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" aria-label="Next post" href="/2023/01/05/6-S081-Lab1-Xv6-and-Unix-utilities/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -155,7 +159,7 @@
       
     <div class="article-tag">
         <i class="fas fa-tag"></i>
-        <a class="tag-link-link" href="/tags/OS/" rel="tag">OS</a>, <a class="tag-link-link" href="/tags/Unix/" rel="tag">Unix</a>
+        <a class="tag-link-link" href="/tags/Operating-System/" rel="tag">Operating System</a>, <a class="tag-link-link" href="/tags/Unix/" rel="tag">Unix</a>
     </div>
 
 
@@ -165,6 +169,7 @@
 
   <div class="content" itemprop="articleBody">
     <p>The contents of this blog are primarily my paper review homework for the honor section of the CS537 Operating System course at UW-Madison. But those papers deserve us to spend time reviewing them. In this paper, for example, you could get a glimpse of the modern large operating system’s prototype and how it is designed and implemented. So, let’s get started!</p>
+<p><a data-fancybox="gallery" data-src="https://unix.org/images/unix-an-open-group-standard.png" data-caption="Unix"><img src="https://unix.org/images/unix-an-open-group-standard.png" alt="Unix"></a></p>
 <h2 id="Overview-amp-Background"><a href="#Overview-amp-Background" class="headerlink" title="Overview &amp; Background"></a>Overview &amp; Background</h2><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Unix">Unix</a> is a family of multitasking, multiuser computer operating systems that derive from the original AT&amp;T Unix, whose development started in 1969 at the Bell Labs research center by Ken Thompson, Dennis Ritchie, and others.</p>
 <p>The paper “The UNIX Time-Sharing System” by D. M. Ritchie and K. Thompson, published in the Communications of the ACM in 1974, reveals the development and design of the Unix operating system. It describes Unix as a time-sharing system, meaning that multiple users can interact with the computer simultaneously and share its resources. The authors aim to present Unix as a more efficient and practical alternative to other existing time-sharing systems.</p>
 <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>The paper begins by discussing the current situation of Unix and the hardware and software environment that Unix presents. There have been three versions of Unix before presenting this paper. They are mainly used for research in operating systems, languages, computer networks, and other computer science topics and document preparation in the Bell Labs. </p>
