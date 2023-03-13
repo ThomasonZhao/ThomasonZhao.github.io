@@ -3,11 +3,13 @@ title: 'Paper Review: The UNIX Time-Sharing System'
 date: 2023-02-13 23:40:37
 category: Academic Paper
 tags:
-    - OS
+    - Operating System
     - Unix
 ---
 
 The contents of this blog are primarily my paper review homework for the honor section of the CS537 Operating System course at UW-Madison. But those papers deserve us to spend time reviewing them. In this paper, for example, you could get a glimpse of the modern large operating system's prototype and how it is designed and implemented. So, let's get started!
+
+![Unix](https://unix.org/images/unix-an-open-group-standard.png)
 
 ## Overview & Background
 
