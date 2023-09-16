@@ -295,7 +295,13 @@ There are 4 kinds of bins maintained by `ptmalloc2`:
 
 ## Reference
 
+Source code:
+
 https://elixir.bootlin.com/glibc/glibc-2.37/source/malloc/malloc.c
+
+https://elixir.bootlin.com/glibc/glibc-2.37/source/malloc/arena.c
+
+Other's blog for glibc malloc:
 
 https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/
 
