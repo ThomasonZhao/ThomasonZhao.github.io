@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="The paper “Redundant Arrays of Inexpensive Disks” discusses the benefits of using RAID technology for data storage. RAID offers significant improvements in performance, reliability, power consumption,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Paper Review: Redundant Arrays of Inexpensive Disks">
+<meta property="og:url" content="https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/index.html">
+<meta property="og:site_name" content="Thomason&#39;s Blog">
+<meta property="og:description" content="The paper “Redundant Arrays of Inexpensive Disks” discusses the benefits of using RAID technology for data storage. RAID offers significant improvements in performance, reliability, power consumption,">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.ubackup.com/screenshot/en/acbn/others/fastest-raid-level/raid-storage.png">
+<meta property="article:published_time" content="2023-04-15T22:03:51.000Z">
+<meta property="article:modified_time" content="2023-04-15T23:58:29.722Z">
+<meta property="article:author" content="Thomason Zhao">
+<meta property="article:tag" content="Operating System">
+<meta property="article:tag" content="Virtual Memory">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.ubackup.com/screenshot/en/acbn/others/fastest-raid-level/raid-storage.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Paper Review: Redundant Arrays of Inexpensive Disks</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/03/13/Paper-Review-Memory-Resource-Management-in-VMware-ESX-server/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&text=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&title=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&is_video=false&description=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Paper Review: Redundant Arrays of Inexpensive Disks&body=Check out this article: https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&title=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&title=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&title=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&title=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&name=Paper Review: Redundant Arrays of Inexpensive Disks&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&t=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#A-Better-Solution-RAID"><span class="toc-number">1.</span> <span class="toc-text">A Better Solution - RAID</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Problem-SLED"><span class="toc-number">1.1.</span> <span class="toc-text">Problem: SLED</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Possiable-Solution"><span class="toc-number">1.2.</span> <span class="toc-text">Possiable Solution</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAID-Level-1"><span class="toc-number">2.</span> <span class="toc-text">RAID Level 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAID-Level-2"><span class="toc-number">3.</span> <span class="toc-text">RAID Level 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAID-Level-3"><span class="toc-number">4.</span> <span class="toc-text">RAID Level 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAID-Level-4"><span class="toc-number">5.</span> <span class="toc-text">RAID Level 4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAID-Level-5"><span class="toc-number">6.</span> <span class="toc-text">RAID Level 5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">7.</span> <span class="toc-text">Conclusion</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">8.</span> <span class="toc-text">Reference</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Paper Review: Redundant Arrays of Inexpensive Disks
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thomason Zhao</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-04-15T22:03:51.000Z" itemprop="datePublished">2023-04-15</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Academic-Paper/">Academic Paper</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Operating-System/" rel="tag">Operating System</a>, <a class="tag-link-link" href="/tags/Virtual-Memory/" rel="tag">Virtual Memory</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>The paper “Redundant Arrays of Inexpensive Disks” discusses the benefits of using RAID technology for data storage. RAID offers significant improvements in performance, reliability, power consumption, and scalability compared to Single Large Expensive Disks (SLED). The paper presents a taxonomy of five different levels of RAID, progressing through a variety of alternatives with differing performance and reliability. Each level offers a different balance of performance, reliability, and cost-effectiveness. The paper also provides examples of industries or applications that would benefit from using RAID storage.</p>
+<p><a data-fancybox="gallery" data-src="https://www.ubackup.com/screenshot/en/acbn/others/fastest-raid-level/raid-storage.png" data-caption="RAID"><img src="https://www.ubackup.com/screenshot/en/acbn/others/fastest-raid-level/raid-storage.png" alt="RAID"></a></p>
+<h2 id="A-Better-Solution-RAID"><a href="#A-Better-Solution-RAID" class="headerlink" title="A Better Solution - RAID"></a>A Better Solution - RAID</h2><h3 id="Problem-SLED"><a href="#Problem-SLED" class="headerlink" title="Problem: SLED"></a>Problem: SLED</h3><p>The problem that led to the invention of RAID was the need for improved reliability in data storage. In the early days of computing, data was typically stored on SLED, which were large and expensive but offered relatively high reliability. However, as disk drives became smaller and less expensive, it became more cost-effective to use multiple smaller disks instead of a single large one. </p>
+<h3 id="Possiable-Solution"><a href="#Possiable-Solution" class="headerlink" title="Possiable Solution"></a>Possiable Solution</h3><p>Definitly, multiple small inexpansive disks could simply merge together to become a larger and faster big disk, which is RAID level 0. But the challenge with using multiple disks was that if any one disk failed, all of the data stored on it would be lost. This made data storage less reliable than with SLEDs. To overcome this challenge, researchers developed RAID technology, which uses extra disks containing redundant information to recover the original information when a disk fails. </p>
+<p>By designing the organization of the disks, RAID offers significant improvements in performance, reliability, power consumption, and scalability compared to SLEDs or other alternatives. It provides a better solution for data storage by offering fault tolerance and redundancy at a lower cost per gigabyte than other options.</p>
+<h2 id="RAID-Level-1"><a href="#RAID-Level-1" class="headerlink" title="RAID Level 1"></a>RAID Level 1</h2><p>Since a large chunk of disks may result in a high failure rate, another simple solution to try is to do the backup for each disk, which is RAID level 1 (mirrored disks). In RAID 1, data is written identically to two or more disks, creating a “mirror” of the data. This provides excellent data redundancy since if one disk fails, the other disk(s) can continue to function and provide access to the data. However, RAID 1 requires twice as many disks as other levels of RAID, making it relatively expensive compared to other options. RAID 1 is best suited for applications that require high reliability and low write performance requirements.</p>
+<h2 id="RAID-Level-2"><a href="#RAID-Level-2" class="headerlink" title="RAID Level 2"></a>RAID Level 2</h2><p>To reduce the extensive overhead of securing the RAID, a second RAID was invented, which is RAID level 2 (memory-style error-correcting codes&#x2F;Hamming codes). RAID 2 uses memory-style error-correcting codes to detect and correct errors in data. It requires a minimum of three disks and is rarely used in practice due to its complexity. In RAID 2, data is divided into small units called “bits,” which are then spread across multiple disks. Each disk has a dedicated bit for error correction, which can be used to reconstruct lost data if one of the disks fails. However, RAID 2 still requires a lot of overhead for error correction and is not very efficient for most applications, so it is not commonly used in practice.</p>
+<h2 id="RAID-Level-3"><a href="#RAID-Level-3" class="headerlink" title="RAID Level 3"></a>RAID Level 3</h2><p>To further reduce the overhead, RAID level 3 comes out. RAID 3 uses bit-interleaved parity to provide redundancy. It requires a minimum of three disks and provides good performance for large sequential reads but poor performance for small random writes. In RAID 3, data is divided into blocks, and each block is written to a different disk in the array. One disk is dedicated to storing parity information, which can be used to reconstruct lost data if one of the disks fails. However, since all write operations must update the parity disk, RAID 3 can suffer from a bottleneck on the parity disk and may not be suitable for applications that require high write performance. RAID 3 is not commonly used in practice due to its limitations.</p>
+<h2 id="RAID-Level-4"><a href="#RAID-Level-4" class="headerlink" title="RAID Level 4"></a>RAID Level 4</h2><p>RAID level 4 was designed to cover the shortage of RAID 3. RAID 4 uses block-interleaved parity to provide redundancy. It requires a minimum of three disks and provides better performance for small random writes than RAID 3 but can suffer from a bottleneck on the parity disk. In RAID 4, data is divided into blocks, and each block is written to a different disk in the array. One disk is dedicated to storing parity information, which can be used to reconstruct lost data if one of the disks fails. However, since all write operations must update the parity disk, RAID 4 can suffer from a bottleneck on the parity disk and may not be suitable for applications that require high write performance. RAID 4 is less commonly used than RAID 5 due to its limitations.</p>
+<h2 id="RAID-Level-5"><a href="#RAID-Level-5" class="headerlink" title="RAID Level 5"></a>RAID Level 5</h2><p>Since the parity disk becomes the bottleneck of the whole RAID, RAID level 5 divide uses block-interleaved distributed parity to provide redundancy. It requires a minimum of three disks and provides good performance for both small random writes and large sequential reads. In RAID 5, data is divided into blocks, and each block is written to a different disk in the array. Parity information is also distributed across all disks in the array, so that if one disk fails, the data can be reconstructed using the parity information on the remaining disks. RAID 5 provides good fault tolerance and performance for most applications and is one of the most commonly used RAID levels in practice.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>This paper, as a discovery of the feasibility of RAID, showed us a step-by-step thinking of developments of the RAID levels. It provides a great insight and thoughts behind each level with specific purpose of those RAID solutions. Although the paper was introduced under the thought of hardware improvements of the disk management, it points out that RAID can also be implemented in software, making it accessible to a wide range of users. </p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>D. Patterson, G. Gibson, R. Katz. Redundant Arrays of Inexpensive Disks. SIGMOD 1988.</p>
+<p>PDF: <a target="_blank" rel="noopener" href="https://www.cs.cmu.edu/~garth/RAIDpaper/Patterson88.pdf">https://www.cs.cmu.edu/~garth/RAIDpaper/Patterson88.pdf</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#A-Better-Solution-RAID"><span class="toc-number">1.</span> <span class="toc-text">A Better Solution - RAID</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Problem-SLED"><span class="toc-number">1.1.</span> <span class="toc-text">Problem: SLED</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Possiable-Solution"><span class="toc-number">1.2.</span> <span class="toc-text">Possiable Solution</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAID-Level-1"><span class="toc-number">2.</span> <span class="toc-text">RAID Level 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAID-Level-2"><span class="toc-number">3.</span> <span class="toc-text">RAID Level 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAID-Level-3"><span class="toc-number">4.</span> <span class="toc-text">RAID Level 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAID-Level-4"><span class="toc-number">5.</span> <span class="toc-text">RAID Level 4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAID-Level-5"><span class="toc-number">6.</span> <span class="toc-text">RAID Level 5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">7.</span> <span class="toc-text">Conclusion</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">8.</span> <span class="toc-text">Reference</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&text=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&title=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&is_video=false&description=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Paper Review: Redundant Arrays of Inexpensive Disks&body=Check out this article: https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&title=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&title=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&title=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&title=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&name=Paper Review: Redundant Arrays of Inexpensive Disks&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/&t=Paper Review: Redundant Arrays of Inexpensive Disks"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    Thomason Zhao
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+</body>
+</html>
