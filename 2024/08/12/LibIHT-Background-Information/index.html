@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="This blog post will provide some background information on the hardware features that LibIHT will be using to collect branch information. It is heavily referenced from the Intel 64 and IA-32 Architect">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LibIHT-Background Information">
+<meta property="og:url" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/index.html">
+<meta property="og:site_name" content="Thomason&#39;s Blog">
+<meta property="og:description" content="This blog post will provide some background information on the hardware features that LibIHT will be using to collect branch information. It is heavily referenced from the Intel 64 and IA-32 Architect">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/assets/IA32_DEBUGCTL.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/assets/LBR_stack.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/assets/LBR_stack_and_tos.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/assets/MSR_LBR_SELECT_haswell.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/assets/IA32_DEBUGCTL.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/assets/DS_save_area_32.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/assets/DS_save_area_64.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/assets/BTS_record_32.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/assets/BTS_record_64.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/assets/IA32_DEBUGCTL_flag_encodings.png">
+<meta property="og:image" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/assets/BTS_filtering.png">
+<meta property="article:published_time" content="2024-08-12T21:51:45.000Z">
+<meta property="article:modified_time" content="2024-08-14T19:01:36.566Z">
+<meta property="article:author" content="Thomason Zhao">
+<meta property="article:tag" content="LibIHT">
+<meta property="article:tag" content="Hardware">
+<meta property="article:tag" content="Spark Program">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/assets/IA32_DEBUGCTL.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>LibIHT-Background Information</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+
+  <!-- fancybox support -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/04/15/Paper-Review-Redundant-Arrays-of-Inexpensive-Disks/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&text=LibIHT-Background Information"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&title=LibIHT-Background Information"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&is_video=false&description=LibIHT-Background Information"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LibIHT-Background Information&body=Check out this article: https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&title=LibIHT-Background Information"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&title=LibIHT-Background Information"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&title=LibIHT-Background Information"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&title=LibIHT-Background Information"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&name=LibIHT-Background Information&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&t=LibIHT-Background Information"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Intel-Hardware-Tracing-Features"><span class="toc-number">1.</span> <span class="toc-text">Intel Hardware Tracing Features</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Non-Architectural-Last-Branch-Record-LBR"><span class="toc-number">2.</span> <span class="toc-text">Non-Architectural Last Branch Record (LBR)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#LBR-Overview"><span class="toc-number">2.1.</span> <span class="toc-text">LBR Overview</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LBR-Stack"><span class="toc-number">2.2.</span> <span class="toc-text">LBR Stack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Top-of-Stack-TOS-MSR"><span class="toc-number">2.3.</span> <span class="toc-text">Top-of-Stack (TOS) MSR</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LBR-Filtering"><span class="toc-number">2.4.</span> <span class="toc-text">LBR Filtering</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Branch-Trace-Store-BTS"><span class="toc-number">3.</span> <span class="toc-text">Branch Trace Store (BTS)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BTS-Overview"><span class="toc-number">3.1.</span> <span class="toc-text">BTS Overview</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DS-Mechanism"><span class="toc-number">3.2.</span> <span class="toc-text">DS Mechanism</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DS-Save-Area"><span class="toc-number">3.3.</span> <span class="toc-text">DS Save Area</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Setting-Up-DS-Save-Area"><span class="toc-number">3.4.</span> <span class="toc-text">Setting Up DS Save Area</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Setting-Up-BTS-Buffer"><span class="toc-number">3.5.</span> <span class="toc-text">Setting Up BTS Buffer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BTS-Filtering"><span class="toc-number">3.6.</span> <span class="toc-text">BTS Filtering</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">4.</span> <span class="toc-text">Conclusion</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">5.</span> <span class="toc-text">Reference</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Appendix"><span class="toc-number">6.</span> <span class="toc-text">Appendix</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Appendix-A-IA32-DEBUGCTL"><span class="toc-number">6.1.</span> <span class="toc-text">Appendix A: IA32_DEBUGCTL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Appendix-B-DS-Save-Area-Buffer-Management-Area"><span class="toc-number">6.2.</span> <span class="toc-text">Appendix B: DS Save Area (Buffer Management Area)</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        LibIHT-Background Information
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thomason Zhao</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-08-12T21:51:45.000Z" itemprop="datePublished">2024-08-12</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/Project-Writeup/">Project Writeup</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Hardware/" rel="tag">Hardware</a>, <a class="tag-link-link" href="/tags/LibIHT/" rel="tag">LibIHT</a>, <a class="tag-link-link" href="/tags/Spark-Program/" rel="tag">Spark Program</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>This blog post will provide some background information on the hardware features that <a target="_blank" rel="noopener" href="https://github.com/libiht/libiht">LibIHT</a> will be using to collect branch information. It is <strong>heavily</strong> referenced from the <em>Intel 64 and IA-32 Architectures Software Developer Manuals</em> in the <a href="#Reference">Reference</a> section.</p>
+<p>If you are really interested in the details, we would recommend reading the manuals. They are very detailed and provide a lot of information on the hardware features that LibIHT will be using.</p>
+<h2 id="Intel-Hardware-Tracing-Features"><a href="#Intel-Hardware-Tracing-Features" class="headerlink" title="Intel Hardware Tracing Features"></a>Intel Hardware Tracing Features</h2><p>Intel processors have several hardware features that can be used to collect branch information. These features are super useful for debugging and performance analysis. They are originally designed for branch profiling and program optimization purposes. But with proper software implementation, they can be used for other purposes as well.</p>
+<blockquote>
+<p>Note: This blog will contain a general overview of the features. Some of features, depending on the processor their microarchitecture, may have slightly different implementations. If you are a hardware enthusiast, we strongly recommend reading the manuals before using these features.</p>
+</blockquote>
+<h2 id="Non-Architectural-Last-Branch-Record-LBR"><a href="#Non-Architectural-Last-Branch-Record-LBR" class="headerlink" title="Non-Architectural Last Branch Record (LBR)"></a>Non-Architectural Last Branch Record (LBR)</h2><blockquote>
+<p>This section mostly references the <em>Intel 64 and IA-32 Architectures Software Developer Manuals</em> Volume 3, Chapter 18.4.1, 18.4.2, and 18.4.8.</p>
+</blockquote>
+<blockquote>
+<p>Note: There is also a newer version of LBR feature in latest Intel processors, called Architectural LBR. They are two different features. However, this blog post will only focus on the Non-Architectural one and will use the term LBR to refer to it.</p>
+</blockquote>
+<p>The Non-Architectural Last Branch Record (LBR) was first introduced on <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/P6_(microarchitecture)">P6</a> family processors to allow the ability to set breakpoints on taken branches, interrupts, and exceptions, and to single-step from one branch to the next. This feature also been extended in later processors: Pentium 4, Intel Xeon, Pentium M, Intel® Core™ Solo, Intel® Core™ Duo, Intel® Core™2 Duo, Intel® Core™ i7 and Intel Atom®.</p>
+<h3 id="LBR-Overview"><a href="#LBR-Overview" class="headerlink" title="LBR Overview"></a>LBR Overview</h3><p>The <code>IA32_DEBUGCTL</code> MSR (Model Specific Register) provides bit field controls to enable debug trace interrupts, debug trace stores, trace messages enable, single stepping on branches, last branch record recording, and to control freezing of LBR stack or performance counters on a PMI (Performance Monitor Interrupt) request. This MSR is located at register address <code>1D9h</code>.</p>
+<p>Specifically, when the LBR flag (bit 0) in the <code>IA32_DEBUGCTL</code> MSR is set, the processor automatically begins recording branch records for taken branches, interrupts, and exceptions (except for debug exceptions) in the LBR stack MSRs</p>
+<p><a data-fancybox="gallery" data-src="/2024/08/12/LibIHT-Background-Information/assets/IA32_DEBUGCTL.png" data-caption="IA32_DEBUGCTL"><img src="/2024/08/12/LibIHT-Background-Information/assets/IA32_DEBUGCTL.png" alt="IA32_DEBUGCTL"></a></p>
+<p>For more detailed information about other bits on the <code>IA32_DEBUGCTL</code> MSR, see <a href="#Appendix-A-IA32-DEBUGCTL">Appendix A</a>.</p>
+<h3 id="LBR-Stack"><a href="#LBR-Stack" class="headerlink" title="LBR Stack"></a>LBR Stack</h3><p>The LBR mechanism stores each branch record in pair of MSRs: <code>MSR_LASTBRANCH_x_FROM_IP</code> and <code>MSR_LASTBRANCH_x_TO_IP</code>. One pair of MSRs is an entry in the LBR stack. The <code>x</code> in the MSR name is the index on the LBR stack, ranging from <code>0</code> to <code>N-1</code>, where <code>N</code> is the number of entries in the LBR stack. The <code>FROM_IP</code> MSR contains the source instruction pointer of the branch, and the <code>TO_IP</code> MSR contains the destination instruction pointer of the branch.</p>
+<p><a data-fancybox="gallery" data-src="/2024/08/12/LibIHT-Background-Information/assets/LBR_stack.png" data-caption="LBR Stack"><img src="/2024/08/12/LibIHT-Background-Information/assets/LBR_stack.png" alt="LBR Stack"></a></p>
+<h3 id="Top-of-Stack-TOS-MSR"><a href="#Top-of-Stack-TOS-MSR" class="headerlink" title="Top-of-Stack (TOS) MSR"></a>Top-of-Stack (TOS) MSR</h3><p>There is also a top-of-stack MSR called <code>MSR_LASTBRANCH_TOS</code>. It contains the top of the stack by index. It indicates the most recent branch, interrupt, or exception recorded.</p>
+<p>The last branch record stack and top-of-stack pointer MSRs are supported across Intel 64 and IA-32 processor families. However, the number of MSRs in the LBR stack and the valid range of TOS pointer value can vary between different processor families.</p>
+<p><a data-fancybox="gallery" data-src="/2024/08/12/LibIHT-Background-Information/assets/LBR_stack_and_tos.png" data-caption="LBR Stack and TOS Range"><img src="/2024/08/12/LibIHT-Background-Information/assets/LBR_stack_and_tos.png" alt="LBR Stack and TOS Range"></a></p>
+<h3 id="LBR-Filtering"><a href="#LBR-Filtering" class="headerlink" title="LBR Filtering"></a>LBR Filtering</h3><p>Not all processors and their microarchitectures support the filtering of the LBR stack. According to the manual, here is a list of processors that support LBR filtering:</p>
+<ul>
+<li>Intel Atom® processors based on Silvermont microarchitecture</li>
+<li>Processors based on Goldmont and Goldmont Plus microarchitectures</li>
+<li>Intel Xeon® Phi processor 7200&#x2F;5200&#x2F;3200</li>
+<li>Processors based on Nehalem microarchitecture</li>
+<li>Processors based on Sandy Bridge microarchitecture</li>
+<li>Processors based on Haswell microarchitecture</li>
+<li>Processors based on Skylake microarchitecture</li>
+</ul>
+<p>In general, for those processors that support LBR filtering, they use the <code>MSR_LBR_SELECT</code> MSR to control the filtering of the LBR stack. Most of the main filtering functionalities are very similar, here is a table for Haswell microarchitecture:</p>
+<p><a data-fancybox="gallery" data-src="/2024/08/12/LibIHT-Background-Information/assets/MSR_LBR_SELECT_haswell.png" data-caption="MSR_LBR_SELECT_Haswell"><img src="/2024/08/12/LibIHT-Background-Information/assets/MSR_LBR_SELECT_haswell.png" alt="MSR_LBR_SELECT_Haswell"></a></p>
+<p>Other microarchitectures’ filtering mechanisms are subset of this table. The main difference happens in the bit 6, 7, and 9 of the <code>MSR_LBR_SELECT</code> MSR.</p>
+<h2 id="Branch-Trace-Store-BTS"><a href="#Branch-Trace-Store-BTS" class="headerlink" title="Branch Trace Store (BTS)"></a>Branch Trace Store (BTS)</h2><blockquote>
+<p>This section mostly references the <em>Intel 64 and IA-32 Architectures Software Developer Manuals</em> Volume 3, Chapter 18.4.1, 18.4.4, and 18.4.9.</p>
+</blockquote>
+<p>The Branch Trace Store (BTS) feature is a powerful extension of the LBR feature. The manual itself did not mention the exact processor family that supports BTS. However, it is safe to assume that it is supported in processors that support LBR feature because they both act as a debugging and branch profiling hardware features on Intel processors.</p>
+<h3 id="BTS-Overview"><a href="#BTS-Overview" class="headerlink" title="BTS Overview"></a>BTS Overview</h3><p>Recall that in <a href="#LBR-Overview">LBR Overview</a>, we mentioned that the <code>IA32_DEBUGCTL</code> MSR provides bit field controls to some of the hardware debugging features, this also includes the BTS feature.</p>
+<p>When the BTS flag (bit 7) in the <code>IA32_DEBUGCTL</code> MSR is set, the processor enables the BTS facilities to log branch trace messages (BTMs) to a memory-resident BTS buffer that is part of the DS save area.</p>
+<p>To actually enable the BTS feature, set the BTS flag is not enough. You also need to set the TR flag (bit 6) in the <code>IA32_DEBUGCTL</code> MSR. The TR flag enables the branch trace messages (BTMs) to be sent out on the system bus. The BTM contains the source and destination instruction pointers of the branch, interrupt, or exception.</p>
+<p><a data-fancybox="gallery" data-src="/2024/08/12/LibIHT-Background-Information/assets/IA32_DEBUGCTL.png" data-caption="IA32_DEBUGCTL"><img src="/2024/08/12/LibIHT-Background-Information/assets/IA32_DEBUGCTL.png" alt="IA32_DEBUGCTL"></a></p>
+<p>As we observed, there are still some flags that related to the BTS feature but not mentioned here, we will cover more detailed information in the following sections. You can also check the <a href="#Appendix-A-IA32-DEBUGCTL">Appendix A</a> for more information.</p>
+<h3 id="DS-Mechanism"><a href="#DS-Mechanism" class="headerlink" title="DS Mechanism"></a>DS Mechanism</h3><p>The Debug Store (DS) feature flag (bit 21) can be accessed by <code>CPUID.1:EDX[21]</code>. The flag indicates that the processor provides the DS mechanism. This allows BTMs to be logged to a memory-resident BTS buffer. It also allows processor event-based sampling (PEBS) to use the DS Area. Since this feature (PEBS) is not been used in LibIHT (but we hope we can implement it in the future), we will not cover this feature in this blog post. But feel free to checkout the manual in chapter 20.6.2.4 for more detailed information.</p>
+<p>When DS flag is set, the <code>BTS_UNAVAILABLE</code> and <code>PEBS_UNAVAILABLE</code> flags in the <code>IA32_MISC_ENABLE</code> MSR indicate (when clear) the availability of the BTS and PEBS facilities, including the ability to set the BTS and BTINT bits in the <code>IA32_DEBUGCTL</code> MSR. Also, it needs the <code>IA32_DS_AREA</code> MSR exist and points to the DS save area.</p>
+<h3 id="DS-Save-Area"><a href="#DS-Save-Area" class="headerlink" title="DS Save Area"></a>DS Save Area</h3><p>The DS save area is a software-designated area that used to collect the following two types of information:</p>
+<ul>
+<li><strong>Branch records —</strong> When the BTS flag is set in the <code>IA32_DEBUGCTL</code> MSR, a branch record is stored in the BTS buffer in the DS save area whenever a taken branch, interrupt, or exception is detected.</li>
+<li><strong>PEBS records —</strong> When a performance counter is configured for PEBS, a PEBS record is stored in the PEBS buffer in the DS save area after the counter overflow occurs. (For more information about PEBS, please refer to the manual.)</li>
+</ul>
+<p>The DS save area is divided into three parts: buffer management area, BTS buffer, and PEBS buffer. Buffer management area it used to define the size and location of the BTS and PEBS buffers. The processor then uses the buffer management area to keep track of the branch and&#x2F;or PEBS records in their respective buffers and to record the performance counter reset value. The linear address of the first byte of the DS buffer management area is specified with the <code>IA32_DS_AREA</code> MSR.</p>
+<p>32-bit version of the DS save area:</p>
+<p><a data-fancybox="gallery" data-src="/2024/08/12/LibIHT-Background-Information/assets/DS_save_area_32.png" data-caption="DS Save Area 32-Bit"><img src="/2024/08/12/LibIHT-Background-Information/assets/DS_save_area_32.png" alt="DS Save Area 32-Bit"></a></p>
+<p>64-bit version of the DS save area:</p>
+<p><a data-fancybox="gallery" data-src="/2024/08/12/LibIHT-Background-Information/assets/DS_save_area_64.png" data-caption="DS Save Area 64-Bit"><img src="/2024/08/12/LibIHT-Background-Information/assets/DS_save_area_64.png" alt="DS Save Area 64-Bit"></a></p>
+<p>As the graph here is very straightforward, I will put the detailed information in the <a href="#Appendix-B-DS-Save-Area-Buffer-Management-Area">Appendix B</a>.</p>
+<p>The BTS buffer is used to store the branch trace records. In addition to the LBR style branch records (with source and destination instruction pointers), the BTS buffer contains an entry for whether the branch that was taken was predicted or not predicted.</p>
+<p>32-bit version of the BTS record:</p>
+<p><a data-fancybox="gallery" data-src="/2024/08/12/LibIHT-Background-Information/assets/BTS_record_32.png" data-caption="BTS Record 32-Bit"><img src="/2024/08/12/LibIHT-Background-Information/assets/BTS_record_32.png" alt="BTS Record 32-Bit"></a></p>
+<p>64-bit version of the BTS record:</p>
+<p><a data-fancybox="gallery" data-src="/2024/08/12/LibIHT-Background-Information/assets/BTS_record_64.png" data-caption="BTS Record 64-Bit"><img src="/2024/08/12/LibIHT-Background-Information/assets/BTS_record_64.png" alt="BTS Record 64-Bit"></a></p>
+<h3 id="Setting-Up-DS-Save-Area"><a href="#Setting-Up-DS-Save-Area" class="headerlink" title="Setting Up DS Save Area"></a>Setting Up DS Save Area</h3><p>To actually enable the BTS feature, you need to correctly set up the DS save area by the following procedures (This is not the exact precise steps, but it should give you a general idea, please refer to the manual for more detailed information):</p>
+<ol>
+<li>Allocate a memory region for the DS buffer management area, BTS buffer, and PEBS buffer (optional if no need for PEBS).</li>
+<li>Configure the DS buffer management area with the correct information (pointers, etc.).</li>
+<li>Write the linear address of the DS buffer management area to the <code>IA32_DS_AREA</code> MSR.</li>
+<li>(Optional) Write the interrupt service routine to handle the BTS interrupt when the BTS buffer is full.</li>
+<li>Enable the BTS feature by setting the BTS flag, TR flag, and probably other filtering flags in the <code>IA32_DEBUGCTL</code> MSR.</li>
+</ol>
+<p>The following restrictions apply to the DS save area (Copied from the manual):</p>
+<ul>
+<li>The recording of branch records in the BTS buffer (or PEBS records in the PEBS buffer) may not operate properly if accesses to the linear addresses in any of the three DS save area sections cause page faults, VM exits, or the setting of accessed or dirty flags in the paging structures (ordinary or EPT). For that reason, system software should establish paging structures (both ordinary and EPT) to prevent such occurrences. Implications of this may be that an operating system should allocate this memory from a non-paged pool and that system software cannot do “lazy” page-table entry propagation for these pages.</li>
+<li>The DS save area can be larger than a page, but the pages must be mapped to contiguous linear addresses. The buffer may share a page, so it need not be aligned on a 4-KByte boundary. For performance reasons, the base of the buffer must be aligned on a doubleword boundary and should be aligned on a cache line boundary.</li>
+<li>It is recommended that the buffer size for the BTS buffer and the PEBS buffer be an integer multiple of the corresponding record sizes.</li>
+<li>The precise event records buffer should be large enough to hold the number of precise event records that can occur while waiting for the interrupt to be serviced.</li>
+<li>The DS save area should be in kernel space. It must not be on the same page as code, to avoid triggering selfmodifying code actions.</li>
+<li>There are no memory type restrictions on the buffers, although it is recommended that the buffers be<br>designated as WB memory type for performance considerations.</li>
+<li>Either the system must be prevented from entering A20M mode while DS save area is active, or bit 20 of all addresses within buffer bounds must be 0.</li>
+<li>Pages that contain buffers must be mapped to the same physical addresses for all processes, such that any change to control register CR3 will not change the DS addresses.</li>
+<li>The DS save area is expected to used only on systems with an enabled APIC. The LVT Performance Counter entry in the APCI must be initialized to use an interrupt gate instead of the trap gate.</li>
+</ul>
+<p>In short, those restrictions are mainly about the memory management and the buffer size. If you follow the normal convention of memory management, you should be fine (Just as what we did in LibIHT). It is important to follow those restrictions to ensure the BTS feature works properly.</p>
+<h3 id="Setting-Up-BTS-Buffer"><a href="#Setting-Up-BTS-Buffer" class="headerlink" title="Setting Up BTS Buffer"></a>Setting Up BTS Buffer</h3><p>There are three flags in the <code>IA32_DEBUGCTL</code> MSR that are related to the BTS feature: TR, BTS, and BTINT.</p>
+<ul>
+<li>The TR flag enables the branch trace messages (BTMs) to be sent out on the system bus.</li>
+<li>The BTS flag enables the BTS facilities to log BTMs to a memory-resident BTS buffer that is part of the DS save area. </li>
+<li>The BTINT flag generates an interrupt when the BTS buffer is nearly full.</li>
+</ul>
+<p>The correct and allowed combination of these three flags is shown in the following table:</p>
+<p><a data-fancybox="gallery" data-src="/2024/08/12/LibIHT-Background-Information/assets/IA32_DEBUGCTL_flag_encodings.png" data-caption="IA32_DEBUGCTL Flag Encodings"><img src="/2024/08/12/LibIHT-Background-Information/assets/IA32_DEBUGCTL_flag_encodings.png" alt="IA32_DEBUGCTL Flag Encodings"></a></p>
+<blockquote>
+<p>Note: If the buffer size is set to less than the minimum allowable value (i.e., BTS absolute maximum &lt; 1 + size of BTS record), the results of BTS is undefined.<br>In order to prevent generating an interrupt, when working with circular BTS buffer, SW need to set BTS interrupt threshold to a value greater than BTS absolute maximum (fields of the DS buffer management area). It’s not enough to clear the BTINT flag itself only.</p>
+</blockquote>
+<h3 id="BTS-Filtering"><a href="#BTS-Filtering" class="headerlink" title="BTS Filtering"></a>BTS Filtering</h3><p>Similar to the LBR feature, BTS also provides filtering mechanisms to filter the branch records. If the processor supports CPL-qualified last branch recording mechanism, the generation of branch records and storing of them in the BTS buffer are determined by: TR, BTS, BTS_OFF_OS, BTS_OFF_USR, and BTINT.</p>
+<p><a data-fancybox="gallery" data-src="/2024/08/12/LibIHT-Background-Information/assets/BTS_filtering.png" data-caption="BTS Filtering"><img src="/2024/08/12/LibIHT-Background-Information/assets/BTS_filtering.png" alt="BTS Filtering"></a></p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>In conclusion, the LBR and BTS features are powerful hardware features that can be used to collect detailed branch information, which can not only be used for debugging, branch profiling, and program optimization but also for reverse engineering to understand the control flow of a program. LibIHT empower these features to reverse engineers and security researchers to collect branch information for their analysis. We will talk more about how LibIHT uses these features and how it’s been architected in the future blog posts.</p>
+<p>You can also checkout the github repository of LibIHT <a target="_blank" rel="noopener" href="https://github.com/libiht/libiht">here</a>. Feel free to star the repository if you are interested in the project. Issues and pull requests are also welcome!</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html">Intel 64 and IA-32 Architectures Software Developer Manuals</a></li>
+</ul>
+<h2 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h2><p>The Appendix section is used to provide additional information copied from the <em>Intel 64 and IA-32 Architectures Software Developer Manuals</em>. It is not necessary to read this section unless you are really interested in the details.</p>
+<h3 id="Appendix-A-IA32-DEBUGCTL"><a href="#Appendix-A-IA32-DEBUGCTL" class="headerlink" title="Appendix A: IA32_DEBUGCTL"></a>Appendix A: IA32_DEBUGCTL</h3><ul>
+<li><p><strong>LBR (last branch&#x2F;interrupt&#x2F;exception) flag (bit 0) —</strong> When set, the processor records a running trace of the most recent branches, interrupts, and&#x2F;or exceptions taken by the processor (prior to a debug exception being generated) in the last branch record (LBR) stack. For more information, see the Section 18.5.1, “LBR Stack” (Intel® Core™2 Duo and Intel Atom® processor family) and Section 18.9.1, “LBR Stack” (processors<br>based on Nehalem microarchitecture).</p>
+</li>
+<li><p><strong>BTF (single-step on branches) flag (bit 1) —</strong> When set, the processor treats the TF flag in the EFLAGS register as a “single-step on branches” flag rather than a “single-step on instructions” flag. This mechanism allows single-stepping the processor on taken branches. See Section 18.4.3, “Single-Stepping on Branches,” for more information about the BTF flag.</p>
+</li>
+<li><p><strong>BLD (bus-lock detection) flag (bit 2) —</strong> If this bit is set, OS bus-lock detection is enabled when CPL &gt; 0. See Section 18.3.1.6.</p>
+</li>
+<li><p><strong>TR (trace message enable) flag (bit 6) —</strong> When set, branch trace messages are enabled. When the processor detects a taken branch, interrupt, or exception; it sends the branch record out on the system bus as a branch trace message (BTM). See Section 18.4.4, “Branch Trace Messages,” for more information about the<br>TR flag.</p>
+</li>
+<li><p><strong>BTS (branch trace store) flag (bit 7) —</strong> When set, the flag enables BTS facilities to log BTMs to a memory-resident BTS buffer that is part of the DS save area. See Section 18.4.9, “BTS and DS Save Area.”</p>
+</li>
+<li><p><strong>BTINT (branch trace interrupt) flag (bit 8) —</strong> When set, the BTS facilities generate an interrupt when the BTS buffer is full. When clear, BTMs are logged to the BTS buffer in a circular fashion. See Section 18.4.5, “Branch Trace Store (BTS),” for a description of this mechanism.</p>
+</li>
+<li><p><strong>BTS_OFF_OS (branch trace off in privileged code) flag (bit 9) —</strong> When set, BTS or BTM is skipped if CPL is 0. See Section 18.13.2.</p>
+</li>
+<li><p><strong>BTS_OFF_USR (branch trace off in user code) flag (bit 10) —</strong> When set, BTS or BTM is skipped if CPL is greater than 0. See Section 18.13.2.</p>
+</li>
+<li><p><strong>FREEZE_LBRS_ON_PMI flag (bit 11) —</strong> When set, the LBR stack is frozen on a hardware PMI request (e.g., when a counter overflows and is configured to trigger PMI). See Section 18.4.7 for details.</p>
+</li>
+<li><p><strong>FREEZE_PERFMON_ON_PMI flag (bit 12) —</strong> When set, the performance counters (IA32_PMCx and IA32_FIXED_CTRx) are frozen on a PMI request. See Section 18.4.7 for details.</p>
+</li>
+<li><p><strong>FREEZE_WHILE_SMM (bit 14) —</strong> If this bit is set, upon the delivery of an SMI, the processor will clear all the enable bits of IA32_PERF_GLOBAL_CTRL, save a copy of the content of IA32_DEBUGCTL and disable LBR, BTF, TR, and BTS fields of IA32_DEBUGCTL before transferring control to the SMI handler. If Intel Thread Director support was enabled before transferring control to the SMI handler, then the processor will also reset the Intel Thread Director history (see Section 15.6.11 for more details about Intel Thread Director enable, reset, and history reset operations).<br>Subsequently, the enable bits of IA32_PERF_GLOBAL_CTRL will be set to 1, the saved copy of IA32_DEBUGCTL prior to SMI delivery will be restored, after the SMI handler issues RSM to complete its service. If Intel Thread Director support is enabled when RSM is executed, then the processor resets the Intel Thread Director history.<br>Note that system software must check if the processor supports the IA32_DEBUGCTL.FREEZE_WHILE_SMM control bit. IA32_DEBUGCTL.FREEZE_WHILE_SMM is supported if IA32_PERF_CAPABILITIES. FREEZE_WHILE_SMM[Bit 12] is reporting 1. See Section 20.8 for details of detecting the presence of IA32_PERF_CAPABILITIES MSR.</p>
+</li>
+<li><p><strong>RTM (bit 15) —</strong> If this bit is set, advanced debugging of RTM transactional regions is enabled if DR7.RTM is also set. See Section 18.3.3.</p>
+</li>
+</ul>
+<h3 id="Appendix-B-DS-Save-Area-Buffer-Management-Area"><a href="#Appendix-B-DS-Save-Area-Buffer-Management-Area" class="headerlink" title="Appendix B: DS Save Area (Buffer Management Area)"></a>Appendix B: DS Save Area (Buffer Management Area)</h3><ul>
+<li><p><strong>BTS buffer base —</strong> Linear address of the first byte of the BTS buffer. This address should point to a natural doubleword boundary.</p>
+</li>
+<li><p><strong>BTS index —</strong> Linear address of the first byte of the next BTS record to be written to. Initially, this address should be the same as the address in the BTS buffer base field.</p>
+</li>
+<li><p><strong>BTS absolute maximum —</strong> Linear address of the next byte past the end of the BTS buffer. This address should be a multiple of the BTS record size (12 bytes) plus 1.</p>
+</li>
+<li><p><strong>BTS interrupt threshold —</strong> Linear address of the BTS record on which an interrupt is to be generated. This address must point to an offset from the BTS buffer base that is a multiple of the BTS record size. Also, it must be several records short of the BTS absolute maximum address to allow a pending interrupt to be handled prior to processor writing the BTS absolute maximum record.</p>
+</li>
+<li><p><strong>PEBS buffer base —</strong> Linear address of the first byte of the PEBS buffer. This address should point to a natural doubleword boundary.</p>
+</li>
+<li><p><strong>PEBS index —</strong> Linear address of the first byte of the next PEBS record to be written to. Initially, this address should be the same as the address in the PEBS buffer base field.</p>
+</li>
+<li><p><strong>PEBS absolute maximum —</strong> Linear address of the next byte past the end of the PEBS buffer. This address should be a multiple of the PEBS record size (40 bytes) plus 1.</p>
+</li>
+<li><p><strong>PEBS interrupt threshold —</strong> Linear address of the PEBS record on which an interrupt is to be generated. This address must point to an offset from the PEBS buffer base that is a multiple of the PEBS record size. Also, it must be several records short of the PEBS absolute maximum address to allow a pending interrupt to be handled prior to processor writing the PEBS absolute maximum record.</p>
+</li>
+<li><p><strong>PEBS counter reset value —</strong> A 64-bit value that the counter is to be set to when a PEBS record is written. Bits beyond the size of the counter are ignored. This value allows state information to be collected regularly every time the specified number of events occur.</p>
+</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+         
+          <li><a href="/search/">Search</a></li>
+         
+          <li><a href="/categories/">Category</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Intel-Hardware-Tracing-Features"><span class="toc-number">1.</span> <span class="toc-text">Intel Hardware Tracing Features</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Non-Architectural-Last-Branch-Record-LBR"><span class="toc-number">2.</span> <span class="toc-text">Non-Architectural Last Branch Record (LBR)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#LBR-Overview"><span class="toc-number">2.1.</span> <span class="toc-text">LBR Overview</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LBR-Stack"><span class="toc-number">2.2.</span> <span class="toc-text">LBR Stack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Top-of-Stack-TOS-MSR"><span class="toc-number">2.3.</span> <span class="toc-text">Top-of-Stack (TOS) MSR</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LBR-Filtering"><span class="toc-number">2.4.</span> <span class="toc-text">LBR Filtering</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Branch-Trace-Store-BTS"><span class="toc-number">3.</span> <span class="toc-text">Branch Trace Store (BTS)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BTS-Overview"><span class="toc-number">3.1.</span> <span class="toc-text">BTS Overview</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DS-Mechanism"><span class="toc-number">3.2.</span> <span class="toc-text">DS Mechanism</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DS-Save-Area"><span class="toc-number">3.3.</span> <span class="toc-text">DS Save Area</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Setting-Up-DS-Save-Area"><span class="toc-number">3.4.</span> <span class="toc-text">Setting Up DS Save Area</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Setting-Up-BTS-Buffer"><span class="toc-number">3.5.</span> <span class="toc-text">Setting Up BTS Buffer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BTS-Filtering"><span class="toc-number">3.6.</span> <span class="toc-text">BTS Filtering</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">4.</span> <span class="toc-text">Conclusion</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">5.</span> <span class="toc-text">Reference</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Appendix"><span class="toc-number">6.</span> <span class="toc-text">Appendix</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Appendix-A-IA32-DEBUGCTL"><span class="toc-number">6.1.</span> <span class="toc-text">Appendix A: IA32_DEBUGCTL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Appendix-B-DS-Save-Area-Buffer-Management-Area"><span class="toc-number">6.2.</span> <span class="toc-text">Appendix B: DS Save Area (Buffer Management Area)</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&text=LibIHT-Background Information"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&title=LibIHT-Background Information"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&is_video=false&description=LibIHT-Background Information"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LibIHT-Background Information&body=Check out this article: https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&title=LibIHT-Background Information"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&title=LibIHT-Background Information"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&title=LibIHT-Background Information"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&title=LibIHT-Background Information"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&name=LibIHT-Background Information&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://thomasonzhao.github.io/2024/08/12/LibIHT-Background-Information/&t=LibIHT-Background Information"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    Thomason Zhao
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Articles</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ThomasonZhao">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+</body>
+</html>
